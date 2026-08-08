@@ -1,0 +1,6480 @@
+{
+  "generatedAt": "2026-08-04T12:50:35+00:00",
+  "sources": [
+    {
+      "file": "csr_database.xlsx",
+      "sheets": [
+        "FY 2020-21, 21-22, 22-23"
+      ]
+    }
+  ],
+  "currency": "INR Crore",
+  "capabilities": {
+    "ngo": false,
+    "beneficiaries": false,
+    "status": false,
+    "start_date": false,
+    "end_date": false,
+    "sdg": false,
+    "duration": false
+  },
+  "columnCoverage": {
+    "ngo": {
+      "present": false,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "beneficiaries": {
+      "present": false,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "status": {
+      "present": true,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "start_date": {
+      "present": false,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "end_date": {
+      "present": false,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "sdg": {
+      "present": true,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    },
+    "duration": {
+      "present": false,
+      "filled": 0,
+      "coveragePct": 0.0,
+      "available": false
+    }
+  },
+  "rowCount": 32761,
+  "companyCount": 1116,
+  "totalSpend": 39711.57,
+  "years": [
+    "FY 2020-21",
+    "FY 2021-22",
+    "FY 2022-23"
+  ],
+  "sectors": [
+    "Air Transportation",
+    "Alternative Energy",
+    "Apparel & Textiles",
+    "Automobiles",
+    "Beverages",
+    "Biotechnology & Pharmaceuticals",
+    "Capital Markets",
+    "Chemicals",
+    "Coal",
+    "Construction Materials",
+    "Consumer Discretionary Products",
+    "Consumer Goods Retail",
+    "Consumer Services",
+    "Corporate & Retail Banking",
+    "Food",
+    "Food & Beverage Retail",
+    "Forestry & Paper",
+    "Health Care Providers",
+    "Health Care Retail",
+    "Hospitality & Recreation",
+    "Industrials",
+    "Infrastructure",
+    "Insurance",
+    "Internet Media & Services",
+    "Land Transportation",
+    "Marine Transportation",
+    "Media",
+    "Medical Technology",
+    "Metals & Mining",
+    "Oil & Gas",
+    "Real Estate",
+    "Restaurants",
+    "Sector Agnostic",
+    "Semiconductors",
+    "Technology",
+    "Telecommunications",
+    "Tobacco",
+    "Unclassified",
+    "Utilities",
+    "Waste Management"
+  ],
+  "states": [
+    "Andaman and Nicobar Islands",
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chandigarh",
+    "Chhattisgarh",
+    "Dadra and Nagar Haveli",
+    "Daman and Diu",
+    "Delhi",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jammu and Kashmir",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Ladakh",
+    "Lakshadweep",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Not Specified",
+    "Odisha",
+    "Pan India",
+    "Puducherry",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal"
+  ],
+  "themes": [
+    "Agro Forestry",
+    "Animal Welfare",
+    "Armed Forces, Veterans, War Widows/ Dependants",
+    "Art And Culture",
+    "Clean Ganga Fund",
+    "Conservation Of Natural Resources",
+    "Education",
+    "Environmental Sustainability",
+    "Gender Equality",
+    "Health Care",
+    "Livelihood Enhancement Projects",
+    "Not Specified",
+    "Other Central Government Funds",
+    "Poverty, Eradicating Hunger, Malnutrition",
+    "Prime Minister'S National Relief Fund",
+    "Rural Development Projects",
+    "Safe Drinking Water",
+    "Sanitation",
+    "Senior Citizens Welfare",
+    "Setting Up Homes And Hostels For Women",
+    "Setting Up Orphanage",
+    "Slum Area Development",
+    "Socio-Economic Inequalities",
+    "Special Education",
+    "Swachh Bharat Kosh",
+    "Technology Incubators",
+    "Training To Promote Sports",
+    "Vocational Skills",
+    "Women Empowerment"
+  ],
+  "modes": [
+    "Directly by company",
+    "Not Specified",
+    "Other implementing agencies",
+    "Trust / Society / Sec-8 company (government)",
+    "Trust / Society / Sec-8 company (own)"
+  ],
+  "districts": [
+    "Adilabad",
+    "Agra",
+    "Ahmedabad",
+    "Ahmednagar",
+    "Aizawl",
+    "Ajmer",
+    "Akola",
+    "Alappuzha",
+    "Aligarh",
+    "Almora",
+    "Alwar",
+    "Ambala",
+    "Ambedkar Nagar",
+    "Amethi",
+    "Amravati",
+    "Amreli",
+    "Amritsar",
+    "Amroha",
+    "Anand",
+    "Anantapur",
+    "Ananthapuramu",
+    "Anantnag",
+    "Angul",
+    "Anjaw",
+    "Anugul",
+    "Anuppur",
+    "Araria",
+    "Aravalli",
+    "Ariyalur",
+    "Ashoknagar",
+    "Auraiya",
+    "Aurangabad",
+    "Ayodhya",
+    "Azamgarh",
+    "Bagalkot",
+    "Bagalkote",
+    "Baghpat",
+    "Bahraich",
+    "Baksa",
+    "Balaghat",
+    "Balangir",
+    "Balasore",
+    "Baleshwar",
+    "Ballari",
+    "Ballia",
+    "Balod",
+    "Balrampur",
+    "Banas Kantha",
+    "Banaskantha",
+    "Bandipora",
+    "Bangalore Rural",
+    "Bangalore Urban",
+    "Banka",
+    "Bankura",
+    "Banswara",
+    "Bara Banki",
+    "Barabanki",
+    "Baramulla",
+    "Baran",
+    "Bareilly",
+    "Bargarh",
+    "Barmer",
+    "Barnala",
+    "Barpeta",
+    "Barwani",
+    "Bastar",
+    "Basti",
+    "Bathinda",
+    "Beed",
+    "Begusarai",
+    "Belagavi",
+    "Belgaum",
+    "Bellary",
+    "Bengaluru Rural",
+    "Betul",
+    "Bhadohi",
+    "Bhadradri Kothagudem",
+    "Bhadrak",
+    "Bhagalpur",
+    "Bhandara",
+    "Bharatpur",
+    "Bharuch",
+    "Bhavnagar",
+    "Bhilwara",
+    "Bhind",
+    "Bhiwani",
+    "Bhojpur",
+    "Bhopal",
+    "Bidar",
+    "Bijapur",
+    "Bijnor",
+    "Bikaner",
+    "Bilaspur",
+    "Birbhum",
+    "Bishnupur",
+    "Biswanath",
+    "Bokaro",
+    "Bongaigaon",
+    "Budaun",
+    "Bulandshahr",
+    "Buldhana",
+    "Bundi",
+    "Burhanpur",
+    "Buxar",
+    "Cachar",
+    "Central Delhi",
+    "Chamarajanagar",
+    "Chamarajanagara",
+    "Chamba",
+    "Chamoli",
+    "Champawat",
+    "Chandauli",
+    "Chandel",
+    "Chandigarh",
+    "Chandrapur",
+    "Changlang",
+    "Chatra",
+    "Chengalpattu",
+    "Chennai",
+    "Chhatarpur",
+    "Chhindwara",
+    "Chhota Udaipur",
+    "Chikkaballapur",
+    "Chikkamagaluru",
+    "Chitradurga",
+    "Chitrakoot",
+    "Chittoor",
+    "Chittorgarh",
+    "Churachandpur",
+    "Churu",
+    "Coimbatore",
+    "Cooch Behar",
+    "Cuddalore",
+    "Cuttack",
+    "Dadra And Nagar Haveli",
+    "Dadra Nagar Haveli",
+    "Dahod",
+    "Dakshin Bastar Dantewada",
+    "Dakshin Dinajpur",
+    "Dakshina Kannada",
+    "Daman",
+    "Damoh",
+    "Dang",
+    "Dangs",
+    "Dantewada",
+    "Darbhanga",
+    "Darjeeling",
+    "Darrang",
+    "Dausa",
+    "Davangere",
+    "Debagarh",
+    "Dehradun",
+    "Deogarh",
+    "Deoghar",
+    "Deoria",
+    "Dewas",
+    "Dhalai",
+    "Dhamtari",
+    "Dhanbad",
+    "Dhar",
+    "Dharashiv",
+    "Dharmapuri",
+    "Dharwad",
+    "Dhemaji",
+    "Dhenkanal",
+    "Dholpur",
+    "Dhubri",
+    "Dhule",
+    "Dibang Valley",
+    "Dibrugarh",
+    "Dimapur",
+    "Dindigul",
+    "Doda",
+    "Dumka",
+    "Dungarpur",
+    "Durg",
+    "East Champaran",
+    "East Delhi",
+    "East Garo Hills",
+    "East Godavari",
+    "East Khasi Hills",
+    "East Siang",
+    "East Sikkim",
+    "East Singhbhum",
+    "East Singhbum",
+    "Ernakulam",
+    "Erode",
+    "Etah",
+    "Etawah",
+    "Faridabad",
+    "Farrukhabad",
+    "Fatehabad",
+    "Fatehgarh Sahib",
+    "Fatehpur",
+    "Fazilka",
+    "Ferozepur",
+    "Firozabad",
+    "Firozpur",
+    "Gadchiroli",
+    "Gajapati",
+    "Gandhinagar",
+    "Gangtok",
+    "Ganjam",
+    "Gariaband",
+    "Gautam Buddha Nagar",
+    "Gaya",
+    "Ghaziabad",
+    "Ghazipur",
+    "Gir Somnath",
+    "Giridih",
+    "Goalpara",
+    "Godda",
+    "Golaghat",
+    "Gopalganj",
+    "Gorakhpur",
+    "Gulbarga",
+    "Gumla",
+    "Guna",
+    "Guntur",
+    "Gurdaspur",
+    "Gurugram",
+    "Gwalior",
+    "Gyalshing",
+    "Hailakandi",
+    "Hamirpur",
+    "Hanumangarh",
+    "Harda",
+    "Hardoi",
+    "Haridwar",
+    "Hassan",
+    "Hathras",
+    "Haveri",
+    "Hazaribagh",
+    "Hingoli",
+    "Hisar",
+    "Hooghly",
+    "Hoshangabad",
+    "Hoshiarpur",
+    "Howrah",
+    "Hyderabad",
+    "Idukki",
+    "Imphal East",
+    "Imphal West",
+    "Indore",
+    "Jabalpur",
+    "Jagatsinghapur",
+    "Jagatsinghpur",
+    "Jaipur",
+    "Jaisalmer",
+    "Jajapur",
+    "Jajpur",
+    "Jalandhar",
+    "Jalaun",
+    "Jalgaon",
+    "Jalna",
+    "Jalore",
+    "Jalpaiguri",
+    "Jammu",
+    "Jamnagar",
+    "Jamtara",
+    "Jamui",
+    "Janjgir Champa",
+    "Janjgir-Champa",
+    "Jashpur",
+    "Jaunpur",
+    "Jehanabad",
+    "Jhabua",
+    "Jhajjar",
+    "Jhalawar",
+    "Jhansi",
+    "Jharsuguda",
+    "Jhunjhunu",
+    "Jind",
+    "Jodhpur",
+    "Jorhat",
+    "Junagadh",
+    "Kabirdham",
+    "Kachchh",
+    "Kadapa",
+    "Kaimur",
+    "Kaithal",
+    "Kalaburagi",
+    "Kalahandi",
+    "Kalimpong",
+    "Kallakurichi",
+    "Kamrup",
+    "Kamrup Metropolitan",
+    "Kancheepuram",
+    "Kanchipuram",
+    "Kandhamal",
+    "Kangra",
+    "Kanker",
+    "Kannauj",
+    "Kanniyakumari",
+    "Kannur",
+    "Kanpur Dehat",
+    "Kanpur Nagar",
+    "Kanyakumari",
+    "Kapurthala",
+    "Karaikal",
+    "Karauli",
+    "Kargil",
+    "Karimganj",
+    "Karimnagar",
+    "Karnal",
+    "Karur",
+    "Kasaragod",
+    "Kathua",
+    "Katihar",
+    "Katni",
+    "Kaushambi",
+    "Kendrapara",
+    "Kendujhar",
+    "Khagaria",
+    "Khammam",
+    "Khandwa",
+    "Khandwa (East Nimar)",
+    "Khargone",
+    "Khargone (West Nimar)",
+    "Kheda",
+    "Kheri",
+    "Khordha",
+    "Khunti",
+    "Kinnaur",
+    "Kishanganj",
+    "Kishtwar",
+    "Kodagu",
+    "Koderma",
+    "Kohima",
+    "Kokrajhar",
+    "Kolar",
+    "Kolhapur",
+    "Kolkata",
+    "Kollam",
+    "Komaram Bheem",
+    "Kondagaon",
+    "Koppal",
+    "Koraput",
+    "Korba",
+    "Korea",
+    "Koriya",
+    "Kota",
+    "Kottayam",
+    "Kozhikode",
+    "Krishna",
+    "Krishnagiri",
+    "Kullu",
+    "Kupwara",
+    "Kurnool",
+    "Kurukshetra",
+    "Kushinagar",
+    "Kutch",
+    "Lahaul Spiti",
+    "Lakhimpur",
+    "Lakshadweep",
+    "Lalitpur",
+    "Latehar",
+    "Latur",
+    "Leh",
+    "Leh Ladakh",
+    "Lohardaga",
+    "Lohit",
+    "Lower Dibang Valley",
+    "Lower Subansiri",
+    "Lucknow",
+    "Ludhiana",
+    "Lunglei",
+    "Madhubani",
+    "Madurai",
+    "Mahabubnagar",
+    "Maharajganj",
+    "Mahasamund",
+    "Mahbubnagar",
+    "Mahe",
+    "Mahendragarh",
+    "Mahesana",
+    "Mahrajganj",
+    "Mainpuri",
+    "Majuli",
+    "Malappuram",
+    "Malda",
+    "Malkangiri",
+    "Mamit",
+    "Mancherial",
+    "Mandi",
+    "Mandla",
+    "Mandsaur",
+    "Mandya",
+    "Mangan",
+    "Mansa",
+    "Marigaon",
+    "Mathura",
+    "Mau",
+    "Mayurbhanj",
+    "Medak",
+    "Medchal",
+    "Meerut",
+    "Mehsana",
+    "Mewat",
+    "Mirzapur",
+    "Moga",
+    "Mohali",
+    "Mokokchung",
+    "Mon",
+    "Moradabad",
+    "Morena",
+    "Muktsar",
+    "Mumbai City",
+    "Mumbai Suburban",
+    "Munger",
+    "Murshidabad",
+    "Muzaffarnagar",
+    "Muzaffarpur",
+    "Mysore",
+    "Mysuru",
+    "Nabarangpur",
+    "Nadia",
+    "Nagaon",
+    "Nagapattinam",
+    "Nagaur",
+    "Nagpur",
+    "Nainital",
+    "Nalanda",
+    "Nalbari",
+    "Nalgonda",
+    "Namakkal",
+    "Namchi",
+    "Nanded",
+    "Nandurbar",
+    "Narayanpur",
+    "Narmada",
+    "Narmadapuram",
+    "Narsimhapur",
+    "Nashik",
+    "Navsari",
+    "Nawada",
+    "Nayagarh",
+    "Neemuch",
+    "Nellore",
+    "New Delhi",
+    "Nilgiris",
+    "Nizamabad",
+    "North 24 Parganas",
+    "North Delhi",
+    "North East Delhi",
+    "North Goa",
+    "North Sikkim",
+    "North Tripura",
+    "North West Delhi",
+    "Nuapada",
+    "Nuh",
+    "Osmanabad",
+    "Palakkad",
+    "Palamu",
+    "Palghar",
+    "Pali",
+    "Palwal",
+    "Pan India",
+    "Panch Mahals",
+    "Panchkula",
+    "Panchmahal",
+    "Panipat",
+    "Panna",
+    "Papum Pare",
+    "Parbhani",
+    "Paschim Bardhaman",
+    "Paschim Medinipur",
+    "Pashchim Champaran",
+    "Patan",
+    "Pathanamthitta",
+    "Patiala",
+    "Patna",
+    "Pauri",
+    "Pauri Garhwal",
+    "Perambalur",
+    "Phek",
+    "Pilibhit",
+    "Pithoragarh",
+    "Porbandar",
+    "Prakasam",
+    "Pratapgarh",
+    "Prayagraj",
+    "Puducherry",
+    "Pudukkottai",
+    "Pulwama",
+    "Pune",
+    "Purba Medinipur",
+    "Purbi Champaran",
+    "Puri",
+    "Purnia",
+    "Purulia",
+    "Rae Bareli",
+    "Raebareli",
+    "Raichur",
+    "Raigad",
+    "Raigarh",
+    "Raipur",
+    "Raisen",
+    "Rajanna Sircilla",
+    "Rajgarh",
+    "Rajkot",
+    "Rajnandgaon",
+    "Rajouri",
+    "Rajsamand",
+    "Ramanagara",
+    "Ramanathapuram",
+    "Ramban",
+    "Ramgarh",
+    "Rampur",
+    "Ranchi",
+    "Ranga Reddy",
+    "Ranipet",
+    "Ratlam",
+    "Ratnagiri",
+    "Rayagada",
+    "Reasi",
+    "Rewa",
+    "Rewari",
+    "Ri Bhoi",
+    "Rohtak",
+    "Rohtas",
+    "Rudra Prayag",
+    "Rudraprayag",
+    "Rupnagar",
+    "S.A.S Nagar",
+    "Sabar Kantha",
+    "Sabarkantha",
+    "Sagar",
+    "Saharanpur",
+    "Saharsa",
+    "Sahebganj",
+    "Salem",
+    "Samastipur",
+    "Sambalpur",
+    "Sangareddy",
+    "Sangli",
+    "Sangrur",
+    "Sant Kabir Nagar",
+    "Saraikela Kharsawan",
+    "Saran",
+    "Satara",
+    "Satna",
+    "Sawai Madhopur",
+    "Sehore",
+    "Senapati",
+    "Seraikela Kharsawan",
+    "Shahdol",
+    "Shaheed Bhagat Singh Nagar",
+    "Shahid Bhagat Singh Nagar",
+    "Shahjahanpur",
+    "Shajapur",
+    "Sheikhpura",
+    "Sheopur",
+    "Shimla",
+    "Shimoga",
+    "Shivamogga",
+    "Shivpuri",
+    "Shravasti",
+    "Shrawasti",
+    "Siddharthnagar",
+    "Siddipet",
+    "Sikar",
+    "Simdega",
+    "Sindhudurg",
+    "Singrauli",
+    "Sirmaur",
+    "Sirohi",
+    "Sirsa",
+    "Sitamarhi",
+    "Sitapur",
+    "Sivaganga",
+    "Sivasagar",
+    "Siwan",
+    "Solan",
+    "Solapur",
+    "Sonbhadra",
+    "Sonipat",
+    "Sonitpur",
+    "South 24 Parganas",
+    "South Delhi",
+    "South East Delhi",
+    "South Garo Hills",
+    "South Goa",
+    "South Sikkim",
+    "South Tripura",
+    "South West Delhi",
+    "Sri Ganganagar",
+    "Sri Muktsar Sahib",
+    "Sri Potti Sriramulu Nellore",
+    "Srikakulam",
+    "Srinagar",
+    "Subarnapur",
+    "Sukma",
+    "Sultanpur",
+    "Sundargarh",
+    "Sundergarh",
+    "Surajpur",
+    "Surat",
+    "Surendranagar",
+    "Surguja",
+    "Suryapet",
+    "Tamenglong",
+    "Tapi",
+    "Tarn Taran",
+    "Tehri",
+    "Tehri Garhwal",
+    "Tengnoupal",
+    "Tenkasi",
+    "Thane",
+    "Thanjavur",
+    "The Nilgiris",
+    "Theni",
+    "Thiruvallur",
+    "Thiruvananthapuram",
+    "Thiruvarur",
+    "Thoothukkudi",
+    "Thoothukudi",
+    "Thrissur",
+    "Tikamgarh",
+    "Tinsukia",
+    "Tirap",
+    "Tiruchirappalli",
+    "Tirunelveli",
+    "Tiruppur",
+    "Tiruvallur",
+    "Tiruvannamalai",
+    "Tiruvarur",
+    "Tonk",
+    "Tuensang",
+    "Tumakuru",
+    "Tumkur",
+    "Udaipur",
+    "Udam Singh Nagar",
+    "Udham Singh Nagar",
+    "Udhampur",
+    "Udupi",
+    "Ujjain",
+    "Ukhrul",
+    "Umaria",
+    "Una",
+    "Unnao",
+    "Upper Siang",
+    "Uttar Bastar Kanker",
+    "Uttar Kashi",
+    "Uttara Kannada",
+    "Uttarkashi",
+    "Vadodara",
+    "Vaishali",
+    "Valsad",
+    "Varanasi",
+    "Vellore",
+    "Vidisha",
+    "Vijayapura",
+    "Vikarabad",
+    "Viluppuram",
+    "Virudhunagar",
+    "Visakhapatnam",
+    "Vizianagaram",
+    "Wanaparthy",
+    "Warangal",
+    "Warangal Rural",
+    "Warangal Urban",
+    "Wardha",
+    "Washim",
+    "Wayanad",
+    "West Champaran",
+    "West Delhi",
+    "West Garo Hills",
+    "West Godavari",
+    "West Jaintia Hills",
+    "West Kameng",
+    "West Khasi Hills",
+    "West Siang",
+    "West Sikkim",
+    "West Singhbhum",
+    "West Tripura",
+    "Y.S.R.",
+    "Yadadri Bhuvanagiri",
+    "Yadgir",
+    "Yamunanagar",
+    "Yavatmal",
+    "Zunheboto"
+  ],
+  "ngos": [],
+  "statuses": [],
+  "companies": [
+    {
+      "id": "360-one-wam",
+      "name": "360 One Wam Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "3m-india",
+      "name": "3M India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "agi-greenpac",
+      "name": "AGI Greenpac Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "aarti-drugs",
+      "name": "Aarti Drugs Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "aarti-industries",
+      "name": "Aarti Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "aarti-pharmalabs",
+      "name": "Aarti Pharmalabs Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "aavas-financiers",
+      "name": "Aavas Financiers Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "abans-holdings",
+      "name": "Abans Holdings Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "abb-india",
+      "name": "Abb India Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "abbott-india",
+      "name": "Abbott India Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "acc",
+      "name": "Acc Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "accelya-solutions-india",
+      "name": "Accelya Solutions India Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "action-construction-equipment",
+      "name": "Action Construction Equipment Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "adani-enterprises",
+      "name": "Adani Enterprises Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "adani-green-energy",
+      "name": "Adani Green Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "adani-ports-and-special-economic-zone",
+      "name": "Adani Ports And Special Economic Zone Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "adani-power",
+      "name": "Adani Power Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "adani-total-gas",
+      "name": "Adani Total Gas Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "adani-transmission",
+      "name": "Adani Transmission Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "adani-wilmar",
+      "name": "Adani Wilmar Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "adf-foods",
+      "name": "Adf Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "aditya-birla-capital",
+      "name": "Aditya Birla Capital Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "aditya-birla-fashion-and-retail",
+      "name": "Aditya Birla Fashion And Retail Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "aditya-birla-sun-life-amc",
+      "name": "Aditya Birla Sun Life Amc Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "aditya-vision",
+      "name": "Aditya Vision Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "ador-welding",
+      "name": "Ador Welding Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "advanced-enzyme-technologies",
+      "name": "Advanced Enzyme Technologies Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "aegis-logistics",
+      "name": "Aegis Logistics Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "aether-industries",
+      "name": "Aether Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "affle-india",
+      "name": "Affle (India) Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "agarwal-industrial",
+      "name": "Agarwal Industrial Corporation Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "agro-tech-foods",
+      "name": "Agro Tech Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "ags-transact-technologies",
+      "name": "Ags Transact Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "ahluwalia-contracts-india",
+      "name": "Ahluwalia Contracts (India) Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "aia-engineering",
+      "name": "Aia Engineering Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "ajanta-pharma",
+      "name": "Ajanta Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "ajmera-realty-infra-india",
+      "name": "Ajmera Realty & Infra India Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "akzo-nobel-india",
+      "name": "Akzo Nobel India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "alembic",
+      "name": "Alembic Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "alembic-pharmaceuticals",
+      "name": "Alembic Pharmaceuticals Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "alicon-castalloy",
+      "name": "Alicon Castalloy Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "alkem-laboratories",
+      "name": "Alkem Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "alkyl-amines-chemicals",
+      "name": "Alkyl Amines Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "allcargo-logistics",
+      "name": "Allcargo Logistics Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "alok-industries",
+      "name": "Alok Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "amara-raja-batteries",
+      "name": "Amara Raja Batteries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "amber-enterprises-india",
+      "name": "Amber Enterprises India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ambika-cotton-mills",
+      "name": "Ambika Cotton Mills Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "ambuja-cements",
+      "name": "Ambuja Cements Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "ami-organics",
+      "name": "Ami Organics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "amrutanjan-health-care",
+      "name": "Amrutanjan Health Care Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "anand-rathi-wealth",
+      "name": "Anand Rathi Wealth Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "anant-raj",
+      "name": "Anant Raj Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "andhra-paper",
+      "name": "Andhra Paper Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "angel-one",
+      "name": "Angel One Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "anupam-rasayan-india",
+      "name": "Anupam Rasayan India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "apar-industries",
+      "name": "Apar Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "apcotex-industries",
+      "name": "Apcotex Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "apl-apollo-tubes",
+      "name": "Apl Apollo Tubes Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "apollo-hospitals-enterprise",
+      "name": "Apollo Hospitals Enterprise Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "apollo-pipes",
+      "name": "Apollo Pipes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "apollo-tricoat-tubes",
+      "name": "Apollo Tricoat Tubes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "apollo-tyres",
+      "name": "Apollo Tyres Limited.",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "aptech",
+      "name": "Aptech Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "aptus-value-housing-finance-india",
+      "name": "Aptus Value Housing Finance India Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "archean-chemical-industries",
+      "name": "Archean Chemical Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "arman-financial-services",
+      "name": "Arman Financial Services Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "artemis-medicare-services",
+      "name": "Artemis Medicare Services Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "arvind-fashions",
+      "name": "Arvind Fashions Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "arvind",
+      "name": "Arvind Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "arvind-smartspaces",
+      "name": "Arvind Smartspaces Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "asahi-india-glass",
+      "name": "Asahi India Glass Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ashapura-minechem",
+      "name": "Ashapura Minechem Limited.",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "ashiana-housing",
+      "name": "Ashiana Housing Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "ashok-leyland",
+      "name": "Ashok Leyland Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "ashoka-buildcon",
+      "name": "Ashoka Buildcon Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "asian-paints",
+      "name": "Asian Paints Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "asian-star",
+      "name": "Asian Star Company Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "astec-lifesciences",
+      "name": "Astec LifeSciences Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "aster-dm-healthcare",
+      "name": "Aster Dm Healthcare Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "astra-microwave-products",
+      "name": "Astra Microwave Products Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "astral",
+      "name": "Astral Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "astrazeneca-pharma-india",
+      "name": "Astrazeneca Pharma India Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "atul",
+      "name": "Atul Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "atul-projects-india",
+      "name": "Atul Projects India Private Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "au-small-finance-bank",
+      "name": "Au Small Finance Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "aurobindo-pharma",
+      "name": "Aurobindo Pharma Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "authum-investment-infrastructure",
+      "name": "Authum Investment & Infrastructure limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "automotive-axles",
+      "name": "Automotive Axles Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "avadh-sugar-energy",
+      "name": "Avadh Sugar & Energy Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "avantel",
+      "name": "Avantel Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "avanti-feeds",
+      "name": "Avanti Feeds Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "avenue-supermarts",
+      "name": "Avenue Supermarts Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "avt-natural-products",
+      "name": "Avt Natural Products Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "axis-bank",
+      "name": "Axis Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "axita",
+      "name": "Axita",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "bbox",
+      "name": "BBOX",
+      "sector": "Media"
+    },
+    {
+      "id": "bajaj-auto",
+      "name": "Bajaj Auto Limited.",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "bajaj-consumer-care",
+      "name": "Bajaj Consumer Care Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "bajaj-electricals",
+      "name": "Bajaj Electricals Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "bajaj-finance",
+      "name": "Bajaj Finance Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "bajaj-finserv",
+      "name": "Bajaj Finserv Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "bajaj-hindusthan-sugar",
+      "name": "Bajaj Hindusthan Sugar Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "bajaj-holdings-investment",
+      "name": "Bajaj Holdings & Investment Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "bajaj-holdings-and-investments",
+      "name": "Bajaj Holdings and Investments Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "balaji-amines",
+      "name": "Balaji Amines Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "balkrishna-industries",
+      "name": "Balkrishna Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "balmer-lawrie",
+      "name": "Balmer Lawrie & Company Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "balmer-lawrie-and",
+      "name": "Balmer Lawrie And Company Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "balrampur-chini-mills",
+      "name": "Balrampur Chini Mills Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "balu-forge-industries",
+      "name": "Balu Forge Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "banco-products-i",
+      "name": "Banco Products (I) Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "banco-products-india",
+      "name": "Banco Products (India) Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bandhan-bank",
+      "name": "Bandhan Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "bank-of-baroda",
+      "name": "Bank of Baroda",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "bank-of-india",
+      "name": "Bank of India",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "bank-of-maharashtra",
+      "name": "Bank of Maharashtra",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "bannari-amman-sugars",
+      "name": "Bannari Amman Sugars Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "barbeque-nation-hospitality",
+      "name": "Barbeque-Nation Hospitality Limited",
+      "sector": "Restaurants"
+    },
+    {
+      "id": "basf-india",
+      "name": "Basf India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "bata-india",
+      "name": "Bata India Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "bayer-cropscience",
+      "name": "Bayer Cropscience Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "bcl-industries",
+      "name": "Bcl Industries Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "beml",
+      "name": "Beml Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bengal-assam",
+      "name": "Bengal & Assam Company Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "berger-paints-india",
+      "name": "Berger Paints India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "best-agrolife",
+      "name": "Best Agrolife Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "bf-investment",
+      "name": "Bf Investment Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "bf-utilities",
+      "name": "Bf Utilities Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "bhageria-industries",
+      "name": "Bhageria Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bhagiradha-chemicals-industries",
+      "name": "Bhagiradha Chemicals & Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "bhansali-engineering-polymers",
+      "name": "Bhansali Engineering Polymers Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "bharat-bijlee",
+      "name": "Bharat Bijlee Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bharat-dynamics",
+      "name": "Bharat Dynamics Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bharat-electronics",
+      "name": "Bharat Electronics Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "bharat-forge",
+      "name": "Bharat Forge Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "bharat-heavy-electricals",
+      "name": "Bharat Heavy Electricals Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "bharat-petroleum",
+      "name": "Bharat Petroleum Corporation Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "bharat-rasayan",
+      "name": "Bharat Rasayan Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "bharat-wire-ropes",
+      "name": "Bharat Wire Ropes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bharti-airtel",
+      "name": "Bharti Airtel Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "bigbloc-construction",
+      "name": "Bigbloc Construction Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "bikaji-foods-international",
+      "name": "Bikaji Foods International Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "binny",
+      "name": "Binny Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "biocon",
+      "name": "Biocon Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "birla",
+      "name": "Birla Corporation Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "birlasoft",
+      "name": "Birlasoft Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "black-box",
+      "name": "Black Box Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "bls-international-services",
+      "name": "Bls International Services Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "blue-dart-express",
+      "name": "Blue Dart Express Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "blue-star",
+      "name": "Blue Star Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "bombay-burmah-trading",
+      "name": "Bombay Burmah Trading Corporation Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "bombay-burmah-trading-corporationlimited",
+      "name": "Bombay Burmah Trading Corporationlimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "bombay-dyeing-mfg",
+      "name": "Bombay Dyeing & Mfg Company Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "bombay-super-hybrid-seeds",
+      "name": "Bombay Super Hybrid Seeds Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "borosil",
+      "name": "Borosil Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "borosil-renewables",
+      "name": "Borosil Renewables Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "bosch",
+      "name": "Bosch Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "brigade-enterprises",
+      "name": "Brigade Enterprises Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "brightcom-group",
+      "name": "Brightcom Group Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "britannia-industries",
+      "name": "Britannia Industries Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "bse",
+      "name": "Bse Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "butterfly-gandhimathi-appliances",
+      "name": "Butterfly Gandhimathi Appliances Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "c-e-info-systems",
+      "name": "C.E. Info Systems Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "cg-power-and-industrial-solutions",
+      "name": "CG Power and Industrial Solutions Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "camlin-fine-sciences",
+      "name": "Camlin Fine Sciences Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "campus-activewear",
+      "name": "Campus Activewear Private Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "can-fin-homes",
+      "name": "Can Fin Homes Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "canara-bank-securities",
+      "name": "Canara Bank Securities Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "cantabil-retail-india",
+      "name": "Cantabil Retail India Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "caplin-point-laboratories",
+      "name": "Caplin Point Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "capri-global-capital",
+      "name": "Capri Global Capital Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "carborundum-universal",
+      "name": "Carborundum Universal Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "care-ratings",
+      "name": "Care Ratings Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "cartrade-tech",
+      "name": "Cartrade Tech Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "carysil",
+      "name": "Carysil Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "castrol-india",
+      "name": "Castrol India Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "ccl-products-india",
+      "name": "Ccl Products (India) Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "ceat",
+      "name": "Ceat Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "central-bank-of-india",
+      "name": "Central Bank of India",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "central-depository-services-india",
+      "name": "Central Depository Services (India) Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "centum-electronics",
+      "name": "Centum Electronics Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "century-plyboards-india",
+      "name": "Century Plyboards (India) Limited.",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "century-textiles-industries",
+      "name": "Century Textiles & Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "century-textiles-and-industries",
+      "name": "Century Textiles And Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "cera-sanitaryware",
+      "name": "Cera Sanitaryware Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "cesc",
+      "name": "Cesc Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "chalet-hotels",
+      "name": "Chalet Hotels Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "chaman-lal-setia-exports",
+      "name": "Chaman Lal Setia Exports Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "chambal-fertilisers-and-chemicals",
+      "name": "Chambal Fertilisers And Chemicals limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "chambal-fertilizers-chemicals",
+      "name": "Chambal Fertilizers & Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "chemcon-speciality-chemicals",
+      "name": "Chemcon Speciality Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "chemplast-sanmar",
+      "name": "Chemplast Sanmar Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "chennai-petroleum",
+      "name": "Chennai Petroleum Corporation Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "choice-international",
+      "name": "Choice International Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "cholamandalam-financial-holdings",
+      "name": "Cholamandalam Financial Holdings Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "cholamandalam-investment-and-finance",
+      "name": "Cholamandalam Investment And Finance Company Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "cholamandalam-investment-and-financecompany",
+      "name": "Cholamandalam Investment And Financecompany Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "cigniti-technologies",
+      "name": "Cigniti Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "cipla",
+      "name": "Cipla Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "citurgia-biochemicals",
+      "name": "Citurgia Biochemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "city-union-bank",
+      "name": "City Union Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "clariant-chemicals-india",
+      "name": "Clariant Chemicals (India) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "clean-science-and-technology",
+      "name": "Clean Science And Technology Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "cms-info-systems",
+      "name": "Cms Info Systems Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "coal-india",
+      "name": "Coal India Limited",
+      "sector": "Coal"
+    },
+    {
+      "id": "cochin-shipyard",
+      "name": "Cochin Shipyard Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "coffee-day-enterprises",
+      "name": "Coffee Day Enterprises Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "coforge",
+      "name": "Coforge Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "colgate-palmolive-india",
+      "name": "Colgate-Palmolive (India) Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "computer-age-management-services",
+      "name": "Computer Age Management Services Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "confidence-petroleum-india",
+      "name": "Confidence Petroleum India Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "container-of-india",
+      "name": "Container Corporation Of India Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "control-print",
+      "name": "Control Print Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "coromandel-international",
+      "name": "Coromandel International Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "cosmo-first",
+      "name": "Cosmo First Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "cosmofirst",
+      "name": "Cosmofirst",
+      "sector": "Industrials"
+    },
+    {
+      "id": "craftsman-automation",
+      "name": "Craftsman Automation Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "creditaccess-grameen",
+      "name": "Creditaccess Grameen Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "crisil",
+      "name": "Crisil Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "crompton-greaves-consumer-electricals",
+      "name": "Crompton Greaves Consumer Electricals Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "csb-bank",
+      "name": "Csb Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "cummins-india",
+      "name": "Cummins India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "cyient",
+      "name": "Cyient Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "d-b-realty",
+      "name": "D B Realty Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "d-b",
+      "name": "D.B.Corp Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "dcb-bank",
+      "name": "DCB Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "dcw",
+      "name": "DCW Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "dlf",
+      "name": "DLF Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "dpsc",
+      "name": "DPSC Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "dabur-india",
+      "name": "Dabur India Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "dalmia-bharat",
+      "name": "Dalmia Bharat Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "dalmia-bharat-sugar-and-industries",
+      "name": "Dalmia Bharat Sugar And Industries Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "data-patterns-india",
+      "name": "Data Patterns (India) Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "datamatics-global-services",
+      "name": "Datamatics Global Services Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "dcm-shriram",
+      "name": "Dcm Shriram Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "dcx-systems",
+      "name": "Dcx Systems Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "dcxindia",
+      "name": "Dcxindia",
+      "sector": "Industrials"
+    },
+    {
+      "id": "deep-industries",
+      "name": "Deep Industries Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "deepak-fertilisers-and-petrochemicals",
+      "name": "Deepak Fertilisers And Petrochemicals Corporation",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "deepak-fertilizers-and-petrochemicals",
+      "name": "Deepak Fertilizers and Petrochemicals Corporation Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "deepak-nitrite",
+      "name": "Deepak Nitrite Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "delhivery",
+      "name": "Delhivery Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "delta",
+      "name": "Delta Corp Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "den-networks",
+      "name": "Den Networks Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "devyani-international",
+      "name": "Devyani International Limited",
+      "sector": "Food & Beverage Retail"
+    },
+    {
+      "id": "dfm-foods",
+      "name": "Dfm Foods Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "dhampur-bio-organics",
+      "name": "Dhampur Bio Organics Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "dhampur-sugar-mills",
+      "name": "Dhampur Sugar Mills Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "dhani-services",
+      "name": "Dhani Services Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "dhanuka-agritech",
+      "name": "Dhanuka Agritech Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "dilip-buildcon",
+      "name": "Dilip Buildcon Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "disa-india",
+      "name": "Disa India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "dish-tv-india",
+      "name": "Dish Tv India Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "dishman-carbogen-amcis",
+      "name": "Dishman Carbogen Amcis Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "divgi-torqtransfer-systems",
+      "name": "Divgi Torqtransfer Systems Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "divi",
+      "name": "Divi",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "divis-laboratories",
+      "name": "Divis Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "dixon-technologies-india",
+      "name": "Dixon Technologies (India) Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "dodla-dairy",
+      "name": "Dodla Dairy Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "dollar-industries",
+      "name": "Dollar Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "dr-lal-path-labs",
+      "name": "Dr. Lal Path Labs Limited.",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "dr-lal-pathlabs",
+      "name": "Dr. Lal Pathlabs Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "dr-reddy-s-laboratories",
+      "name": "Dr. Reddy's Laboratories Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "dr-reddys-laboratories",
+      "name": "Dr.Reddys Laboratories Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "dreamfolks-services",
+      "name": "Dreamfolks Services Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "dwarikesh-sugar-industries",
+      "name": "Dwarikesh Sugar Industries Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "dynamatic-technologies",
+      "name": "Dynamatic Technologies Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "eid-parry-india",
+      "name": "EID Parry India Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "elantas-beck-india",
+      "name": "ELANTAS BECK INDIA Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "easy-trip-planners",
+      "name": "Easy Trip Planners Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "eclerx-services",
+      "name": "Eclerx Services Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "edelweiss-financial-services",
+      "name": "Edelweiss Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "eicher-motors",
+      "name": "Eicher Motors Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "eih-associated-hotels",
+      "name": "Eih Associated Hotels Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "eih",
+      "name": "Eih Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "eki-energy-services",
+      "name": "Eki Energy Services Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "elecon-engineering",
+      "name": "Elecon Engineering Company Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "electrosteel-castings",
+      "name": "Electrosteel Castings Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "elgi-equipments",
+      "name": "Elgi Equipments Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "elpro-international",
+      "name": "Elpro International Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "emami",
+      "name": "Emami Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "emudhra",
+      "name": "Emudhra Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "endurance-technologies",
+      "name": "Endurance Technologies Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "engineers-india",
+      "name": "Engineers India Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "entertainment-network-india",
+      "name": "Entertainment Network (India) Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "epl",
+      "name": "Epl Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "equitas-small-finance-bank",
+      "name": "Equitas Small Finance Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "eris-lifesciences",
+      "name": "Eris Lifesciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "esab-india",
+      "name": "Esab India Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "escorts",
+      "name": "Escorts Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "eureka-forbes",
+      "name": "Eureka Forbes Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "eveready-industries-india",
+      "name": "Eveready Industries India Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "everest-industries",
+      "name": "Everest Industries Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "everest-kanto-cylinder",
+      "name": "Everest Kanto Cylinder Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "excel-industries",
+      "name": "Excel Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "exide-industries",
+      "name": "Exide Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "expleo-solutions",
+      "name": "Expleo Solutions Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "fischer-chemicals",
+      "name": "FISCHER CHEMICals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "fairchem-organics",
+      "name": "Fairchem Organics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "fdc",
+      "name": "Fdc Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "federal-mogul-goetze-india",
+      "name": "Federal-Mogul Goetze (India) Limited.",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "fertilizers-and-chemicals-travancore",
+      "name": "Fertilizers and Chemicals Travancore Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "fiem-industries",
+      "name": "Fiem Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "filatex-fashions",
+      "name": "Filatex Fashions Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "filatex-india",
+      "name": "Filatex India Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "fine-organic-industries",
+      "name": "Fine Organic Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "fineotex-chemical",
+      "name": "Fineotex Chemical Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "fino-payments-bank",
+      "name": "Fino Payments Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "finolex-cables",
+      "name": "Finolex Cables Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "finolex-industries",
+      "name": "Finolex Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "firstsource-solutions",
+      "name": "Firstsource Solutions Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "five-star-business-finance",
+      "name": "Five-Star Business Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "force-motors",
+      "name": "Force Motors Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "fortis-healthcare",
+      "name": "Fortis Healthcare Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "foseco-india",
+      "name": "Foseco India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "fsn-e-commerce-ventures",
+      "name": "Fsn E-Commerce Ventures Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "fusion-micro-finance",
+      "name": "Fusion Micro Finance Private Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "g-n-a-axles",
+      "name": "G N A Axles Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "g-r-infraprojects",
+      "name": "G R Infraprojects Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "gm-breweries",
+      "name": "GM Breweries Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "gmr-airports-infrastructure",
+      "name": "GMR Airports Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "gna-axles",
+      "name": "GNA Axles Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "grauer-weil-india",
+      "name": "GRAUER & WEIL (INDIA) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gtl-infrastructure",
+      "name": "GTL Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "gujarat-themis-biosyn",
+      "name": "GUJARAT THEMIS BIOSYN Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "gabriel-india",
+      "name": "Gabriel India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "gail-india",
+      "name": "Gail (India) Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "galaxy-surfactants",
+      "name": "Galaxy Surfactants Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "ganesh-benzoplast",
+      "name": "Ganesh Benzoplast Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "ganesh-housing",
+      "name": "Ganesh Housing Corporation Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "ganesha-ecosphere",
+      "name": "Ganesha Ecosphere Limited",
+      "sector": "Waste Management"
+    },
+    {
+      "id": "garden-reach-shipbuilders-engineers",
+      "name": "Garden Reach Shipbuilders & Engineers Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "garware-hi-tech-films",
+      "name": "Garware Hi-Tech Films Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "garware-technical-fibres",
+      "name": "Garware Technical Fibres Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "gateway-distriparks",
+      "name": "Gateway Distriparks Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "gati",
+      "name": "Gati Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "ge-t-d-india",
+      "name": "Ge T&D India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "general-insurance-of-india",
+      "name": "General Insurance Corporation Of India",
+      "sector": "Insurance"
+    },
+    {
+      "id": "genesys-international",
+      "name": "Genesys International Corporation Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "genus-power-infrastructures",
+      "name": "Genus Power Infrastructures Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "geojit-financial-services",
+      "name": "Geojit Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "ghcl",
+      "name": "Ghcl Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gic-housing-finance",
+      "name": "Gic Housing Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "gillette-india",
+      "name": "Gillette India Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "gland-pharma",
+      "name": "Gland Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "glaxosmithkline-pharmaceuticals",
+      "name": "Glaxosmithkline Pharmaceuticals Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "glenmark-life-sciences",
+      "name": "Glenmark Life Sciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "glenmark-pharmaceuticals",
+      "name": "Glenmark Pharmaceuticals Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "global-health",
+      "name": "Global Health Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "globus-spirits",
+      "name": "Globus Spirits Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "gmm-pfaudler",
+      "name": "Gmm Pfaudler Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gmr-infrastructure",
+      "name": "Gmr Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "go-fashion-india",
+      "name": "Go Fashion (India) Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "gocl",
+      "name": "Gocl Corporation Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "godawari-power-and-ispat",
+      "name": "Godawari Power And Ispat Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "godfrey-phillips-india",
+      "name": "Godfrey Phillips India Limited",
+      "sector": "Tobacco"
+    },
+    {
+      "id": "godrej-agrovet",
+      "name": "Godrej Agrovet Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "godrej-consumer-products",
+      "name": "Godrej Consumer Products Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "godrej-industries",
+      "name": "Godrej Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "godrej-properties",
+      "name": "Godrej Properties Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "gokaldas-exports",
+      "name": "Gokaldas Exports Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "gokul-agro-resources",
+      "name": "Gokul Agro Resources Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "goldiam-international",
+      "name": "Goldiam International Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "goodluck-india",
+      "name": "Goodluck India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "goodyear-india",
+      "name": "Goodyear India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "granules-india",
+      "name": "Granules India Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "graphite-india",
+      "name": "Graphite India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "grasim-industries",
+      "name": "Grasim Industries Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "grauer-and-weil-india",
+      "name": "Grauer And Weil (India) Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "gravita-india",
+      "name": "Gravita India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "great-eastern-hire-purchase",
+      "name": "Great Eastern Hire Purchase Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "greaves-cotton",
+      "name": "Greaves Cotton Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "greenlam-industries",
+      "name": "Greenlam Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "greenpanel-industries",
+      "name": "Greenpanel Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "greenply-industries",
+      "name": "Greenply Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "grindwell-norton",
+      "name": "Grindwell Norton Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "grm-overseas",
+      "name": "Grm Overseas Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "gtpl-hathway",
+      "name": "Gtpl Hathway Private Limited",
+      "sector": "Internet Media & Services"
+    },
+    {
+      "id": "gufic-biosciences",
+      "name": "Gufic Biosciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "gujarat-alkalies-and-chemicals",
+      "name": "Gujarat Alkalies And Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gujarat-ambuja-exports",
+      "name": "Gujarat Ambuja Exports Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "gujarat-fluorochemicals",
+      "name": "Gujarat Fluorochemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gujarat-gas",
+      "name": "Gujarat Gas Company Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "gujarat-industries-power",
+      "name": "Gujarat Industries Power Company Limited.",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "gujarat-mineral-development",
+      "name": "Gujarat Mineral Development Corporation Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "gujarat-narmada-valley-fertilizers-and-chemicals",
+      "name": "Gujarat Narmada Valley Fertilizers and Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gujarat-pipavav-port",
+      "name": "Gujarat Pipavav Port Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "gujarat-state-fertilizers-chemicals",
+      "name": "Gujarat State Fertilizers & Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "gujarat-state-petronet",
+      "name": "Gujarat State Petronet Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "gulf-oil-lubricants-india",
+      "name": "Gulf Oil Lubricants India Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "gulshan-polyols",
+      "name": "Gulshan Polyols Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "h-g-infra-engineering-part-ix",
+      "name": "H.G. Infra Engineering Limited (Part Ix)",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "hawkins-cookers",
+      "name": "HAWKINS COOKERS Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "hcl-technologies",
+      "name": "HCL TECHNOLOGIES Limited.",
+      "sector": "Technology"
+    },
+    {
+      "id": "hdfc",
+      "name": "HDFC",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "hmt",
+      "name": "HMT Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "happiest-minds-technologies",
+      "name": "Happiest Minds Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "hariom-pipe-industries",
+      "name": "Hariom Pipe Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "harsha-engineers",
+      "name": "Harsha Engineers Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "hathway-cable-datacom",
+      "name": "Hathway Cable & Datacom Limited",
+      "sector": "Internet Media & Services"
+    },
+    {
+      "id": "hathway-cable-and-datacom",
+      "name": "Hathway Cable And Datacom Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hatsun-agro-product",
+      "name": "Hatsun Agro Product Limited",
+      "sector": "Food & Beverage Retail"
+    },
+    {
+      "id": "havells-india",
+      "name": "Havells India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "hbl-power-systems",
+      "name": "Hbl Power Systems Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "hdfc-asset-management",
+      "name": "Hdfc Asset Management Company Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "hdfc-bank",
+      "name": "Hdfc Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "hdfc-life-insurance",
+      "name": "Hdfc Life Insurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "healthcare-global-enterprises",
+      "name": "Healthcare Global Enterprises Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "heg",
+      "name": "Heg Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "heidelbergcement-india",
+      "name": "Heidelbergcement India Limited.",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "hemisphere-infrastructure-india-privatelimited",
+      "name": "Hemisphere Infrastructure India Privatelimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hemisphere-properties-india",
+      "name": "Hemisphere Properties India Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "heranba-industries",
+      "name": "Heranba Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "heritage-foods",
+      "name": "Heritage Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "hero-motocorp",
+      "name": "Hero Motocorp Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "hester-biosciences",
+      "name": "Hester Biosciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "hexa-tradex",
+      "name": "Hexa Tradex Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hfcl",
+      "name": "Hfcl Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "hi-tech-pipes",
+      "name": "Hi-Tech Pipes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "hikal",
+      "name": "Hikal Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "hil",
+      "name": "Hil Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "himadri-speciality-chemical",
+      "name": "Himadri Speciality Chemical Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "himatsingka-seide",
+      "name": "Himatsingka Seide Limited.",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hindalco-industries",
+      "name": "Hindalco Industries Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "hinduja-global-solutions",
+      "name": "Hinduja Global Solutions Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "hindustan-aeronautics",
+      "name": "Hindustan Aeronautics Limited",
+      "sector": "Air Transportation"
+    },
+    {
+      "id": "hindustan-construction",
+      "name": "Hindustan Construction Company Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "hindustan-copper",
+      "name": "Hindustan Copper Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "hindustan-foods",
+      "name": "Hindustan Foods Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hindustan-oil-exploration",
+      "name": "Hindustan Oil Exploration Company Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "hindustan-petroleum",
+      "name": "Hindustan Petroleum Corporation Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "hindustan-unilever",
+      "name": "Hindustan Unilever Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "hindustan-zinc",
+      "name": "Hindustan Zinc Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "hindware-home-innovation",
+      "name": "Hindware Home Innovation Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "hindware",
+      "name": "Hindware Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "hitachi-energy-india",
+      "name": "Hitachi Energy India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "hle-glascoat",
+      "name": "Hle Glascoat Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "hmt-watches",
+      "name": "Hmt Watches Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "home-first-finance-india",
+      "name": "Home First Finance Company India Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "honda-india-power-products",
+      "name": "Honda India Power Products Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "honeywell-automation-india",
+      "name": "Honeywell Automation India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "honeywell-automation-india-limitedhttps-www-honeywell-com-in-en-csr",
+      "name": "Honeywell Automation India Limitedhttps://www.honeywell.com/in/en/csr",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "housing-urban-development",
+      "name": "Housing & Urban Development Corporation Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "housing-and-urban-development",
+      "name": "Housing And Urban Development Corporation Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "housing-development-finance",
+      "name": "Housing Development Finance Corporation Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "hsil",
+      "name": "Hsil Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "huhtamaki-india",
+      "name": "Huhtamaki India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "i-g-petrochemicals",
+      "name": "I G Petrochemicals Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "icici-bank",
+      "name": "ICICI Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ifb-industries",
+      "name": "IFB Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ig-petrochemicals",
+      "name": "IG Petrochemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "icici-lombard-general-insurance",
+      "name": "Icici Lombard General Insurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "icici-prudential-life-insurance",
+      "name": "Icici Prudential Life Insurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "icici-securities",
+      "name": "Icici Securities Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "icra",
+      "name": "Icra Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "idbi-bank",
+      "name": "Idbi Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "idfc-first-bank",
+      "name": "Idfc First Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "idfc",
+      "name": "Idfc Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ifci",
+      "name": "Ifci Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ifgl-refractories",
+      "name": "Ifgl Refractories Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "igarashi-motors-india",
+      "name": "Igarashi Motors India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "iifl-finance",
+      "name": "Iifl Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "iifl-securities",
+      "name": "Iifl Securities Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "imagicaaworld-entertainment",
+      "name": "Imagicaaworld Entertainment Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "india-glycols",
+      "name": "India Glycols Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "india-nippon-electricals",
+      "name": "India Nippon Electricals Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "india-pesticides",
+      "name": "India Pesticides Limited.",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "india-tourism-development",
+      "name": "India Tourism Development Corporation Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "indiabulls-housing-finance",
+      "name": "Indiabulls Housing Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "indiabulls-real-estate",
+      "name": "Indiabulls Real Estate Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "indiamart-intermesh",
+      "name": "Indiamart Intermesh Limited",
+      "sector": "Internet Media & Services"
+    },
+    {
+      "id": "indian-bank",
+      "name": "Indian Bank",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "indian-energy-exchange",
+      "name": "Indian Energy Exchange Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "indian-metals-ferro-alloys",
+      "name": "Indian Metals & Ferro Alloys Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "indian-metals-and-ferro-alloys",
+      "name": "Indian Metals And Ferro Alloys Limited.",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "indian-oil",
+      "name": "Indian Oil Corporation Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "indian-overseas-bank",
+      "name": "Indian Overseas Bank",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "indian-railway-catering-and-tourism",
+      "name": "Indian Railway Catering and Tourism Corporation Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "indian-railway-finance",
+      "name": "Indian Railway Finance Corporation Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "indigo-paints",
+      "name": "Indigo Paints Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "indo-count-industries",
+      "name": "Indo Count Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "indo-rama-synthetics-india",
+      "name": "Indo Rama Synthetics (India) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "indoco-remedies",
+      "name": "Indoco Remedies Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "indostar-capital-finance",
+      "name": "Indostar Capital Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "indraprastha-gas",
+      "name": "Indraprastha Gas Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "indus-towers",
+      "name": "Indus Towers Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "indusind-bank",
+      "name": "Indusind Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "induslnd-bank",
+      "name": "Induslnd Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ineos-styrolution-india",
+      "name": "Ineos Styrolution India Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "infibeam-avenues",
+      "name": "Infibeam Avenues Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "info-edge-india",
+      "name": "Info Edge (India) Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "infobeans-technologies",
+      "name": "Infobeans Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "infosys",
+      "name": "Infosys Limited.",
+      "sector": "Technology"
+    },
+    {
+      "id": "ingersoll-rand-india",
+      "name": "Ingersoll Rand (India) Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "inox-green-energy-services",
+      "name": "Inox Green Energy Services Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "inox-leisure",
+      "name": "Inox Leisure Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "inox-wind-energy",
+      "name": "Inox Wind Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "inox-wind",
+      "name": "Inox Wind Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "insecticides-india",
+      "name": "Insecticides (India) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "insolation-energy",
+      "name": "Insolation Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "intellect-design-arena",
+      "name": "Intellect Design Arena Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "interglobe-aviation",
+      "name": "Interglobe Aviation Limited",
+      "sector": "Air Transportation"
+    },
+    {
+      "id": "iol-chemicals-and-pharmaceuticals",
+      "name": "Iol Chemicals And Pharmaceuticals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "ion-exchange-india",
+      "name": "Ion Exchange (India) Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ipca-laboratories",
+      "name": "Ipca Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "irb-infrastructure-developers",
+      "name": "Irb Infrastructure Developers Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "ircon-international",
+      "name": "Ircon International Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "isgec-heavy-engineering",
+      "name": "Isgec Heavy Engineering Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ismt",
+      "name": "Ismt Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "itc",
+      "name": "Itc Limited",
+      "sector": "Tobacco"
+    },
+    {
+      "id": "itd-cementation-india",
+      "name": "Itd Cementation India Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "iti",
+      "name": "Iti Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "j-kumar-infraprojects",
+      "name": "J.Kumar Infraprojects Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "jb-chemicals-pharmaceuticals",
+      "name": "JB Chemicals & Pharmaceuticals Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "jk-cement",
+      "name": "JK Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "jsw-steel",
+      "name": "JSW Steel limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "jagran-prakashan",
+      "name": "Jagran Prakashan Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "jai",
+      "name": "Jai Corp Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "jain-irrigation-systems",
+      "name": "Jain Irrigation Systems Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jaiprakash-associates",
+      "name": "Jaiprakash Associates Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "jaiprakash-power-ventures",
+      "name": "Jaiprakash Power Ventures Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "jamna-auto-industries",
+      "name": "Jamna Auto Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "jash-engineering",
+      "name": "Jash Engineering Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jayaswal-neco-industries",
+      "name": "Jayaswal Neco Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jbm-auto",
+      "name": "Jbm Auto Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "jet-airways-india",
+      "name": "Jet Airways (India) Limited",
+      "sector": "Air Transportation"
+    },
+    {
+      "id": "jindal-poly-films",
+      "name": "Jindal Poly Films Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jindal-saw",
+      "name": "Jindal Saw Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jindal-stainless",
+      "name": "Jindal Stainless Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "jindal-steel-power",
+      "name": "Jindal Steel & Power Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "jindal-steel-and-power",
+      "name": "Jindal Steel and Power Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "jindal-worldwide",
+      "name": "Jindal Worldwide Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "jk-lakshmi-cement",
+      "name": "Jk Lakshmi Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "jk-paper",
+      "name": "Jk Paper Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "jk-tyre-industries",
+      "name": "Jk Tyre & Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "jm-financial",
+      "name": "Jm Financial Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "jmc-projects-india",
+      "name": "Jmc Projects (India) Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "johnson-controls-hitachi-air-conditioning-india",
+      "name": "Johnson Controls - Hitachi Air Conditioning India Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "jsw-energy",
+      "name": "Jsw Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "jsw-holdings",
+      "name": "Jsw Holdings Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "jsw-ispat-special-products",
+      "name": "Jsw Ispat Special Products Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "jtekt-india",
+      "name": "Jtekt India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jtl-industries",
+      "name": "Jtl Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "jubilant-foodworks",
+      "name": "Jubilant Foodworks Limited",
+      "sector": "Food & Beverage Retail"
+    },
+    {
+      "id": "jubilant-ingrevia",
+      "name": "Jubilant Ingrevia Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "jubilant-pharmova",
+      "name": "Jubilant Pharmova Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "jupiter-wagons",
+      "name": "Jupiter Wagons Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "just-dial",
+      "name": "Just Dial Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "jyothy-labs",
+      "name": "Jyothy Labs Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "k-p-i-global-infrastructure",
+      "name": "K.P.I. Global Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "k-p-r-mill",
+      "name": "K.P.R. Mill Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "kcp",
+      "name": "KCP Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "kennametal-india",
+      "name": "KENNAMETAL INDIA Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "kirloskar-ferrous-industries",
+      "name": "KIRLOSKAR FERROUS INDUSTRIES Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "kovai-medical-center-hospitals",
+      "name": "KOVAI MEDICAL CENTER & HOSPITAls limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "kp-energy",
+      "name": "KP Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "kpi-green-energy",
+      "name": "KPI Green Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "kabra-extrusion-technik",
+      "name": "Kabra Extrusion Technik Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kajaria-ceramics",
+      "name": "Kajaria Ceramics Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kalpataru-power-transmission",
+      "name": "Kalpataru Power Transmission Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "kalpataru-projects-international",
+      "name": "Kalpataru Projects International Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "kalyan-jewellers-india",
+      "name": "Kalyan Jewellers India Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "kalyani-steels",
+      "name": "Kalyani Steels Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "kama-holdings",
+      "name": "Kama Holdings Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "kamdhenu",
+      "name": "Kamdhenu Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "kansai-nerolac-paints",
+      "name": "Kansai Nerolac Paints Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "karur-vysya-bank",
+      "name": "Karur Vysya Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "kaushalya-infrastructure-developers",
+      "name": "Kaushalya Infrastructure Developers Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "kaveri-seed",
+      "name": "Kaveri Seed Company Limited.",
+      "sector": "Food"
+    },
+    {
+      "id": "kaynes-technology-india",
+      "name": "Kaynes Technology India Private Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "kddl",
+      "name": "Kddl Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kec-international",
+      "name": "Kec International Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "kei-industries",
+      "name": "Kei Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kesoram-industries",
+      "name": "Kesoram Industries Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "kewal-kiran-clothing",
+      "name": "Kewal Kiran Clothing Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "keystone-realtors",
+      "name": "Keystone Realtors Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "kfin-technologies",
+      "name": "Kfin Technologies Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "kingfa-science-technology-india",
+      "name": "Kingfa Science & Technology (India) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "kiocl",
+      "name": "Kiocl Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "kiri-industries",
+      "name": "Kiri Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "kirloskar-brothers",
+      "name": "Kirloskar Brothers Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kirloskar-industries",
+      "name": "Kirloskar Industries Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "kirloskar-oil-engines",
+      "name": "Kirloskar Oil Engines Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "kirloskar-pneumatic",
+      "name": "Kirloskar Pneumatic Company Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "kitex-garments",
+      "name": "Kitex Garments Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "knr-constructions",
+      "name": "Knr Constructions Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "kolte-patil-developers",
+      "name": "Kolte - Patil Developers Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "kotak-mahindra-bank",
+      "name": "Kotak Mahindra Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "kovai-medical-center-and-hospital",
+      "name": "Kovai Medical Center And Hospital Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "kpit-technologies",
+      "name": "Kpit Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "krbl",
+      "name": "Krbl Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "krishana-phoschem",
+      "name": "Krishana Phoschem Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "krishna-institute-of-medical-sciences",
+      "name": "Krishna Institute Of Medical Sciences Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "krsnaa-diagnostics",
+      "name": "Krsnaa Diagnostics Limited",
+      "sector": "Medical Technology"
+    },
+    {
+      "id": "ksb",
+      "name": "Ksb Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "kuantum-papers",
+      "name": "Kuantum Papers Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "l-t-finance-holdings",
+      "name": "L&T Finance Holdings Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "l-t-technology-services",
+      "name": "L&T Technology Services Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "lg-balakrishnan-bros",
+      "name": "LG Balakrishnan & Bros Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "lic-housing-finance",
+      "name": "LIC Housing Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "lloyds-enterprises",
+      "name": "LLOYDs ENTERPRISES LIMITED",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "lti-mindtree",
+      "name": "LTI Mindtree Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "la-opala-r-g",
+      "name": "La Opala R G Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "la-opala-rg",
+      "name": "La Opala RG Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "lakshmi-machine-works",
+      "name": "Lakshmi Machine Works Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "larsen-toubro-infotech",
+      "name": "Larsen & Toubro Infotech Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "larsen-and-toubro",
+      "name": "Larsen and Toubro Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "latent-view-analytics",
+      "name": "Latent View Analytics Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "laurus-labs",
+      "name": "Laurus Labs Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "laxmi-organic-industries",
+      "name": "Laxmi Organic Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "lemon-tree-hotels",
+      "name": "Lemon Tree Hotels Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "life-insurance-of-india",
+      "name": "Life Insurance Corporation of India",
+      "sector": "Insurance"
+    },
+    {
+      "id": "likhitha-infrastructure",
+      "name": "Likhitha Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "linde-india",
+      "name": "Linde India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "lloyds-metals-and-energy",
+      "name": "Lloyds Metals And Energy Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "lloyds-steels-industries",
+      "name": "Lloyds Steels Industries Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "lt-foods",
+      "name": "Lt Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "ltimindtree",
+      "name": "Ltimindtree Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "lumax-auto-technologies",
+      "name": "Lumax Auto Technologies Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "lumax-industries",
+      "name": "Lumax Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "lupin",
+      "name": "Lupin Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "lux-industries",
+      "name": "Lux Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "m-k-proteins",
+      "name": "M K Proteins Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "macrotech-developers",
+      "name": "Macrotech Developers Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "madhya-bharat-agro-products",
+      "name": "Madhya Bharat Agro Products Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "madras-fertilizers",
+      "name": "Madras Fertilizers Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "magellanic-cloud",
+      "name": "Magellanic Cloud Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "mahanagar-gas",
+      "name": "Mahanagar Gas Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "mahanagar-telephone-nigam",
+      "name": "Mahanagar Telephone Nigam Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "maharashtra-scooters",
+      "name": "Maharashtra Scooters Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "maharashtra-seamless",
+      "name": "Maharashtra Seamless Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "maharashtra-seamless-transferred-from-delhi-to-mah",
+      "name": "Maharashtra Seamless Limited(Transferred From Delhi To Mah",
+      "sector": "Industrials"
+    },
+    {
+      "id": "mahindra-and-mahindra",
+      "name": "Mahindra And Mahindra Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "mahindra-cie-automotive",
+      "name": "Mahindra Cie Automotive Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "mahindra-holidays-resorts-india",
+      "name": "Mahindra Holidays & Resorts India Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "mahindra-lifespace-developers",
+      "name": "Mahindra Lifespace Developers Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "mahindra-logistics",
+      "name": "Mahindra Logistics Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "mahindra-and-mahindra-financial-services",
+      "name": "Mahindra and Mahindra Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "maithan-alloys",
+      "name": "Maithan Alloys Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "man-infraconstruction",
+      "name": "Man Infraconstruction Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "manali-petrochemicals",
+      "name": "Manali Petrochemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "manappuram-finance",
+      "name": "Manappuram Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "mangalam-cement",
+      "name": "Mangalam Cement Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "mangalore-chemicals-fertilizers",
+      "name": "Mangalore Chemicals & Fertilizers Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "mangalore-chemicals-and-fertiliserslimited",
+      "name": "Mangalore Chemicals And Fertiliserslimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "mangalore-refinery-and-petrochemicals",
+      "name": "Mangalore Refinery And Petrochemicals Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "manorama-industries",
+      "name": "Manorama Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "marathon-nextgen-realty",
+      "name": "Marathon Nextgen Realty Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "marico",
+      "name": "Marico Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "markans-pharma",
+      "name": "Markans Pharma Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "marksans-pharma",
+      "name": "Marksans Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "maruti-suzuki-india",
+      "name": "Maruti Suzuki India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "mas-financial-services",
+      "name": "Mas Financial Services Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "mastek",
+      "name": "Mastek Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "matrimony-com",
+      "name": "Matrimony.Com Limited",
+      "sector": "Internet Media & Services"
+    },
+    {
+      "id": "max-financial-services",
+      "name": "Max Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "max-healthcare-institute",
+      "name": "Max Healthcare Institute Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "max-ventures-and-industries",
+      "name": "Max Ventures And Industries Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "mayur-uniquoters",
+      "name": "Mayur Uniquoters Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "mazagon-dock-shipbuilders",
+      "name": "Mazagon Dock Shipbuilders Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "media-matrix-worldwide",
+      "name": "Media Matrix Worldwide Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "medplus-health-services",
+      "name": "Medplus Health Services Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "meghmani-finechem",
+      "name": "Meghmani Finechem Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "meghmani-organics",
+      "name": "Meghmani Organics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "metro-brands",
+      "name": "Metro Brands Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "metropolis-healthcare",
+      "name": "Metropolis Healthcare Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "minda",
+      "name": "Minda Corporation Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "mindtree",
+      "name": "Mindtree Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "mishra-dhatu-nigam",
+      "name": "Mishra Dhatu Nigam Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "mishtann-foods",
+      "name": "Mishtann Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "mm-forgings",
+      "name": "Mm Forgings Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "mmtc",
+      "name": "Mmtc Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "moil",
+      "name": "Moil Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "mold-tek-packaging",
+      "name": "Mold-Tek Packaging Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "monte-carlo-fashions",
+      "name": "Monte Carlo Fashions Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "morepen-laboratories",
+      "name": "Morepen Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "moschip-technologies",
+      "name": "Moschip Technologies Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "motherson-sumi-systems",
+      "name": "Motherson Sumi Systems Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "motherson-sumi-wiring-india",
+      "name": "Motherson Sumi Wiring India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "motilal-oswal-financial-services",
+      "name": "Motilal Oswal Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "mphasis",
+      "name": "Mphasis Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "mps",
+      "name": "Mps Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "mrf",
+      "name": "Mrf Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "mrs-bectors-food-specialities",
+      "name": "Mrs. Bectors Food Specialities Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "mstc",
+      "name": "Mstc Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "mtar-technologies",
+      "name": "Mtar Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "mukand",
+      "name": "Mukand Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "muthoot-finance",
+      "name": "Muthoot Finance Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "nirlon",
+      "name": "NIRLON Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "nmdc-steel",
+      "name": "NMDC Steel Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "nrb-bearing",
+      "name": "NRB Bearing Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "ntpc",
+      "name": "NTPC Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "nacl-industries",
+      "name": "Nacl Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "nahar-capital-and-financial-services",
+      "name": "Nahar Capital And Financial Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "nahar-spinning-mills",
+      "name": "Nahar Spinning Mills Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "nalwa-sons-investments-tfr-fromharyana-to-delhi",
+      "name": "Nalwa Sons Investments Limited Tfr.Fromharyana To Delhi",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "narayana-hrudayalaya",
+      "name": "Narayana Hrudayalaya Limited.",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "natco-pharma",
+      "name": "Natco Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "national-aluminium",
+      "name": "National Aluminium Company Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "national-fertilizers",
+      "name": "National Fertilizers Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "national-standard-india",
+      "name": "National Standard (India) Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "nava",
+      "name": "Nava Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "navin-fluorine-international",
+      "name": "Navin Fluorine International Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "navneet-education",
+      "name": "Navneet Education Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "nazara-technologies",
+      "name": "Nazara Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "nbcc-india",
+      "name": "Nbcc (India) Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "ncc",
+      "name": "Ncc Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "nelco",
+      "name": "Nelco Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "neogen-chemicals",
+      "name": "Neogen Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "nesco",
+      "name": "Nesco Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "nestle-india",
+      "name": "Nestle India Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "network18-media-investments",
+      "name": "Network18 Media & Investments Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "neuland-laboratories",
+      "name": "Neuland Laboratories Limited.",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "newgen-software-technologies",
+      "name": "Newgen Software Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "nhpc",
+      "name": "Nhpc Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "niit",
+      "name": "Niit Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "nilkamal",
+      "name": "Nilkamal Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "nippon-life-india-asset-management",
+      "name": "Nippon Life India Asset Management Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "nitin-spinners",
+      "name": "Nitin Spinners Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "nlc-india",
+      "name": "Nlc India Limited",
+      "sector": "Coal"
+    },
+    {
+      "id": "nmdc",
+      "name": "Nmdc Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "nocil",
+      "name": "Nocil Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "novartis-india",
+      "name": "Novartis India Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "nrb-bearings-full-fledged",
+      "name": "Nrb Bearings Limited (Full Fledged Public Co)",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "nucleus-software-exports",
+      "name": "Nucleus Software Exports Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "nuvoco-vistas",
+      "name": "Nuvoco Vistas Corporation Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "oberoi-realty",
+      "name": "Oberoi Realty Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "oil-and-natural-gas",
+      "name": "Oil And Natural Gas Corporation Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "oil-india",
+      "name": "Oil India Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "olectra-greentech",
+      "name": "Olectra Greentech Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "omaxe",
+      "name": "Omaxe Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "one-97-communications",
+      "name": "One 97 Communications Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "optiemus-infracom",
+      "name": "Optiemus Infracom Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "oracle-financial-services-software",
+      "name": "Oracle Financial Services Software Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "orchid-pharma",
+      "name": "Orchid Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "orient-cement",
+      "name": "Orient Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "orient-electric",
+      "name": "Orient Electric Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "oriental-aromatics",
+      "name": "Oriental Aromatics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "oriental-hotels",
+      "name": "Oriental Hotels Limited",
+      "sector": "Restaurants"
+    },
+    {
+      "id": "pc-jeweller",
+      "name": "PC Jeweller Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "pds",
+      "name": "PDS Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "piccadily-agro-industries",
+      "name": "PICCADILY AGRO INDUSTRIES Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "page-industries",
+      "name": "Page Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "paisalo-digital",
+      "name": "Paisalo Digital Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "panama-petrochem",
+      "name": "Panama Petrochem Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "paradeep-phosphates",
+      "name": "Paradeep Phosphates Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "parag-milk-foods",
+      "name": "Parag Milk Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "paras-defence-and-space-technologies",
+      "name": "Paras Defence And Space Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "patanjali-foods",
+      "name": "Patanjali Foods Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "patel-engineering",
+      "name": "Patel Engineering Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "paushak",
+      "name": "Paushak Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "pb-fintech",
+      "name": "Pb Fintech Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "pcbl",
+      "name": "Pcbl Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "pearl-global-industries",
+      "name": "Pearl Global Industries Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "pennar-industries",
+      "name": "Pennar Industries Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "persistent-systems",
+      "name": "Persistent Systems Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "petronet-lng",
+      "name": "Petronet Lng Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "pfizer",
+      "name": "Pfizer Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "pg-electroplast",
+      "name": "Pg Electroplast Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "pi-industries",
+      "name": "Pi Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "pidilite-industries",
+      "name": "Pidilite Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "pilani-investment-and-industries",
+      "name": "Pilani Investment And Industries Corporation Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "piramal-enterprises",
+      "name": "Piramal Enterprises Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "piramal-pharma",
+      "name": "Piramal Pharma Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "pitti-engineering",
+      "name": "Pitti Engineering Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "pix-transmissions",
+      "name": "Pix Transmissions Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "pnb-gilts",
+      "name": "Pnb Gilts Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "pnb-housing-finance",
+      "name": "Pnb Housing Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "pnc-infratech",
+      "name": "Pnc Infratech Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "poly-medicure",
+      "name": "Poly Medicure Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "polycab-india",
+      "name": "Polycab India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "polyplex",
+      "name": "Polyplex Corporation Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "poonawalla-fincorp",
+      "name": "Poonawalla Fincorp Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "power-finance",
+      "name": "Power Finance Corporation Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "power-grid-of-india",
+      "name": "Power Grid Corporation of India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "power-mech-projects",
+      "name": "Power Mech Projects Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "praj-industries",
+      "name": "Praj Industries Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "prakash-industries",
+      "name": "Prakash Industries Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "prataap-snacks",
+      "name": "Prataap Snacks Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "praveg",
+      "name": "Praveg Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "precision-camshafts",
+      "name": "Precision Camshafts Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "precision-wires-india",
+      "name": "Precision Wires India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "prestige-estates-projects",
+      "name": "Prestige Estates Projects Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "pricol",
+      "name": "Pricol Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "prime-focus",
+      "name": "Prime Focus Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "prince-pipes-and-fittings",
+      "name": "Prince Pipes And Fittings Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "prism-johnson",
+      "name": "Prism Johnson Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "privi-speciality-chemicals",
+      "name": "Privi Speciality Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "procter-gamble-health",
+      "name": "Procter & Gamble Health Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "procter-gamble-hygiene-and-health-care",
+      "name": "Procter & Gamble Hygiene And Health Care Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "procter-gamble-hygiene-and-healthcare",
+      "name": "Procter & Gamble Hygiene And Healthcare Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "protean-egov-technologies",
+      "name": "Protean eGov Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "prudent-corporate-advisory-services",
+      "name": "Prudent Corporate Advisory Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "psp-projects",
+      "name": "Psp Projects Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "ptc-india",
+      "name": "Ptc India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "ptc-industries",
+      "name": "Ptc Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "punjab-sind-bank",
+      "name": "Punjab & Sind Bank",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "punjab-alkalies-and-chemicals",
+      "name": "Punjab Alkalies And Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "punjab-chemicals-crop-protection",
+      "name": "Punjab Chemicals & Crop Protection Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "punjab-chemicals-and-crop-protection",
+      "name": "Punjab Chemicals And Crop Protection Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "punjab-national-bank",
+      "name": "Punjab National Bank",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "puravankara",
+      "name": "Puravankara Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "pvr",
+      "name": "Pvr Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "quess",
+      "name": "Quess Corp Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "r-systems-international",
+      "name": "R Systems International Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "radiant-cash-management-services",
+      "name": "Radiant Cash Management Services Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "radico-khaitan",
+      "name": "Radico Khaitan Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "rail-vikas-nigam",
+      "name": "Rail Vikas Nigam Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "railtel-of-india",
+      "name": "Railtel Corporation Of India Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "rain-industries",
+      "name": "Rain Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "rainbow-childrens-medicare",
+      "name": "Rainbow Childrens Medicare Private Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "rajesh-exports",
+      "name": "Rajesh Exports Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "rajratan-global-wire",
+      "name": "Rajratan Global Wire Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "rallis-india",
+      "name": "Rallis India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "rama-steel-tubes",
+      "name": "Rama Steel Tubes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ramco-industries",
+      "name": "Ramco Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ramkrishna-forgings",
+      "name": "Ramkrishna Forgings Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "ramky-infrastructure",
+      "name": "Ramky Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "rane-holdings",
+      "name": "Rane Holdings Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "rashtriya-chemicals-and-fertilizers",
+      "name": "Rashtriya Chemicals And Fertilizers Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "rategain-travel-technologies",
+      "name": "Rategain Travel Technologies Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "ratnamani-metals-and-tubes",
+      "name": "Ratnamani Metals And Tubes Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "rattanindia-enterprises",
+      "name": "Rattanindia Enterprises Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "rattanindia-power",
+      "name": "Rattanindia Power Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "raymond",
+      "name": "Raymond Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "rbl-bank",
+      "name": "Rbl Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "rec",
+      "name": "Rec Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "redington-india",
+      "name": "Redington (India) Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "relaxo-footwears",
+      "name": "Relaxo Footwears Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "reliance-industrial-infrastructure",
+      "name": "Reliance Industrial Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "reliance-industries",
+      "name": "Reliance Industries Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "reliance-infrastructure",
+      "name": "Reliance Infrastructure Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "reliance-power",
+      "name": "Reliance Power Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "religare-enterprises",
+      "name": "Religare Enterprises Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "repco-home-finance",
+      "name": "Repco Home Finance Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "responsive-industries",
+      "name": "Responsive Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "restaurant-brands-asia",
+      "name": "Restaurant Brands Asia Limited",
+      "sector": "Food & Beverage Retail"
+    },
+    {
+      "id": "rhi-magnesita-india",
+      "name": "Rhi Magnesita India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "rico-auto-industries",
+      "name": "Rico Auto Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "rites",
+      "name": "Rites Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "rolex-rings",
+      "name": "Rolex Rings Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "rossari-biotech",
+      "name": "Rossari Biotech Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "rossell-india",
+      "name": "Rossell India Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "roto-pumps",
+      "name": "Roto Pumps Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "route-mobile",
+      "name": "Route Mobile Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "rpg-life-sciences",
+      "name": "Rpg Life Sciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "rpsg-ventures",
+      "name": "Rpsg Ventures Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "rswm",
+      "name": "Rswm Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "rupa",
+      "name": "Rupa & Company Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "rustomjee-realty",
+      "name": "Rustomjee Realty Private Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "s-h-kelkar-and",
+      "name": "S H Kelkar And Company Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "s-j-s-enterprises",
+      "name": "S.J.S. Enterprises Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "sbi-life-insurance",
+      "name": "SBI Life Insurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "shilchar-technologies",
+      "name": "SHILCHAR TECHNOLOGIES Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "spicejet",
+      "name": "SPICEJET Limited",
+      "sector": "Air Transportation"
+    },
+    {
+      "id": "sadhana-nitro-chem",
+      "name": "Sadhana Nitro Chem Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "safari-industries-india",
+      "name": "Safari Industries (India) Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "sagar-cements",
+      "name": "Sagar Cements Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "saksoft",
+      "name": "Saksoft Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "samvardhana-motherson-international",
+      "name": "Samvardhana Motherson International Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "sandhar-technologies",
+      "name": "Sandhar Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "sandur-power",
+      "name": "Sandur Power Company Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "sangam-india",
+      "name": "Sangam (India) Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "sanghi-industries",
+      "name": "Sanghi Industries Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "sanofi-india",
+      "name": "Sanofi India Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "sansera-engineering",
+      "name": "Sansera Engineering Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "sapphire-foods-india",
+      "name": "Sapphire Foods India Private Limited",
+      "sector": "Restaurants"
+    },
+    {
+      "id": "sarda-energy-minerals",
+      "name": "Sarda Energy & Minerals Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "saregama-india",
+      "name": "Saregama India Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "sasken-technologies",
+      "name": "Sasken Technologies Limited",
+      "sector": "Semiconductors"
+    },
+    {
+      "id": "satia-industries",
+      "name": "Satia Industries Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "satin-creditcare-network",
+      "name": "Satin Creditcare Network Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "savita-oil-technologies",
+      "name": "Savita Oil Technologies Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "sbi-cards-and-payment-services",
+      "name": "Sbi Cards And Payment Services Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "schaeffler-india",
+      "name": "Schaeffler India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "schneider-electric-infrastructure",
+      "name": "Schneider Electric Infrastructure Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "seamec",
+      "name": "Seamec Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "sequent-scientific",
+      "name": "Sequent Scientific Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "seshasayee-paper-and-boards",
+      "name": "Seshasayee Paper And Boards Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "sg-finserve",
+      "name": "Sg Finserve Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "sg-mart",
+      "name": "Sg Mart Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "shaily-engineering-plastics",
+      "name": "Shaily Engineering Plastics Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "shalby",
+      "name": "Shalby Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "shalimar-paints",
+      "name": "Shalimar Paints Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "shankara-building-products",
+      "name": "Shankara Building Products Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "shanthi-gears",
+      "name": "Shanthi Gears Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "sharda-cropchem",
+      "name": "Sharda Cropchem Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "sharda-motor-industries",
+      "name": "Sharda Motor Industries Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "share-india-securities",
+      "name": "Share India Securities Limited.",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "sheela-foam",
+      "name": "Sheela Foam Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "shilpa-medicare",
+      "name": "Shilpa Medicare Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "shipping-of-india",
+      "name": "Shipping Corporation Of India Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "shivalik-bimetal-controls",
+      "name": "Shivalik Bimetal Controls Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "shivalik-rasayan",
+      "name": "Shivalik Rasayan Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "shoppers-stop",
+      "name": "Shoppers Stop Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "shree-cement",
+      "name": "Shree Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "shree-digvijay-cement",
+      "name": "Shree Digvijay Cement Co.Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "shree-renuka-sugars",
+      "name": "Shree Renuka Sugars Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "shriram-finance",
+      "name": "Shriram Finance Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "shriram-pistons-rings",
+      "name": "Shriram Pistons & Rings Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "shriram-properties",
+      "name": "Shriram Properties Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "shyam-metalics-and-energy",
+      "name": "Shyam Metalics And Energy Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "siemens",
+      "name": "Siemens Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "sindhu-trade-links",
+      "name": "Sindhu Trade Links Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "sirca-paints-india",
+      "name": "Sirca Paints India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "sis",
+      "name": "Sis Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "siyaram-silk-mills",
+      "name": "Siyaram Silk Mills Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "sjvn",
+      "name": "Sjvn Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "skf-india",
+      "name": "Skf India Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "skipper",
+      "name": "Skipper Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "sml-isuzu",
+      "name": "Sml Isuzu Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "sobha",
+      "name": "Sobha Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "solar-industries-india",
+      "name": "Solar Industries India Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "solara-active-pharma-sciences",
+      "name": "Solara Active Pharma Sciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "som-distilleries-breweries",
+      "name": "Som Distilleries & Breweries Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "sona-blw-precision-forgings",
+      "name": "Sona Blw Precision Forgings Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "sonata-software",
+      "name": "Sonata Software Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "southern-petrochemicals-industries",
+      "name": "Southern Petrochemicals Industries Corporation Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "spacenet-enterprises-india",
+      "name": "Spacenet Enterprises India Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "spandana-sphoorty-financial",
+      "name": "Spandana Sphoorty Financial Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "sportking-india",
+      "name": "Sportking India Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "srf",
+      "name": "Srf Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "star-cement",
+      "name": "Star Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "star-health-and-allied-insurance",
+      "name": "Star Health And Allied Insurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "state-bank-of-india",
+      "name": "State Bank of India",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "steel-authority-of-india",
+      "name": "Steel Authority Of India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "steel-exchange-india",
+      "name": "Steel Exchange India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "steel-strips-wheels",
+      "name": "Steel Strips Wheels Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "steelcast",
+      "name": "Steelcast Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "sterling-tools",
+      "name": "Sterling Tools Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "sterling-and-wilson-renewable-energy",
+      "name": "Sterling and Wilson Renewable Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "sterlite-technologies",
+      "name": "Sterlite Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "stove-kraft",
+      "name": "Stove Kraft Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "strides-pharma-science",
+      "name": "Strides Pharma Science Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "stylam-industries",
+      "name": "Stylam Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "styrenix",
+      "name": "Styrenix",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "subex",
+      "name": "Subex Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "subros",
+      "name": "Subros Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "sudarshan-chemical-industries",
+      "name": "Sudarshan Chemical Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "sula-vineyards",
+      "name": "Sula Vineyards Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "sumitomo-chemical-india",
+      "name": "Sumitomo Chemical India Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "sun-pharma-advanced-research",
+      "name": "Sun Pharma Advanced Research Company Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "sun-pharmaceutical-industries",
+      "name": "Sun Pharmaceutical Industries Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "sun-tv-network",
+      "name": "Sun Tv Network Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "sundaram-clayton",
+      "name": "Sundaram Clayton Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "sundaram-finance-holdings",
+      "name": "Sundaram Finance Holdings Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "sundaram-finance",
+      "name": "Sundaram Finance Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "sundram-fasteners",
+      "name": "Sundram Fasteners Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "sunflag-iron-and-steel",
+      "name": "Sunflag Iron And Steel Co Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "sunteck-realty",
+      "name": "Sunteck Realty Limited",
+      "sector": "Real Estate"
+    },
+    {
+      "id": "suprajit-engineering",
+      "name": "Suprajit Engineering Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "supreme-industries",
+      "name": "Supreme Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "supreme-petrochem",
+      "name": "Supreme Petrochem Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "supriya-lifescience",
+      "name": "Supriya Lifescience Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "surya-roshni",
+      "name": "Surya Roshni Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "suryoday-small-finance-bank",
+      "name": "Suryoday Small Finance Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "suven-life-sciences",
+      "name": "Suven Life Sciences Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "suven-pharmaceuticals",
+      "name": "Suven Pharmaceuticals Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "suzlon-energy",
+      "name": "Suzlon Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "swan-energy",
+      "name": "Swan Energy Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "swaraj-engines",
+      "name": "Swaraj Engines Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "symphony",
+      "name": "Symphony Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "syngene-international",
+      "name": "Syngene International Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "syrma-sgs-technology",
+      "name": "Syrma Sgs Technology Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "tcs",
+      "name": "TCS",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "tv-today-network",
+      "name": "TV Today Network Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "tvs-motor",
+      "name": "TVS Motor Company Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "tajgvk",
+      "name": "Tajgvk",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "tamil-nadu-newsprint-papers",
+      "name": "Tamil Nadu Newsprint & Papers Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "tamilnad-mercantile-bank",
+      "name": "Tamilnad Mercantile Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "tanfac-industries",
+      "name": "Tanfac Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "tanla-platforms",
+      "name": "Tanla Platforms Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "tarc",
+      "name": "Tarc Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "tarsons-products",
+      "name": "Tarsons Products Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "tasty-bite-eatables",
+      "name": "Tasty Bite Eatables Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "tata-chemicals",
+      "name": "Tata Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "tata-coffee",
+      "name": "Tata Coffee Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "tata-communications",
+      "name": "Tata Communications Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "tata-consumer-products",
+      "name": "Tata Consumer Products Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "tata-elxsi",
+      "name": "Tata Elxsi Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "tata-investment",
+      "name": "Tata Investment Corporation Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "tata-metaliks",
+      "name": "Tata Metaliks Limited.",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "tata-motors",
+      "name": "Tata Motors Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "tata-power",
+      "name": "Tata Power Company Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "tata-steel",
+      "name": "Tata Steel Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "tata-steel-long-products",
+      "name": "Tata Steel Long Products Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "tata-teleservices-maharashtra",
+      "name": "Tata Teleservices (Maharashtra) Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "tatva-chintan-pharma-chem",
+      "name": "Tatva Chintan Pharma Chem Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "tci-express",
+      "name": "Tci Express Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "tcns-clothing",
+      "name": "Tcns Clothing Co. Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "tcpl-packaging",
+      "name": "Tcpl Packaging Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "td-power-systems",
+      "name": "Td Power Systems Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "teamlease-services",
+      "name": "Teamlease Services Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "tech-mahindra",
+      "name": "Tech Mahindra Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "techno-electric-engineering",
+      "name": "Techno Electric & Engineering Company Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "technocraft-industries-india",
+      "name": "Technocraft Industries (India) Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "tega-industries",
+      "name": "Tega Industries Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "tejas-networks",
+      "name": "Tejas Networks Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "texmaco-rail-engineering",
+      "name": "Texmaco Rail & Engineering Limited",
+      "sector": "Land Transportation"
+    },
+    {
+      "id": "thangamayil-jewellery",
+      "name": "Thangamayil Jewellery Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "andhra-sugars",
+      "name": "The Andhra Sugars Limited",
+      "sector": "Sector Agnostic"
+    },
+    {
+      "id": "federal-bank",
+      "name": "The Federal Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "great-eastern-shipping",
+      "name": "The Great Eastern Shipping Company Limited",
+      "sector": "Marine Transportation"
+    },
+    {
+      "id": "india-cements",
+      "name": "The India Cements Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "indian-hotels",
+      "name": "The Indian Hotels Company Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "jammu-kashmir-bank",
+      "name": "The Jammu & Kashmir Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "karnataka-bank",
+      "name": "The Karnataka Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "multi-commodity-exchange-of-india",
+      "name": "The Multi Commodity Exchange Of India Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "new-india-assurance",
+      "name": "The New India Assurance Company Limited",
+      "sector": "Insurance"
+    },
+    {
+      "id": "phoenix-mills",
+      "name": "The Phoenix Mills Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "ramco-cements",
+      "name": "The Ramco Cements Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "south-indian-bank",
+      "name": "The South Indian Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "tinplate-of-india",
+      "name": "The Tinplate Company of India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "ugar-sugar-works",
+      "name": "The Ugar Sugar Works Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "thejo-engineering",
+      "name": "Thejo Engineering Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "themis-medicare",
+      "name": "Themis Medicare Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "thermax",
+      "name": "Thermax Limited.",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "thirumalai-chemicals",
+      "name": "Thirumalai Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "thomas-cook-india",
+      "name": "Thomas Cook (India) Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "thyrocare-technologies",
+      "name": "Thyrocare Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "tide-water-oil-india",
+      "name": "Tide Water Oil Company (India) Limited",
+      "sector": "Oil & Gas"
+    },
+    {
+      "id": "tilaknagar-industries",
+      "name": "Tilaknagar Industries Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "time-technoplast",
+      "name": "Time Technoplast Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "timken-india",
+      "name": "Timken India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "tips-industries",
+      "name": "Tips Industries Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "titagarh-wagons",
+      "name": "Titagarh Wagons Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "titan",
+      "name": "Titan Company Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "torrent-pharmaceuticals",
+      "name": "Torrent Pharmaceuticals Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "torrent-power-grid",
+      "name": "Torrent Power Grid Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "torrent-power",
+      "name": "Torrent Power Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "transport-of-india",
+      "name": "Transport Corporation Of India Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "trent",
+      "name": "Trent Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "trident",
+      "name": "Trident Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "triveni-engineering-industries",
+      "name": "Triveni Engineering & Industries Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "triveni-engineering-and-industries",
+      "name": "Triveni Engineering And Industries limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "triveni-engineering-and-industrieslimited",
+      "name": "Triveni Engineering And Industrieslimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "triveni-turbine",
+      "name": "Triveni Turbine Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "ttk-healthcare",
+      "name": "Ttk Healthcare Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "ttk-prestige",
+      "name": "Ttk Prestige Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "tube-investments-of-india",
+      "name": "Tube Investments Of India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "tv18-broadcast",
+      "name": "Tv18 Broadcast Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "tvs-srichakra",
+      "name": "Tvs Srichakra Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "uco-bank",
+      "name": "UCO Bank",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "uno-minda",
+      "name": "UNO Minda Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "udaipur-cement-works",
+      "name": "Udaipur Cement Works Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "uflex",
+      "name": "Uflex Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "ugro-capital",
+      "name": "Ugro Capital Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ujjivan-financial-services",
+      "name": "Ujjivan Financial Services Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ujjivan-small-finance-bank",
+      "name": "Ujjivan Small Finance Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ultratech-cement",
+      "name": "UltraTech Cement Limited",
+      "sector": "Construction Materials"
+    },
+    {
+      "id": "unichem-laboratories",
+      "name": "Unichem Laboratories Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "union-bank-of-india",
+      "name": "Union Bank of India",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "uniparts-india",
+      "name": "Uniparts India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "uniphos-enterprises",
+      "name": "Uniphos Enterprises Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "united-breweries",
+      "name": "United Breweries Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "united-spirits",
+      "name": "United Spirits Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "universal-cables",
+      "name": "Universal Cables Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "upl",
+      "name": "Upl Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "usha-martin",
+      "name": "Usha Martin Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "uti-asset-management",
+      "name": "Uti Asset Management Company Limited",
+      "sector": "Capital Markets"
+    },
+    {
+      "id": "uttam-sugar-mills",
+      "name": "Uttam Sugar Mills Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "v-guard-industries",
+      "name": "V-Guard Industries Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "v-mart-retail",
+      "name": "V-Mart Retail Limited",
+      "sector": "Consumer Goods Retail"
+    },
+    {
+      "id": "v-s-t-tillers-tractors",
+      "name": "V.S.T Tillers Tractors Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "veritas-india",
+      "name": "VERITAS (INDIA) Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "vip-industries",
+      "name": "VIP Industries Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "va-tech-wabag",
+      "name": "Va Tech Wabag Limited",
+      "sector": "Waste Management"
+    },
+    {
+      "id": "vadilal-industries",
+      "name": "Vadilal Industries Limited",
+      "sector": "Food & Beverage Retail"
+    },
+    {
+      "id": "vaibhav-global",
+      "name": "Vaibhav Global Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "vakrangee",
+      "name": "Vakrangee Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "valiant-organics",
+      "name": "Valiant Organics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "vardhman-special-steels",
+      "name": "Vardhman Special Steels Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "vardhman-textiles",
+      "name": "Vardhman Textiles Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "varroc-engineering",
+      "name": "Varroc Engineering Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "varun-beverages",
+      "name": "Varun Beverages Limited",
+      "sector": "Beverages"
+    },
+    {
+      "id": "vedant-fashions",
+      "name": "Vedant Fashions Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "vedanta",
+      "name": "Vedanta Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "venky",
+      "name": "Venky",
+      "sector": "Food"
+    },
+    {
+      "id": "venus-pipes-tubes",
+      "name": "Venus Pipes & Tubes Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "veranda-learning-solutions",
+      "name": "Veranda Learning Solutions Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "vesuvius-india",
+      "name": "Vesuvius India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "vidhi-specialty-food-ingredients",
+      "name": "Vidhi Specialty Food Ingredients Limited",
+      "sector": "Food"
+    },
+    {
+      "id": "vijaya-diagnostic-centre",
+      "name": "Vijaya Diagnostic Centre Limited",
+      "sector": "Health Care Providers"
+    },
+    {
+      "id": "vinati-organics",
+      "name": "Vinati Organics Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "vindhya-telelinks",
+      "name": "Vindhya Telelinks Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "vip-clothing",
+      "name": "Vip Clothing Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "vishnu-chemicals",
+      "name": "Vishnu Chemicals Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "vodafone-idea",
+      "name": "Vodafone Idea Limited",
+      "sector": "Telecommunications"
+    },
+    {
+      "id": "voltamp-transformers",
+      "name": "Voltamp Transformers Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "voltas",
+      "name": "Voltas Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "vrl-logistics",
+      "name": "Vrl Logistics Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "vst-industries",
+      "name": "Vst Industries Limited",
+      "sector": "Tobacco"
+    },
+    {
+      "id": "vst-tillers-tractors",
+      "name": "Vst Tillers Tractors Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "wpil",
+      "name": "WPIL Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "waaree-renewable-technologies",
+      "name": "Waaree Renewable Technologies Limited",
+      "sector": "Alternative Energy"
+    },
+    {
+      "id": "wardwizard-innovations-mobility-limilted",
+      "name": "Wardwizard Innovations & Mobility Limilted",
+      "sector": "Industrials"
+    },
+    {
+      "id": "welspun",
+      "name": "Welspun Corp Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "welspun-enterprises",
+      "name": "Welspun Enterprises Limited",
+      "sector": "Infrastructure"
+    },
+    {
+      "id": "welspun-india",
+      "name": "Welspun India Limited",
+      "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "wendt-india",
+      "name": "Wendt India Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "west-coast-paper-mills",
+      "name": "West Coast Paper Mills Limited",
+      "sector": "Forestry & Paper"
+    },
+    {
+      "id": "wheels-india",
+      "name": "Wheels India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "whirlpool-of-india",
+      "name": "Whirlpool of India Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "wipro",
+      "name": "Wipro Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "wockhardt",
+      "name": "Wockhardt Limited",
+      "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "wonderla-holidays",
+      "name": "Wonderla Holidays Limited",
+      "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "yasho-industries",
+      "name": "Yasho Industries Limited",
+      "sector": "Chemicals"
+    },
+    {
+      "id": "yes-bank",
+      "name": "Yes Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "zf-commercial-vehicle-control-systems-india",
+      "name": "ZF Commercial Vehicle Control Systems India Limited",
+      "sector": "Automobiles"
+    },
+    {
+      "id": "zee-entertainment-enterprises",
+      "name": "Zee Entertainment Enterprises Limited",
+      "sector": "Media"
+    },
+    {
+      "id": "zen-technologies",
+      "name": "Zen Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "zensar-technologies",
+      "name": "Zensar Technologies Limited",
+      "sector": "Technology"
+    },
+    {
+      "id": "zomato",
+      "name": "Zomato Limited",
+      "sector": "Consumer Services"
+    },
+    {
+      "id": "zydus-lifesciences",
+      "name": "Zydus Lifesciences Limited",
+      "sector": "Health Care Retail"
+    },
+    {
+      "id": "zydus-wellness",
+      "name": "Zydus Wellness Limited",
+      "sector": "Health Care Providers"
+    }
+  ],
+  "spendByYear": {
+    "FY 2020-21": 13851.47,
+    "FY 2021-22": 12357.24,
+    "FY 2022-23": 13502.86
+  },
+  "stats": {
+    "workbooks": 1,
+    "raw_rows": 34545,
+    "dropped_no_company": 982,
+    "dropped_empty": 102,
+    "duplicates_removed": 700,
+    "missing_year": 0,
+    "missing_spend": 292,
+    "sector_backfilled": 11659,
+    "sector_unknown": 557,
+    "negative_amounts": 7,
+    "aspirational_rows": 1726
+  }
+}

@@ -1,0 +1,25 @@
+# Render blueprint — commit this, then "New > Blueprint" in the Render dashboard
+# and point it at the repository. Everything below is provisioned automatically.
+services:
+  - type: web
+    name: cms-csr
+    runtime: docker
+    plan: starter            # 512 MB RAM; enough for a ~4 MB dataset
+    region: singapore        # closest Render region to India
+    healthCheckPath: /api/meta
+    autoDeploy: true
+    disk:
+      name: csr-data
+      mountPath: /var/data   # matches CSR_DATA_DIR in the Dockerfile
+      sizeGB: 1
+    envVars:
+      - key: CSR_DATA_DIR
+        value: /var/data
+      - key: NODE_ENV
+        value: production
+      - key: APP_PASSWORD
+        sync: false          # set this in the Render dashboard, not in git
+      - key: LLM_API_KEY
+        sync: false          # optional — enables AI narration and chat
+      - key: LLM_PROVIDER
+        value: anthropic

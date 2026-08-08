@@ -1,0 +1,21 @@
+# Dependencies & build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local environment
+.env
+.env*.local
+
+# Generated dataset backups (regenerated on every upload)
+data/backup/
+
+# Python
+__pycache__/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db

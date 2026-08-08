@@ -1,0 +1,25 @@
+/*
+ * Tailwind provides utilities only. The visual language comes from
+ * draft-theme.css, which is the shared draft stylesheet ported verbatim —
+ * it is the design specification, so it wins over anything here.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./draft-theme.css";
+
+@layer base {
+  /*
+   * Tailwind's preflight resets borders to `currentColor`; the draft sets
+   * explicit border colours per component, so re-point the default at the
+   * draft's border token to keep stray utility borders on-palette.
+   */
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+}
