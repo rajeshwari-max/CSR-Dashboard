@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronsLeft, HelpCircle, Moon, Settings, Sun } from "lucide-react";
+import { ChevronsLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { ICONS } from "@/components/shell/icons";
@@ -43,10 +43,8 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
         {groups.map((group) => (
           <div key={group}>
             <div className="nav-group-title">{group}</div>
-            {NAV.filter((entry) => entry.group === group).map((entry, position) => {
+            {NAV.filter((entry) => entry.group === group).map((entry) => {
               const Icon = ICONS[entry.icon];
-              // Hue index cycles 1-8, matching the ramp in the stylesheet.
-              const hue = ((NAV.findIndex((item) => item.href === entry.href) + position) % 8) + 1;
               const active = entry.href === "/" ? pathname === "/" : pathname.startsWith(entry.href);
               return (
                 <Link
@@ -54,7 +52,6 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
                   href={entry.href}
                   onClick={onCloseMobile}
                   className={`nav-item${active ? " active" : ""}`}
-                  data-hue={hue}
                   title={collapsed ? entry.label : undefined}
                 >
                   <Icon className="icon" width={17} height={17} />
@@ -81,19 +78,6 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
           {isDark ? <Sun className="icon" width={17} height={17} /> : <Moon className="icon" width={17} height={17} />}
           <span className="nav-label">{isDark ? "Light mode" : "Dark mode"}</span>
         </button>
-        <Link href="/data-upload" className="nav-item" onClick={onCloseMobile}>
-          <Settings className="icon" width={17} height={17} />
-          <span className="nav-label">Settings</span>
-        </Link>
-        <a
-          className="nav-item"
-          href="https://www.mca.gov.in/content/mca/global/en/home.html"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <HelpCircle className="icon" width={17} height={17} />
-          <span className="nav-label">Help</span>
-        </a>
       </div>
     </aside>
   );

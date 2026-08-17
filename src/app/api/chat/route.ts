@@ -30,8 +30,9 @@ export async function POST(request: Request) {
       return NextResponse.json({
         available: false,
         answer:
-          "Natural-language chat needs an LLM key. Set LLM_API_KEY (and optionally LLM_PROVIDER / LLM_MODEL) " +
-          "in .env.local and restart. Every insight card on this page works without it.",
+          "Natural-language chat needs an LLM key. Set the LLM_API_KEY environment variable " +
+          "(and optionally LLM_PROVIDER / LLM_MODEL), then restart the service. On Render that is " +
+          "Settings → Environment. Every insight card on this page works without it.",
         facts,
         model: null,
       });

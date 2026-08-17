@@ -21,16 +21,13 @@ import type { NamedValue } from "@/types";
 
 const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified"]);
 
-/**
- * Sequential sky -> indigo -> violet ramp. A multi-hue scale separates the
- * middle of the distribution far better than one hue at varying opacity.
- */
+/** Single-hue sequential ramp — the convention for a quantity choropleth. */
 const HEAT_STOPS: [number, number, number][] = [
-  [224, 242, 254], // sky-100
-  [125, 211, 252], // sky-300
-  [56, 130, 246],  // blue-500
-  [79, 70, 229],   // indigo-600
-  [124, 58, 237],  // violet-600
+  [237, 242, 252],
+  [199, 213, 240],
+  [147, 170, 222],
+  [90, 119, 196],
+  [47, 75, 199],
 ];
 
 function heatColor(t: number): string {
@@ -165,7 +162,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
       <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Spend intensity</p>
-          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#e0f2fe,#7dd3fc,#3882f6,#4f46e5,#7c3aed)" }} />
+          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#edf2fc,#c7d5f0,#93aade,#5a77c4,#2f4bc7)" }} />
           <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
             <span>₹0</span>
             <span>{formatCrore(max)}</span>

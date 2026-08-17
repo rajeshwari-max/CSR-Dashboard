@@ -401,7 +401,7 @@ export function AiInsightsView() {
             <CardDescription>
               {data?.llm.available
                 ? `Grounded on the current selection · answered by ${data.llm.model}`
-                : "Add LLM_API_KEY to .env.local to enable — every panel above works without it"}
+                : "Set the LLM_API_KEY environment variable to enable — every panel above works without it"}
             </CardDescription>
           </div>
         </CardHeader>
