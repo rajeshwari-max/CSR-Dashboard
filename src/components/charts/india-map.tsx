@@ -23,11 +23,11 @@ const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified"]);
 
 /** Single-hue sequential ramp — the convention for a quantity choropleth. */
 const HEAT_STOPS: [number, number, number][] = [
-  [237, 242, 252],
-  [199, 213, 240],
-  [147, 170, 222],
-  [90, 119, 196],
-  [47, 75, 199],
+  [238, 242, 255],
+  [199, 210, 254],
+  [129, 140, 248],
+  [79, 70, 229],
+  [109, 40, 217],
 ];
 
 function heatColor(t: number): string {
@@ -162,7 +162,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
       <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Spend intensity</p>
-          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#edf2fc,#c7d5f0,#93aade,#5a77c4,#2f4bc7)" }} />
+          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#eef2ff,#c7d2fe,#818cf8,#4f46e5,#6d28d9)" }} />
           <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
             <span>₹0</span>
             <span>{formatCrore(max)}</span>

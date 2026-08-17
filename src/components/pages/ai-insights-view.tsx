@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ExportMenu } from "@/components/shared/export-menu";
 import { postJson, useApi } from "@/lib/api";
 import { formatCrore, formatSignedPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -107,6 +108,8 @@ export function AiInsightsView() {
       onRefresh={() => insights.refetch()}
       isRefreshing={insights.isValidating}
       actions={
+        <>
+        <ExportMenu filterQuery={filterQuery} label="Download" />
         <Button
           variant={narrate ? "default" : "outline"}
           size="sm"
@@ -117,6 +120,7 @@ export function AiInsightsView() {
           <Sparkles className="size-4" />
           {narrate ? "AI narration on" : "AI narration"}
         </Button>
+        </>
       }
     >
       <SectionLabel>Executive summary</SectionLabel>

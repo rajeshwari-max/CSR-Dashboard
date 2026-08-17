@@ -11,6 +11,7 @@ import { AiInsightCard } from "@/components/insights/insight-card";
 import { IndiaMap } from "@/components/charts/india-map";
 import { MiniLabel, PageFrame } from "@/components/shell/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
+import { ExportMenu } from "@/components/shared/export-menu";
 import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
@@ -59,6 +60,7 @@ export function ExecutiveDashboard() {
             <RefreshCw width={13} height={13} className={summary.isValidating ? "spin" : undefined} />
             Refresh
           </button>
+          <ExportMenu filterQuery={filterQuery} label="Download" />
           <Link href={`/trend-analysis?${filterQuery}`} className="btn btn-gradient btn-sm">
             <TrendingUp width={13} height={13} />
             Analyse trends
