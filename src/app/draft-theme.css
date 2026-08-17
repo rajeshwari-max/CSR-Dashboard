@@ -618,3 +618,8 @@ tbody tr:hover{background:var(--surface-2);}
 /* Wordmark: three letters in the 28px square needs tighter type than one. */
 .brand-mark{font-size:9.5px;letter-spacing:.02em;font-weight:800;}
 .sidebar.collapsed .brand-mark{font-size:9px;}
+
+/* Sparklines were removed from the KPI cards — reclaim their reserved space. */
+.kpi-spark{display:none;}
+.kpi-card{padding:16px 16px 14px;}
+.kpi-card .kpi-sub{margin-bottom:0;}

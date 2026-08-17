@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -9,13 +8,11 @@ import {
   FolderKanban,
   IndianRupee,
   Minus,
-  Plus,
   MapPinned,
   ShieldCheck,
   Users,
   Wallet,
 } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
 import { formatCrore, formatNumber, formatPercent, formatSignedPercent } from "@/lib/format";
 import type { Kpis, Meta } from "@/types";
@@ -35,36 +32,9 @@ interface KpiSpec {
   value: string;
   sub: React.ReactNode;
   delta?: number | null;
-  spark: { label: string; value: number }[];
   unavailable?: string;
   icon: React.ElementType;
   tip?: string;
-}
-
-function Spark({ data, color }: { data: { value: number }[]; color: string }) {
-  if (!data || data.length < 2) return null;
-  const id = `sp-${color.replace(/[^a-z0-9]/gi, "")}`;
-  return (
-    <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
-        <defs>
-          <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity={0.35} />
-            <stop offset="100%" stopColor={color} stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <Area
-          type="monotone"
-          dataKey="value"
-          stroke={color}
-          strokeWidth={2}
-          fill={`url(#${id})`}
-          isAnimationActive={false}
-          dot={false}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
-  );
 }
 
 export function KpiRow({
@@ -93,29 +63,24 @@ export function KpiRow({
   }
 
   const beneficiaries = meta?.capabilities.beneficiaries ?? false;
-  const flat = kpis.spendSparkline.map((point) => ({ label: point.label, value: 0 }));
-
   const cards: KpiSpec[] = [
     {
       label: "Total CSR Spend",
       value: formatCrore(kpis.totalSpend),
       sub: `${kpis.latestYear ?? "—"}, all reporting`,
       delta: kpis.yoyGrowthPct,
-      spark: kpis.spendSparkline,
       icon: IndianRupee,
     },
     {
       label: "Companies Reporting",
       value: formatNumber(kpis.companyCount),
       sub: `${kpis.sectorCount} sectors`,
-      spark: kpis.companySparkline,
       icon: Building2,
     },
     {
       label: "Active Projects",
       value: formatNumber(kpis.projectCount),
       sub: `Across ${kpis.stateCount} states`,
-      spark: kpis.projectSparkline,
       icon: FolderKanban,
     },
     beneficiaries
@@ -123,7 +88,6 @@ export function KpiRow({
           label: "Beneficiaries Reached",
           value: formatNumber(kpis.beneficiaries ?? 0),
           sub: "Across all reported projects",
-          spark: kpis.beneficiarySparkline ?? flat,
           icon: Users,
         }
       : {
@@ -133,7 +97,6 @@ export function KpiRow({
           label: "Districts Reached",
           value: formatNumber(kpis.districtCount),
           sub: `${kpis.stateCount} states and UTs`,
-          spark: kpis.districtSparkline ?? flat,
           icon: MapPinned,
         },
     {
@@ -145,7 +108,6 @@ export function KpiRow({
         kpis.complianceBase > 0
           ? `${formatNumber(kpis.complianceMet)} of ${formatNumber(kpis.complianceBase)} disclosing filers`
           : "No obligation disclosed in view",
-      spark: kpis.complianceSparkline,
       icon: ShieldCheck,
       tip: "Share of companies in view that spent at least 95% of their disclosed CSR obligation in the latest year. Measured on each company's national total (an obligation is a whole-company figure), and filers that disclose no obligation are excluded from both sides.",
     },
@@ -153,13 +115,9 @@ export function KpiRow({
       label: "Avg. Spend / Company",
       value: formatCrore(kpis.avgSpendPerCompany),
       sub: `Median ${formatCrore(kpis.medianSpendPerCompany)}`,
-      spark: kpis.avgSparkline,
       icon: Wallet,
     },
   ];
-
-  // Sparkline colours track the card hue set in the stylesheet.
-  const colors = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--c5)", "var(--c4)", "var(--c7)"];
 
   return (
     <div className="kpi-row">
@@ -196,16 +154,6 @@ export function KpiRow({
                 </span>
               ) : null}
               <span className="truncate1">{card.sub}</span>
-            </div>
-            <div className="kpi-spark chart-wrap">
-              {dimmed ? (
-                <Link href="/data-upload" className="kpi-cta">
-                  <Plus width={11} height={11} />
-                  Add {card.unavailable} column
-                </Link>
-              ) : (
-                <Spark data={card.spark} color={colors[index]} />
-              )}
             </div>
           </div>
         );
