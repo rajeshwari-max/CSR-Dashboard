@@ -41,7 +41,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
       key: "spend",
       label: "Total CSR Spend",
       value: formatCrore(kpis.totalSpend),
-      sub: `${formatNumber(kpis.projectCount)} projects · ${kpis.stateCount} states`,
+      sub: `${formatNumber(kpis.projectCount)} projects · across India`,
       icon: IndianRupee,
       delta: kpis.yoyGrowthPct,
       spark: kpis.spendSparkline,

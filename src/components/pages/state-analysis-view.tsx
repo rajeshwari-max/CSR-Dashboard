@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { IndiaMap } from "@/components/charts/india-map";
+import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -138,8 +139,8 @@ export function StateAnalysisView() {
 
       <SectionLabel>State comparison</SectionLabel>
       <ChartCard
-        title="Top states by financial year"
-        description="Every financial year in view, top 8 states"
+        title="Annual CSR spend across leading states"
+        description="Top 8 mapped states; values are project spend in INR crore"
         height={340}
         isLoading={summary.isLoading}
         error={summary.error}
@@ -149,7 +150,7 @@ export function StateAnalysisView() {
           <BarChart data={comparison} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="name" {...AXIS_PROPS} interval={0} angle={-18} textAnchor="end" height={60} />
-            <YAxis {...AXIS_PROPS} />
+            <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} />
             <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
             <Legend iconType="circle" iconSize={8} />
             {years.map((year, index) => (
@@ -195,6 +196,8 @@ export function StateAnalysisView() {
           />
         </CardContent>
       </Card>
+
+      <ProjectRegisterSection filterQuery={filterQuery} />
     </PageFrame>
   );
 }

@@ -7,6 +7,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -36,6 +37,10 @@ export function CompanyAnalysisView() {
   const [term, setTerm] = React.useState("");
   const [compare, setCompare] = React.useState<string[]>([]);
 
+  React.useEffect(() => {
+    setCompare(filters.companies.slice(0, 4));
+  }, [filters.companies]);
+
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=50`);
   const comparison = useApi<ComparisonResponse>(
     compare.length ? `/api/compare?companies=${compare.map(encodeURIComponent).join("|")}&${filterQuery}` : null,
@@ -50,10 +55,15 @@ export function CompanyAnalysisView() {
       .slice(0, 40);
   }, [meta.data, term]);
 
-  const toggleCompare = (id: string) =>
-    setCompare((current) =>
-      current.includes(id) ? current.filter((x) => x !== id) : current.length >= 4 ? current : [...current, id],
-    );
+  const toggleCompare = (id: string) => {
+    const next = compare.includes(id)
+      ? compare.filter((x) => x !== id)
+      : compare.length >= 4
+        ? compare
+        : [...compare, id];
+    setCompare(next);
+    setValues("companies", next);
+  };
 
   const chartData = React.useMemo(() => {
     const rows = comparison.data?.companies ?? [];
@@ -73,6 +83,7 @@ export function CompanyAnalysisView() {
       filters={filters}
       filterQuery={filterQuery}
       resultCount={summary.data?.filteredRows}
+      hideFacets={["companies"]}
       error={summary.error ?? meta.error}
       onRefresh={() => {
         summary.refetch();
@@ -80,7 +91,7 @@ export function CompanyAnalysisView() {
       }}
       isRefreshing={summary.isValidating}
     >
-      <SectionLabel>Company search</SectionLabel>
+      <SectionLabel>Company search and analysis</SectionLabel>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -324,6 +335,8 @@ export function CompanyAnalysisView() {
           </CardContent>
         </Card>
       </div>
+
+      <ProjectRegisterSection filterQuery={filterQuery} />
     </PageFrame>
   );
 }

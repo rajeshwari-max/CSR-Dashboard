@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FilterX, Info, Search, SlidersHorizontal, Target } from "lucide-react";
+import { FilterX, Search, SlidersHorizontal, Target } from "lucide-react";
 
 import { ExportMenu } from "@/components/shared/export-menu";
 import { Badge } from "@/components/ui/badge";
@@ -27,17 +27,12 @@ interface FilterBarProps {
   hide?: FacetKey[];
 }
 
-/**
- * Facets the mockup shows which the workbook cannot back. Rendered disabled
- * with the reason rather than silently dropped, so the gap between "designed"
- * and "available" stays visible instead of turning into invented data.
- */
-const UNAVAILABLE_FACETS = [
-  { label: "Quarter", reason: "CSR disclosures are annual — the workbook has no quarter column." },
-  { label: "Month", reason: "CSR disclosures are annual — the workbook has no month or date column." },
-  { label: "NGO", reason: "No implementing-agency name column in the source data." },
-  { label: "Status", reason: "No project status column in the source data." },
-];
+const SPEND_RANGES = [
+  { label: "₹0–1 Cr", min: 0, max: 1 },
+  { label: "₹1–5 Cr", min: 1, max: 5 },
+  { label: "₹5–10 Cr", min: 5, max: 10 },
+  { label: "> ₹10 Cr", min: 10, max: null },
+] as const;
 
 export function FilterBar({
   meta,
@@ -93,23 +88,6 @@ export function FilterBar({
           <SlidersHorizontal className="size-3.5" />
           Filters
         </span>
-        {UNAVAILABLE_FACETS.map((facet) => (
-          <Popover key={facet.label}>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 rounded-full border border-dashed border-border px-2 py-0.5 text-[11px] text-muted-foreground/70 transition-colors hover:text-muted-foreground"
-              >
-                {facet.label}
-                <Info className="size-3" />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-64 p-3 text-xs text-muted-foreground">
-              <p className="mb-1 font-semibold text-foreground">{facet.label} filter unavailable</p>
-              {facet.reason}
-            </PopoverContent>
-          </Popover>
-        ))}
       </div>
 
       <div className="grid grid-cols-1 gap-4 border-t border-border pt-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
@@ -218,6 +196,36 @@ export function FilterBar({
             className="numeric h-9 w-16 rounded-lg border border-input bg-card px-2 text-center text-xs shadow-sm outline-none focus:ring-2 focus:ring-ring"
           />
           <span className="text-[11px] text-muted-foreground">Cr</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="h-9 px-2.5 text-xs">
+                Spend bands
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-2" align="end">
+              <p className="px-2 pb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Project spend
+              </p>
+              <div className="space-y-1">
+                {SPEND_RANGES.map((range) => {
+                  const active = filters.minSpend === range.min && filters.maxSpend === range.max;
+                  return (
+                    <button
+                      key={range.label}
+                      type="button"
+                      onClick={() => setRange(range.min, range.max)}
+                      className={cn(
+                        "w-full rounded-md px-2 py-1.5 text-left text-xs transition-colors hover:bg-accent",
+                        active && "bg-primary text-primary-foreground hover:bg-primary",
+                      )}
+                    >
+                      {range.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <button

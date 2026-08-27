@@ -18,6 +18,7 @@ import {
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
 import { SectorPieChart } from "@/components/charts/sector-pie-chart";
+import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -223,6 +224,8 @@ export function SectorAnalysisView() {
           />
         </CardContent>
       </Card>
+
+      <ProjectRegisterSection filterQuery={filterQuery} />
     </PageFrame>
   );
 }

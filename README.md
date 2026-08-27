@@ -80,11 +80,10 @@ rather than lighting up an empty chart.
 | Page | What it does |
 | --- | --- |
 | **Executive Dashboard** | 4 KPI cards with sparklines, spend trend, sector donut, top-12 companies, Schedule VII categories, India choropleth, top states, paginated project register. |
-| **Company Analysis** | Searchable list of all 1,116 filers, tick up to 4 to **compare** side by side (spend by year, YoY, obligation utilisation), sector distribution, and direct links to each company's disclosed CSR/BRSR/annual report PDFs. |
-| **State Analysis** | Choropleth + coverage panel, fastest-growing states, multi-year state comparison, full state table, **district table** (682 districts). |
-| **Sector Analysis** | Sector share, 6-sector trajectories, YoY growth (risers and fallers), funding flow into Schedule VII categories, full sector table. |
+| **Company Analysis** | One searchable company list, up to 4-company comparison, spend by year, YoY, obligation utilisation, sector distribution, disclosure links, and the filtered project register. |
+| **State Analysis** | Choropleth + coverage panel, fastest-growing states, readable multi-year state comparison, state and district tables, and the filtered project register. |
+| **Sector Analysis** | Sector share, 6-sector trajectories, YoY growth, funding flow into Schedule VII categories, full sector table, and the filtered project register. |
 | **NGO Analysis** | Mode-of-implementation breakdown (direct vs. own trust vs. government trust vs. external agency), state presence, focus areas — plus an honest panel explaining that partner *names* aren't in the data. |
-| **Project Analytics** | Project-size histogram (click a bar to filter by amount), district locations, aspirational-district spend, project register. |
 | **AI Insights** | Executive summary, ~10 insight cards with evidence chips, forecast chart with confidence band, anomaly table, recommendations, data-quality panel, and a chat box. |
 | **Reports** | PDF / Excel / PowerPoint / CSV generation from the current filters, with a per-format contents list and a re-downloadable history. |
 | **Data Explorer** | Raw register with a column chooser, sorting, page sizes to 200, and named **saved views** stored in the browser. |
@@ -93,9 +92,9 @@ Plus `/companies/[id]` — per-company drill-down with national rank, sector ran
 utilisation, thematic mix, state coverage, peers and largest projects.
 
 Filters (year, company, state, district, sector, Schedule VII category, implementation mode, amount
-range, aspirational-only, free text) are shared across every page and mirrored into the URL, so any
-view is a shareable link. Quarter, Month, NGO and Status appear as disabled chips explaining why the
-data can't support them.
+range (including 0–1, 1–5, 5–10 and >10 Cr presets), aspirational-only, free text) are shared across
+every page and mirrored into the URL, so any view is a shareable link. Unsupported Quarter, Month,
+NGO and Status filter chips are not shown.
 
 ---
 
@@ -197,8 +196,7 @@ These are properties of the source workbook, shown to the user rather than hidde
 1. **Project outlay is not summable.** For part of FY 2020-21 the workbook repeats a company-level
    outlay on every project row (HDFC's ₹407.74 Cr on ~200 rows). Aggregate outlay and any
    budget-utilisation ratio derived from it are therefore *not* charted; the per-project value is
-   still shown in the register as disclosed. Project Analytics states this in place of the
-   "Budget Utilization" panel.
+   still shown in project registers as disclosed; aggregate utilisation is intentionally omitted.
 2. **~33% of FY 2022-23 spend is filed as "Pan India"** and can't be mapped. It appears as a chip
    beside the choropleth and as a "gap" insight rather than being dropped.
 3. **1,088 rows have no resolvable sector** even after backfilling from the per-sector sheets; they

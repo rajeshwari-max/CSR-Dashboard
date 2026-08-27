@@ -140,7 +140,7 @@ export function ExecutiveDashboard() {
               <h3>State-wise Distribution</h3>
               <div className="muted">Click a state to filter</div>
             </div>
-            <span className="card-badge">{kpis?.stateCount ?? 0} states</span>
+            <span className="card-badge">Across India</span>
           </div>
           <div style={{ height: 190 }}>
             {summary.isLoading ? (
