@@ -119,7 +119,7 @@ const LABEL: Record<Dimension, string> = {
 
 export function answerQuestion(question: string, filters: Filters): NlqAnswer {
   const data = getDataset();
-  const years = [...data.years].sort();
+  const years = data.yearOrder.map((index) => data.years[index]);
   const base: Filters = { ...EMPTY_FILTERS, ...filters };
 
   const year = parseYear(question, years);
@@ -357,7 +357,7 @@ export function nlqCapabilities() {
   return {
     dimensions: ["state", "district", "sector", "company", "category", "implementation mode", "year"],
     metrics: ["spend", "growth", "projects", "companies"],
-    years: [...data.years].sort(),
+    years: data.yearOrder.map((index) => data.years[index]),
     entities: {
       states: data.states.length,
       sectors: data.sectors.length,

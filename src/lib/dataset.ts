@@ -12,7 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { DEFAULT_REPORTING_YEARS } from "@/types";
+import { REPORTING_START_YEAR } from "@/types";
 import type {
   Capabilities,
   ColumnCoverage,
@@ -138,6 +138,12 @@ export function round(value: number, digits = 2): number {
   return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 
+/** Include FY 2021-22 and every later financial year present in an uploaded dataset. */
+function isReportingYear(label: string): boolean {
+  const match = /^FY\s+(\d{4})-\d{2}$/.exec(label.trim());
+  return match !== null && Number.parseInt(match[1], 10) >= REPORTING_START_YEAR;
+}
+
 export function getDataset(): Dataset {
   if (globalThis.__csrDataset) return globalThis.__csrDataset;
 
@@ -204,7 +210,9 @@ export function getDataset(): Dataset {
       `${d.states[row[3]] ?? ""} ${row[6] >= 0 ? d.districts[row[6]] : ""}`.toLowerCase();
   }
 
-  dataset.yearOrder = [...d.years.keys()].sort((a, b) => d.years[a].localeCompare(d.years[b]));
+  dataset.yearOrder = [...d.years.keys()]
+    .filter((index) => isReportingYear(d.years[index]))
+    .sort((a, b) => d.years[a].localeCompare(d.years[b]));
 
   globalThis.__csrDataset = dataset;
   return dataset;
@@ -214,7 +222,8 @@ export function getMeta(): Meta {
   if (!globalThis.__csrMeta) {
     const base = readJson<Meta>("meta.json");
     const data = getDataset();
-    const allowedYears = new Set(DEFAULT_REPORTING_YEARS);
+    const reportingYears = data.years.filter(isReportingYear);
+    const allowedYears = new Set(reportingYears);
     const allowedYearIndexes = new Set(
       data.years.flatMap((year, index) => (allowedYears.has(year) ? [index] : [])),
     );
@@ -240,7 +249,7 @@ export function getMeta(): Meta {
       rowCount,
       companyCount: companies.size,
       totalSpend: round(totalSpend),
-      years: DEFAULT_REPORTING_YEARS.filter((year) => data.years.includes(year)),
+      years: [...reportingYears].sort((a, b) => a.localeCompare(b)),
       spendByYear: Object.fromEntries(
         Object.entries(spendByYear).map(([year, value]) => [year, round(value)]),
       ),
@@ -266,7 +275,7 @@ function indexSet(values: string[], dictionary: string[]): Set<number> | null {
 export function selectRows(filters: Filters): Int32Array {
   const data = getDataset();
   const years = indexSet(filters.years, data.years);
-  const reportingYears = indexSet(DEFAULT_REPORTING_YEARS, data.years);
+  const reportingYears = indexSet(data.years.filter(isReportingYear), data.years);
   const sectors = indexSet(filters.sectors, data.sectors);
   const states = indexSet(filters.states, data.states);
   const districts = indexSet(filters.districts, data.districts);

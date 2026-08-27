@@ -88,10 +88,11 @@ export interface Filters {
   aspirationalOnly: boolean;
 }
 
-export const DEFAULT_REPORTING_YEARS = ["FY 2021-22", "FY 2022-23", "FY 2023-24", "FY 2024-25"];
+/** Earliest financial year exposed by the application; later years are discovered from each dataset. */
+export const REPORTING_START_YEAR = 2021;
 
 export const EMPTY_FILTERS: Filters = {
-  years: [...DEFAULT_REPORTING_YEARS],
+  years: [],
   sectors: [],
   states: [],
   districts: [],
