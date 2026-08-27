@@ -1,6 +1,12 @@
 {
-  "generatedAt": "2026-08-04T12:50:35+00:00",
+  "generatedAt": "2026-08-27T05:35:43+00:00",
   "sources": [
+    {
+      "file": "AAAMaster.xlsm",
+      "sheets": [
+        "Sheet1"
+      ]
+    },
     {
       "file": "csr_database.xlsx",
       "sheets": [
@@ -62,13 +68,21 @@
       "available": false
     }
   },
-  "rowCount": 32761,
-  "companyCount": 1116,
-  "totalSpend": 39711.57,
+  "rowCount": 101327,
+  "companyCount": 1347,
+  "totalSpend": 141976.53,
   "years": [
+    "FY 2014-15",
+    "FY 2015-16",
+    "FY 2016-17",
+    "FY 2017-18",
+    "FY 2018-19",
+    "FY 2019-20",
     "FY 2020-21",
     "FY 2021-22",
-    "FY 2022-23"
+    "FY 2022-23",
+    "FY 2023-24",
+    "FY 2024-25"
   ],
   "sectors": [
     "Air Transportation",
@@ -123,6 +137,7 @@
     "Dadra and Nagar Haveli",
     "Daman and Diu",
     "Delhi",
+    "District Not Classified Elsewhere",
     "Goa",
     "Gujarat",
     "Haryana",
@@ -155,6 +170,7 @@
   ],
   "themes": [
     "Agro Forestry",
+    "Andhra Pradesh",
     "Animal Welfare",
     "Armed Forces, Veterans, War Widows/ Dependants",
     "Art And Culture",
@@ -167,6 +183,7 @@
     "Livelihood Enhancement Projects",
     "Not Specified",
     "Other Central Government Funds",
+    "Pan India",
     "Poverty, Eradicating Hunger, Malnutrition",
     "Prime Minister'S National Relief Fund",
     "Rural Development Projects",
@@ -176,6 +193,7 @@
     "Setting Up Homes And Hostels For Women",
     "Setting Up Orphanage",
     "Slum Area Development",
+    "Socio-Economic Equalities",
     "Socio-Economic Inequalities",
     "Special Education",
     "Swachh Bharat Kosh",
@@ -192,8 +210,15 @@
     "Trust / Society / Sec-8 company (own)"
   ],
   "districts": [
+    "1.02",
+    "1.88",
+    "25.09",
+    "3.76",
+    "9.35",
+    "9.93",
     "Adilabad",
     "Agra",
+    "Ahilyanagar",
     "Ahmedabad",
     "Ahmednagar",
     "Aizawl",
@@ -201,6 +226,8 @@
     "Akola",
     "Alappuzha",
     "Aligarh",
+    "Alipurduar",
+    "Alirajpur",
     "Almora",
     "Alwar",
     "Ambala",
@@ -221,6 +248,8 @@
     "Araria",
     "Aravalli",
     "Ariyalur",
+    "Arvalli",
+    "Arwal",
     "Ashoknagar",
     "Auraiya",
     "Aurangabad",
@@ -228,6 +257,7 @@
     "Azamgarh",
     "Bagalkot",
     "Bagalkote",
+    "Bageshwar",
     "Baghpat",
     "Bahraich",
     "Baksa",
@@ -239,8 +269,10 @@
     "Ballia",
     "Balod",
     "Balrampur",
+    "Balrampur-Ramanujganj",
     "Banas Kantha",
     "Banaskantha",
+    "Banda",
     "Bandipora",
     "Bangalore Rural",
     "Bangalore Urban",
@@ -266,6 +298,8 @@
     "Belgaum",
     "Bellary",
     "Bengaluru Rural",
+    "Bengaluru South",
+    "Bengaluru Urban",
     "Betul",
     "Bhadohi",
     "Bhadradri Kothagudem",
@@ -290,7 +324,10 @@
     "Biswanath",
     "Bokaro",
     "Bongaigaon",
+    "Botad",
+    "Boudh",
     "Budaun",
+    "Budgam",
     "Bulandshahr",
     "Buldhana",
     "Bundi",
@@ -312,10 +349,14 @@
     "Chengalpattu",
     "Chennai",
     "Chhatarpur",
+    "Chhatrapati Sambhajinagar",
     "Chhindwara",
     "Chhota Udaipur",
+    "Chhotaudepur",
     "Chikkaballapur",
+    "Chikkaballapura",
     "Chikkamagaluru",
+    "Chirang",
     "Chitradurga",
     "Chitrakoot",
     "Chittoor",
@@ -341,6 +382,7 @@
     "Darjeeling",
     "Darrang",
     "Dausa",
+    "Davanagere",
     "Davangere",
     "Debagarh",
     "Dehradun",
@@ -362,8 +404,11 @@
     "Dhule",
     "Dibang Valley",
     "Dibrugarh",
+    "Dima Hasao",
     "Dimapur",
     "Dindigul",
+    "Dindori",
+    "District Not Classified Elsewhere",
     "Doda",
     "Dumka",
     "Dungarpur",
@@ -372,6 +417,8 @@
     "East Delhi",
     "East Garo Hills",
     "East Godavari",
+    "East Jaintia Hills",
+    "East Kameng",
     "East Khasi Hills",
     "East Siang",
     "East Sikkim",
@@ -382,6 +429,7 @@
     "Etah",
     "Etawah",
     "Faridabad",
+    "Faridkot",
     "Farrukhabad",
     "Fatehabad",
     "Fatehgarh Sahib",
@@ -390,12 +438,16 @@
     "Ferozepur",
     "Firozabad",
     "Firozpur",
+    "Gadag",
     "Gadchiroli",
     "Gajapati",
     "Gandhinagar",
+    "Ganganagar",
     "Gangtok",
     "Ganjam",
+    "Garhwa",
     "Gariaband",
+    "Gariyaband",
     "Gautam Buddha Nagar",
     "Gaya",
     "Ghaziabad",
@@ -405,6 +457,9 @@
     "Goalpara",
     "Godda",
     "Golaghat",
+    "Gomati",
+    "Gonda",
+    "Gondia",
     "Gopalganj",
     "Gorakhpur",
     "Gulbarga",
@@ -427,6 +482,7 @@
     "Hazaribagh",
     "Hingoli",
     "Hisar",
+    "Hojai",
     "Hooghly",
     "Hoshangabad",
     "Hoshiarpur",
@@ -453,6 +509,7 @@
     "Jamnagar",
     "Jamtara",
     "Jamui",
+    "Jangoan",
     "Janjgir Champa",
     "Janjgir-Champa",
     "Jashpur",
@@ -462,22 +519,28 @@
     "Jhajjar",
     "Jhalawar",
     "Jhansi",
+    "Jhargram",
     "Jharsuguda",
     "Jhunjhunu",
     "Jind",
     "Jodhpur",
+    "Jogulamba Gadwal",
     "Jorhat",
     "Junagadh",
+    "Kabeerdham",
     "Kabirdham",
     "Kachchh",
     "Kadapa",
     "Kaimur",
+    "Kaimur (Bhabua)",
     "Kaithal",
     "Kalaburagi",
     "Kalahandi",
     "Kalimpong",
     "Kallakurichi",
+    "Kamareddy",
     "Kamrup",
+    "Kamrup Metro",
     "Kamrup Metropolitan",
     "Kancheepuram",
     "Kanchipuram",
@@ -493,6 +556,7 @@
     "Kapurthala",
     "Karaikal",
     "Karauli",
+    "Karbi Anglong",
     "Kargil",
     "Karimganj",
     "Karimnagar",
@@ -505,6 +569,7 @@
     "Kaushambi",
     "Kendrapara",
     "Kendujhar",
+    "Keonjhar",
     "Khagaria",
     "Khammam",
     "Khandwa",
@@ -516,6 +581,7 @@
     "Khordha",
     "Khunti",
     "Kinnaur",
+    "Kiphire",
     "Kishanganj",
     "Kishtwar",
     "Kodagu",
@@ -523,6 +589,7 @@
     "Kohima",
     "Kokrajhar",
     "Kolar",
+    "Kolasib",
     "Kolhapur",
     "Kolkata",
     "Kollam",
@@ -539,28 +606,37 @@
     "Krishna",
     "Krishnagiri",
     "Kullu",
+    "Kumuram Bheem Asifabad",
     "Kupwara",
     "Kurnool",
     "Kurukshetra",
+    "Kurung Kumey",
     "Kushinagar",
     "Kutch",
+    "Lahaul And Spiti",
     "Lahaul Spiti",
     "Lakhimpur",
+    "Lakhisarai",
     "Lakshadweep",
+    "Lakshadweep District",
     "Lalitpur",
     "Latehar",
     "Latur",
+    "Lawngtlai",
     "Leh",
     "Leh Ladakh",
     "Lohardaga",
     "Lohit",
+    "Longleng",
     "Lower Dibang Valley",
     "Lower Subansiri",
     "Lucknow",
     "Ludhiana",
     "Lunglei",
+    "Madhepura",
     "Madhubani",
     "Madurai",
+    "Mahabubabad",
     "Mahabubnagar",
     "Maharajganj",
     "Mahasamund",
@@ -568,6 +644,8 @@
     "Mahe",
     "Mahendragarh",
     "Mahesana",
+    "Mahisagar",
+    "Mahoba",
     "Mahrajganj",
     "Mainpuri",
     "Majuli",
@@ -588,6 +666,7 @@
     "Mayurbhanj",
     "Medak",
     "Medchal",
+    "Medchal Malkajgiri",
     "Meerut",
     "Mehsana",
     "Mewat",
@@ -597,8 +676,10 @@
     "Mokokchung",
     "Mon",
     "Moradabad",
+    "Morbi",
     "Morena",
     "Muktsar",
+    "Mumbai",
     "Mumbai City",
     "Mumbai Suburban",
     "Munger",
@@ -619,6 +700,7 @@
     "Nalgonda",
     "Namakkal",
     "Namchi",
+    "Namsai",
     "Nanded",
     "Nandurbar",
     "Narayanpur",
@@ -632,6 +714,7 @@
     "Neemuch",
     "Nellore",
     "New Delhi",
+    "Nicobars",
     "Nilgiris",
     "Nizamabad",
     "North 24 Parganas",
@@ -644,6 +727,7 @@
     "Nuapada",
     "Nuh",
     "Osmanabad",
+    "Pakur",
     "Palakkad",
     "Palamu",
     "Palghar",
@@ -662,14 +746,18 @@
     "Pashchim Champaran",
     "Patan",
     "Pathanamthitta",
+    "Pathankot",
     "Patiala",
     "Patna",
     "Pauri",
     "Pauri Garhwal",
+    "Peddapalli",
     "Perambalur",
+    "Peren",
     "Phek",
     "Pilibhit",
     "Pithoragarh",
+    "Poonch",
     "Porbandar",
     "Prakasam",
     "Pratapgarh",
@@ -678,6 +766,7 @@
     "Pudukkottai",
     "Pulwama",
     "Pune",
+    "Purba Bardhaman",
     "Purba Medinipur",
     "Purbi Champaran",
     "Puri",
@@ -725,6 +814,7 @@
     "Sahebganj",
     "Salem",
     "Samastipur",
+    "Samba",
     "Sambalpur",
     "Sangareddy",
     "Sangli",
@@ -737,22 +827,28 @@
     "Sawai Madhopur",
     "Sehore",
     "Senapati",
+    "Seoni",
     "Seraikela Kharsawan",
+    "Serchhip",
     "Shahdol",
     "Shaheed Bhagat Singh Nagar",
     "Shahid Bhagat Singh Nagar",
     "Shahjahanpur",
     "Shajapur",
     "Sheikhpura",
+    "Sheohar",
     "Sheopur",
     "Shimla",
     "Shimoga",
     "Shivamogga",
     "Shivpuri",
+    "Shopian",
     "Shravasti",
     "Shrawasti",
+    "Siaha",
     "Siddharthnagar",
     "Siddipet",
+    "Sidhi",
     "Sikar",
     "Simdega",
     "Sindhudurg",
@@ -768,9 +864,11 @@
     "Solan",
     "Solapur",
     "Sonbhadra",
+    "Sonepur",
     "Sonipat",
     "Sonitpur",
     "South 24 Parganas",
+    "South Andamans",
     "South Delhi",
     "South East Delhi",
     "South Garo Hills",
@@ -781,6 +879,7 @@
     "Sri Ganganagar",
     "Sri Muktsar Sahib",
     "Sri Potti Sriramulu Nellore",
+    "Sribhumi",
     "Srikakulam",
     "Srinagar",
     "Subarnapur",
@@ -788,6 +887,7 @@
     "Sultanpur",
     "Sundargarh",
     "Sundergarh",
+    "Supaul",
     "Surajpur",
     "Surat",
     "Surendranagar",
@@ -796,6 +896,7 @@
     "Tamenglong",
     "Tapi",
     "Tarn Taran",
+    "Tawang",
     "Tehri",
     "Tehri Garhwal",
     "Tengnoupal",
@@ -809,6 +910,7 @@
     "Thiruvarur",
     "Thoothukkudi",
     "Thoothukudi",
+    "Thoubal",
     "Thrissur",
     "Tikamgarh",
     "Tinsukia",
@@ -832,9 +934,12 @@
     "Ukhrul",
     "Umaria",
     "Una",
+    "Unakoti",
     "Unnao",
     "Upper Siang",
+    "Upper Subansiri",
     "Uttar Bastar Kanker",
+    "Uttar Dinajpur",
     "Uttar Kashi",
     "Uttara Kannada",
     "Uttarkashi",
@@ -844,6 +949,7 @@
     "Varanasi",
     "Vellore",
     "Vidisha",
+    "Vijayanagara",
     "Vijayapura",
     "Vikarabad",
     "Viluppuram",
@@ -869,6 +975,7 @@
     "West Singhbhum",
     "West Tripura",
     "Y.S.R.",
+    "Y.S.R. Kadapa",
     "Yadadri Bhuvanagiri",
     "Yadgir",
     "Yamunanagar",
@@ -889,9 +996,9 @@
       "sector": "Utilities"
     },
     {
-      "id": "agi-greenpac",
-      "name": "AGI Greenpac Limited",
-      "sector": "Consumer Discretionary Products"
+      "id": "63-moons-technologies",
+      "name": "63 Moons Technologies Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "aarti-drugs",
@@ -939,9 +1046,19 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "acme-solar-holdings",
+      "name": "Acme Solar Holdings Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "action-construction-equipment",
       "name": "Action Construction Equipment Limited",
       "sector": "Construction Materials"
+    },
+    {
+      "id": "adani-energy-solutions",
+      "name": "Adani Energy Solutions Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "adani-enterprises",
@@ -994,6 +1111,11 @@
       "sector": "Apparel & Textiles"
     },
     {
+      "id": "aditya-birla-financial-services",
+      "name": "Aditya Birla Financial Services Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "aditya-birla-sun-life-amc",
       "name": "Aditya Birla Sun Life Amc Limited",
       "sector": "Insurance"
@@ -1019,9 +1141,24 @@
       "sector": "Oil & Gas"
     },
     {
+      "id": "aegis-vopak-terminals",
+      "name": "Aegis Vopak Terminals Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "aeroflex-neu",
+      "name": "Aeroflex Neu Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "aether-industries",
       "name": "Aether Industries Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "afcons-infrastructure",
+      "name": "Afcons Infrastructure Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "affle-india",
@@ -1032,6 +1169,16 @@
       "id": "agarwal-industrial",
       "name": "Agarwal Industrial Corporation Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "agi-greenpac",
+      "name": "Agi Greenpac Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "agi-infra",
+      "name": "Agi Infra Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "agro-tech-foods",
@@ -1059,9 +1206,19 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "ajax-engineering",
+      "name": "Ajax Engineering Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "ajmera-realty-infra-india",
       "name": "Ajmera Realty & Infra India Limited",
       "sector": "Real Estate"
+    },
+    {
+      "id": "akums-drugs-and-pharmaceuticals",
+      "name": "Akums Drugs And Pharmaceuticals Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "akzo-nobel-india",
@@ -1084,6 +1241,11 @@
       "sector": "Metals & Mining"
     },
     {
+      "id": "alivus-life-sciences",
+      "name": "Alivus Life Sciences Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "alkem-laboratories",
       "name": "Alkem Laboratories Limited",
       "sector": "Biotechnology & Pharmaceuticals"
@@ -1099,6 +1261,11 @@
       "sector": "Sector Agnostic"
     },
     {
+      "id": "allied-blenders-and-distillers",
+      "name": "Allied Blenders And Distillers Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "alok-industries",
       "name": "Alok Industries Limited",
       "sector": "Apparel & Textiles"
@@ -1107,6 +1274,11 @@
       "id": "amara-raja-batteries",
       "name": "Amara Raja Batteries Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "amara-raja-energy-mobility",
+      "name": "Amara Raja Energy & Mobility Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "amber-enterprises-india",
@@ -1134,6 +1306,11 @@
       "sector": "Health Care Retail"
     },
     {
+      "id": "anand-rathi-share-and-stock-brokers",
+      "name": "Anand Rathi Share And Stock Brokers Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "anand-rathi-wealth",
       "name": "Anand Rathi Wealth Limited",
       "sector": "Capital Markets"
@@ -1142,6 +1319,11 @@
       "id": "anant-raj",
       "name": "Anant Raj Limited",
       "sector": "Real Estate"
+    },
+    {
+      "id": "anant-raj-projects",
+      "name": "Anant Raj Projects Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "andhra-paper",
@@ -1169,6 +1351,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "apeejay-surrendra-management-servicesprivate",
+      "name": "Apeejay Surrendra Management Servicesprivate Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "apl-apollo-tubes",
       "name": "Apl Apollo Tubes Limited",
       "sector": "Construction Materials"
@@ -1177,6 +1364,11 @@
       "id": "apollo-hospitals-enterprise",
       "name": "Apollo Hospitals Enterprise Limited",
       "sector": "Health Care Providers"
+    },
+    {
+      "id": "apollo-micro-systems",
+      "name": "Apollo Micro Systems Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "apollo-pipes",
@@ -1269,6 +1461,16 @@
       "sector": "Industrials"
     },
     {
+      "id": "ask-automotive",
+      "name": "Ask Automotive Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "asm-technologies",
+      "name": "Asm Technologies Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "astec-lifesciences",
       "name": "Astec LifeSciences Limited",
       "sector": "Chemicals"
@@ -1294,6 +1496,11 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "ather-energy",
+      "name": "Ather Energy Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "atul",
       "name": "Atul Limited",
       "sector": "Chemicals"
@@ -1309,6 +1516,11 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "aurionpro-solutions",
+      "name": "Aurionpro Solutions Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "aurobindo-pharma",
       "name": "Aurobindo Pharma Limited",
       "sector": "Health Care Retail"
@@ -1319,6 +1531,11 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "authum-investment-infrastructurelimited",
+      "name": "Authum Investment & Infrastructurelimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "automotive-axles",
       "name": "Automotive Axles Limited",
       "sector": "Automobiles"
@@ -1327,6 +1544,11 @@
       "id": "avadh-sugar-energy",
       "name": "Avadh Sugar & Energy Limited",
       "sector": "Food"
+    },
+    {
+      "id": "avalon-technologies",
+      "name": "Avalon Technologies Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "avantel",
@@ -1344,6 +1566,11 @@
       "sector": "Consumer Goods Retail"
     },
     {
+      "id": "avenuesai",
+      "name": "Avenuesai Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "avt-natural-products",
       "name": "Avt Natural Products Limited",
       "sector": "Industrials"
@@ -1354,9 +1581,19 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "axiscades-technologies",
+      "name": "Axiscades Technologies Limited",
+      "sector": "Technology"
+    },
+    {
       "id": "axita",
       "name": "Axita",
       "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "azad-engineering",
+      "name": "Azad Engineering Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "bbox",
@@ -1384,6 +1621,11 @@
       "sector": "Insurance"
     },
     {
+      "id": "bajaj-financial-securities",
+      "name": "Bajaj Financial Securities Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "bajaj-finserv",
       "name": "Bajaj Finserv Limited",
       "sector": "Insurance"
@@ -1395,13 +1637,18 @@
     },
     {
       "id": "bajaj-holdings-investment",
-      "name": "Bajaj Holdings & Investment Limited",
+      "name": "Bajaj Holdings & Investment Limited.",
       "sector": "Capital Markets"
     },
     {
       "id": "bajaj-holdings-and-investments",
       "name": "Bajaj Holdings and Investments Limited",
       "sector": "Capital Markets"
+    },
+    {
+      "id": "bajaj-housing-finance",
+      "name": "Bajaj Housing Finance Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "balaji-amines",
@@ -1412,6 +1659,11 @@
       "id": "balkrishna-industries",
       "name": "Balkrishna Industries Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "ballarpur-industries",
+      "name": "Ballarpur Industries Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "balmer-lawrie",
@@ -1469,6 +1721,11 @@
       "sector": "Food"
     },
     {
+      "id": "bansal-wire-industries",
+      "name": "Bansal Wire Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "barbeque-nation-hospitality",
       "name": "Barbeque-Nation Hospitality Limited",
       "sector": "Restaurants"
@@ -1494,6 +1751,11 @@
       "sector": "Sector Agnostic"
     },
     {
+      "id": "belrise-industries",
+      "name": "Belrise Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "beml",
       "name": "Beml Limited",
       "sector": "Industrials"
@@ -1502,6 +1764,11 @@
       "id": "bengal-assam",
       "name": "Bengal & Assam Company Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "bengal-finance-and-investment-privatelimited",
+      "name": "Bengal Finance And Investment Privatelimited",
+      "sector": "Unclassified"
     },
     {
       "id": "berger-paints-india",
@@ -1524,6 +1791,11 @@
       "sector": "Utilities"
     },
     {
+      "id": "bgr-energy-systems",
+      "name": "Bgr Energy Systems Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "bhageria-industries",
       "name": "Bhageria Industries Limited",
       "sector": "Industrials"
@@ -1532,6 +1804,11 @@
       "id": "bhagiradha-chemicals-industries",
       "name": "Bhagiradha Chemicals & Industries Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "bhagiradha-chemicals-and-industries",
+      "name": "Bhagiradha Chemicals And Industries Ltd.",
+      "sector": "Unclassified"
     },
     {
       "id": "bhansali-engineering-polymers",
@@ -1584,6 +1861,11 @@
       "sector": "Consumer Services"
     },
     {
+      "id": "bharti-airtel-services",
+      "name": "Bharti Airtel Services Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "bigbloc-construction",
       "name": "Bigbloc Construction Limited",
       "sector": "Construction Materials"
@@ -1599,6 +1881,11 @@
       "sector": "Apparel & Textiles"
     },
     {
+      "id": "biocon-biologics",
+      "name": "Biocon Biologics Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "biocon",
       "name": "Biocon Limited",
       "sector": "Biotechnology & Pharmaceuticals"
@@ -1609,6 +1896,11 @@
       "sector": "Construction Materials"
     },
     {
+      "id": "birlasoft-india",
+      "name": "Birlasoft (India) Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "birlasoft",
       "name": "Birlasoft Limited",
       "sector": "Technology"
@@ -1616,6 +1908,11 @@
     {
       "id": "black-box",
       "name": "Black Box Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "bliss-gvs-pharma",
+      "name": "Bliss Gvs Pharma Limited",
       "sector": "Unclassified"
     },
     {
@@ -1629,14 +1926,19 @@
       "sector": "Consumer Services"
     },
     {
+      "id": "blue-jet-healthcare",
+      "name": "Blue Jet Healthcare Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "blue-star",
       "name": "Blue Star Limited",
       "sector": "Utilities"
     },
     {
-      "id": "bombay-burmah-trading",
-      "name": "Bombay Burmah Trading Corporation Limited",
-      "sector": "Food"
+      "id": "bluestone-jewellery-and-lifestyle",
+      "name": "Bluestone Jewellery And Lifestyle Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "bombay-burmah-trading-corporationlimited",
@@ -1654,6 +1956,11 @@
       "sector": "Food"
     },
     {
+      "id": "bondada-engineering",
+      "name": "Bondada Engineering Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "borosil",
       "name": "Borosil Limited",
       "sector": "Industrials"
@@ -1664,9 +1971,19 @@
       "sector": "Consumer Discretionary Products"
     },
     {
+      "id": "bosch-home-comfort-india",
+      "name": "Bosch Home Comfort India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "bosch",
       "name": "Bosch Limited",
       "sector": "Technology"
+    },
+    {
+      "id": "brainbees-solutions",
+      "name": "Brainbees Solutions Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "brigade-enterprises",
@@ -1695,13 +2012,8 @@
     },
     {
       "id": "c-e-info-systems",
-      "name": "C.E. Info Systems Limited",
+      "name": "C.E. Info Systems Private Limited",
       "sector": "Technology"
-    },
-    {
-      "id": "cg-power-and-industrial-solutions",
-      "name": "CG Power and Industrial Solutions Limited",
-      "sector": "Utilities"
     },
     {
       "id": "camlin-fine-sciences",
@@ -1749,6 +2061,11 @@
       "sector": "Consumer Services"
     },
     {
+      "id": "carraro-india",
+      "name": "Carraro India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "cartrade-tech",
       "name": "Cartrade Tech Limited",
       "sector": "Automobiles"
@@ -1772,6 +2089,21 @@
       "id": "ceat",
       "name": "Ceat Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "ceigall-india",
+      "name": "Ceigall India Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "cello-world",
+      "name": "Cello World Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "cemindia-projects",
+      "name": "Cemindia Projects Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "central-bank-of-india",
@@ -1811,6 +2143,11 @@
     {
       "id": "cesc",
       "name": "Cesc Limited",
+      "sector": "Utilities"
+    },
+    {
+      "id": "cg-power-and-industrial-solutions",
+      "name": "Cg Power And Industrial Solutions Limited",
       "sector": "Utilities"
     },
     {
@@ -1869,6 +2206,16 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "cian-agro-industries-infrastructure",
+      "name": "Cian Agro Industries & Infrastructure Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "cie-automotive-india",
+      "name": "Cie Automotive India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "cigniti-technologies",
       "name": "Cigniti Technologies Limited",
       "sector": "Technology"
@@ -1919,9 +2266,24 @@
       "sector": "Beverages"
     },
     {
+      "id": "coforge-business-process-solutions",
+      "name": "Coforge Business Process Solutions Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "coforge",
       "name": "Coforge Limited",
       "sector": "Technology"
+    },
+    {
+      "id": "cohance-lifesciences",
+      "name": "Cohance Lifesciences Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "colaba-land-and-mill",
+      "name": "Colaba Land And Mill Company Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "colgate-palmolive-india",
@@ -1932,6 +2294,11 @@
       "id": "computer-age-management-services",
       "name": "Computer Age Management Services Limited",
       "sector": "Technology"
+    },
+    {
+      "id": "concord-biotech",
+      "name": "Concord Biotech Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "confidence-petroleum-india",
@@ -1994,6 +2361,16 @@
       "sector": "Automobiles"
     },
     {
+      "id": "cupid",
+      "name": "Cupid Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "cyient-dlm",
+      "name": "Cyient Dlm Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "cyient",
       "name": "Cyient Limited",
       "sector": "Technology"
@@ -2007,11 +2384,6 @@
       "id": "d-b",
       "name": "D.B.Corp Limited",
       "sector": "Media"
-    },
-    {
-      "id": "dcb-bank",
-      "name": "DCB Bank Limited",
-      "sector": "Corporate & Retail Banking"
     },
     {
       "id": "dcw",
@@ -2054,6 +2426,11 @@
       "sector": "Technology"
     },
     {
+      "id": "dcb-bank",
+      "name": "Dcb Bank Limited",
+      "sector": "Corporate & Retail Banking"
+    },
+    {
       "id": "dcm-shriram",
       "name": "Dcm Shriram Limited",
       "sector": "Sector Agnostic"
@@ -2067,6 +2444,11 @@
       "id": "dcxindia",
       "name": "Dcxindia",
       "sector": "Industrials"
+    },
+    {
+      "id": "ddev-plastiks-industries",
+      "name": "Ddev Plastiks Industries Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "deep-industries",
@@ -2134,6 +2516,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "diamond-power-infrastructure",
+      "name": "Diamond Power Infrastructure Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "dilip-buildcon",
       "name": "Dilip Buildcon Limited",
       "sector": "Infrastructure"
@@ -2159,6 +2546,11 @@
       "sector": "Automobiles"
     },
     {
+      "id": "divgi-torqtransfer-systems-privatelimited",
+      "name": "Divgi Torqtransfer Systems Privatelimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "divi",
       "name": "Divi",
       "sector": "Biotechnology & Pharmaceuticals"
@@ -2174,6 +2566,11 @@
       "sector": "Technology"
     },
     {
+      "id": "dlf-info-city-chennai",
+      "name": "Dlf Info City Chennai Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "dodla-dairy",
       "name": "Dodla Dairy Limited",
       "sector": "Food"
@@ -2182,6 +2579,11 @@
       "id": "dollar-industries",
       "name": "Dollar Industries Limited",
       "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "doms-industries",
+      "name": "Doms Industries Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "dr-lal-path-labs",
@@ -2209,6 +2611,11 @@
       "sector": "Consumer Services"
     },
     {
+      "id": "dredging-of-india",
+      "name": "Dredging Corporation Of India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "dwarikesh-sugar-industries",
       "name": "Dwarikesh Sugar Industries Limited",
       "sector": "Food"
@@ -2217,6 +2624,11 @@
       "id": "dynamatic-technologies",
       "name": "Dynamatic Technologies Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "e2e-networks",
+      "name": "E2E Networks Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "eid-parry-india",
@@ -2230,7 +2642,7 @@
     },
     {
       "id": "easy-trip-planners",
-      "name": "Easy Trip Planners Limited",
+      "name": "Easy Trip Planners Private Limited",
       "sector": "Consumer Services"
     },
     {
@@ -2279,6 +2691,11 @@
       "sector": "Industrials"
     },
     {
+      "id": "ellenbarrie-industrial-gases",
+      "name": "Ellenbarrie Industrial Gases Ltd",
+      "sector": "Unclassified"
+    },
+    {
       "id": "elpro-international",
       "name": "Elpro International Limited",
       "sector": "Unclassified"
@@ -2287,6 +2704,11 @@
       "id": "emami",
       "name": "Emami Limited",
       "sector": "Health Care Retail"
+    },
+    {
+      "id": "embassy-developments",
+      "name": "Embassy Developments Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "emudhra",
@@ -2304,9 +2726,24 @@
       "sector": "Oil & Gas"
     },
     {
+      "id": "entero-healthcare-solutions",
+      "name": "Entero Healthcare Solutions Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "entertainment-network-india",
       "name": "Entertainment Network (India) Limited",
       "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "enviro-infra-engineers",
+      "name": "Enviro Infra Engineers Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "epack-durable",
+      "name": "Epack Durable Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "epl",
@@ -2329,9 +2766,24 @@
       "sector": "Technology"
     },
     {
+      "id": "escorts-kubota",
+      "name": "Escorts Kubota Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "escorts",
       "name": "Escorts Limited",
       "sector": "Construction Materials"
+    },
+    {
+      "id": "eternal",
+      "name": "Eternal Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "ethos",
+      "name": "Ethos Limited",
+      "sector": "Consumer Discretionary Products"
     },
     {
       "id": "eureka-forbes",
@@ -2382,6 +2834,11 @@
       "id": "fdc",
       "name": "Fdc Limited",
       "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "fedbank-financial-services",
+      "name": "Fedbank Financial Services Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "federal-mogul-goetze-india",
@@ -2444,6 +2901,11 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "flair-writing-industries",
+      "name": "Flair Writing Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "force-motors",
       "name": "Force Motors Limited",
       "sector": "Unclassified"
@@ -2464,9 +2926,19 @@
       "sector": "Consumer Goods Retail"
     },
     {
+      "id": "fusion-finance",
+      "name": "Fusion Finance Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "fusion-micro-finance",
       "name": "Fusion Micro Finance Private Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "g-m-breweries",
+      "name": "G M Breweries Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "g-n-a-axles",
@@ -2506,7 +2978,7 @@
     {
       "id": "gujarat-themis-biosyn",
       "name": "GUJARAT THEMIS BIOSYN Limited",
-      "sector": "Biotechnology & Pharmaceuticals"
+      "sector": "Chemicals"
     },
     {
       "id": "gabriel-india",
@@ -2522,6 +2994,11 @@
       "id": "galaxy-surfactants",
       "name": "Galaxy Surfactants Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "gallantt-ispat",
+      "name": "Gallantt Ispat Limited",
+      "sector": "Metals & Mining"
     },
     {
       "id": "ganesh-benzoplast",
@@ -2544,6 +3021,11 @@
       "sector": "Marine Transportation"
     },
     {
+      "id": "garden-reach-shipbuilders-engineerslimited",
+      "name": "Garden Reach Shipbuilders & Engineerslimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "garware-hi-tech-films",
       "name": "Garware Hi-Tech Films Limited",
       "sector": "Chemicals"
@@ -2564,9 +3046,19 @@
       "sector": "Consumer Services"
     },
     {
+      "id": "ge-power-conversion-india-privatelimited",
+      "name": "Ge Power Conversion India Privatelimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "ge-t-d-india",
       "name": "Ge T&D India Limited",
       "sector": "Utilities"
+    },
+    {
+      "id": "ge-vernova-t-d-india",
+      "name": "Ge Vernova T&D India Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "general-insurance-of-india",
@@ -2639,6 +3131,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "gmr-airports",
+      "name": "Gmr Airports Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "gmr-infrastructure",
       "name": "Gmr Infrastructure Limited",
       "sector": "Infrastructure"
@@ -2707,6 +3204,11 @@
       "id": "goodyear-india",
       "name": "Goodyear India Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "gopal-snacks",
+      "name": "Gopal Snacks Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "granules-india",
@@ -2779,6 +3281,11 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "guj-info-petro",
+      "name": "Guj Info Petro Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "gujarat-alkalies-and-chemicals",
       "name": "Gujarat Alkalies And Chemicals Limited",
       "sector": "Chemicals"
@@ -2840,13 +3347,8 @@
     },
     {
       "id": "h-g-infra-engineering-part-ix",
-      "name": "H.G. Infra Engineering Limited (Part Ix)",
+      "name": "H.G. Infra Engineering Private Limited (Part Ix)",
       "sector": "Infrastructure"
-    },
-    {
-      "id": "hawkins-cookers",
-      "name": "HAWKINS COOKERS Limited",
-      "sector": "Consumer Discretionary Products"
     },
     {
       "id": "hcl-technologies",
@@ -2869,9 +3371,19 @@
       "sector": "Technology"
     },
     {
+      "id": "happy-forgings",
+      "name": "Happy Forgings Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "hariom-pipe-industries",
       "name": "Hariom Pipe Industries Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "harsha-engineers-international",
+      "name": "Harsha Engineers International Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "harsha-engineers",
@@ -2899,6 +3411,16 @@
       "sector": "Utilities"
     },
     {
+      "id": "hawkins-cookers",
+      "name": "Hawkins Cookers Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "hbl-engineering",
+      "name": "Hbl Engineering Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "hbl-power-systems",
       "name": "Hbl Power Systems Limited",
       "sector": "Industrials"
@@ -2919,6 +3441,11 @@
       "sector": "Insurance"
     },
     {
+      "id": "hdfc-standard-life-insurance",
+      "name": "Hdfc Standard Life Insurance Company Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "healthcare-global-enterprises",
       "name": "Healthcare Global Enterprises Limited",
       "sector": "Health Care Providers"
@@ -2927,6 +3454,11 @@
       "id": "heg",
       "name": "Heg Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "heidelberg-india",
+      "name": "Heidelberg India Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "heidelbergcement-india",
@@ -3075,8 +3607,13 @@
     },
     {
       "id": "home-first-finance-india",
-      "name": "Home First Finance Company India Limited",
+      "name": "Home First Finance Company India Private Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "honasa-consumer",
+      "name": "Honasa Consumer Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "honda-india-power-products",
@@ -3114,6 +3651,11 @@
       "sector": "Unclassified"
     },
     {
+      "id": "hubtown",
+      "name": "Hubtown Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "huhtamaki-india",
       "name": "Huhtamaki India Limited",
       "sector": "Industrials"
@@ -3124,11 +3666,6 @@
       "sector": "Unclassified"
     },
     {
-      "id": "icici-bank",
-      "name": "ICICI Bank Limited",
-      "sector": "Corporate & Retail Banking"
-    },
-    {
       "id": "ifb-industries",
       "name": "IFB Industries Limited",
       "sector": "Industrials"
@@ -3137,6 +3674,11 @@
       "id": "ig-petrochemicals",
       "name": "IG Petrochemicals Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "icici-bank",
+      "name": "Icici Bank Limited",
+      "sector": "Corporate & Retail Banking"
     },
     {
       "id": "icici-lombard-general-insurance",
@@ -3159,6 +3701,11 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "icra-techno-analytics",
+      "name": "Icra Techno Analytics Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "idbi-bank",
       "name": "Idbi Bank Limited",
       "sector": "Corporate & Retail Banking"
@@ -3172,6 +3719,11 @@
       "id": "idfc",
       "name": "Idfc Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "ifci-factors",
+      "name": "Ifci Factors Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "ifci",
@@ -3189,6 +3741,11 @@
       "sector": "Automobiles"
     },
     {
+      "id": "iifl-capital-services",
+      "name": "Iifl Capital Services Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "iifl-finance",
       "name": "Iifl Finance Limited",
       "sector": "Corporate & Retail Banking"
@@ -3204,6 +3761,11 @@
       "sector": "Hospitality & Recreation"
     },
     {
+      "id": "indegene",
+      "name": "Indegene Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "india-glycols",
       "name": "India Glycols Limited",
       "sector": "Chemicals"
@@ -3217,6 +3779,11 @@
       "id": "india-pesticides",
       "name": "India Pesticides Limited.",
       "sector": "Chemicals"
+    },
+    {
+      "id": "india-shelter-finance",
+      "name": "India Shelter Finance Corporation Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "india-tourism-development",
@@ -3270,7 +3837,7 @@
     },
     {
       "id": "indian-railway-catering-and-tourism",
-      "name": "Indian Railway Catering and Tourism Corporation Limited",
+      "name": "Indian Railway Catering And Tourism Corporation Limited",
       "sector": "Land Transportation"
     },
     {
@@ -3279,9 +3846,19 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "indian-renewable-energy-development-agency",
+      "name": "Indian Renewable Energy Development Agency Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "indigo-paints",
       "name": "Indigo Paints Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "indigrid-investment-managers",
+      "name": "Indigrid Investment Managers Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "indo-count-industries",
@@ -3292,6 +3869,11 @@
       "id": "indo-rama-synthetics-india",
       "name": "Indo Rama Synthetics (India) Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "indo-thai-securities",
+      "name": "Indo Thai Securities Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "indoco-remedies",
@@ -3307,6 +3889,11 @@
       "id": "indraprastha-gas",
       "name": "Indraprastha Gas Limited",
       "sector": "Oil & Gas"
+    },
+    {
+      "id": "indraprastha-medical",
+      "name": "Indraprastha Medical Corporation Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "indus-towers",
@@ -3350,13 +3937,23 @@
     },
     {
       "id": "ingersoll-rand-india",
-      "name": "Ingersoll Rand (India) Limited",
+      "name": "Ingersoll-Rand (India) Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "innova-captab",
+      "name": "Innova Captab Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "inox-green-energy-services",
       "name": "Inox Green Energy Services Limited",
       "sector": "Alternative Energy"
+    },
+    {
+      "id": "inox-india",
+      "name": "Inox India Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "inox-leisure",
@@ -3389,9 +3986,19 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "interarch-building-solutions",
+      "name": "Interarch Building Solutions Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "interglobe-aviation",
       "name": "Interglobe Aviation Limited",
       "sector": "Air Transportation"
+    },
+    {
+      "id": "inventurus-knowledge-solutions",
+      "name": "Inventurus Knowledge Solutions Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "iol-chemicals-and-pharmaceuticals",
@@ -3402,6 +4009,11 @@
       "id": "ion-exchange-india",
       "name": "Ion Exchange (India) Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "ion-exchange-projects-and-engineering",
+      "name": "Ion Exchange Projects And Engineering Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "ipca-laboratories",
@@ -3459,14 +4071,14 @@
       "sector": "Construction Materials"
     },
     {
-      "id": "jsw-steel",
-      "name": "JSW Steel limited",
-      "sector": "Metals & Mining"
-    },
-    {
       "id": "jagran-prakashan",
       "name": "Jagran Prakashan Limited",
       "sector": "Media"
+    },
+    {
+      "id": "jai-balaji-industries",
+      "name": "Jai Balaji Industries Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "jai",
@@ -3509,6 +4121,11 @@
       "sector": "Automobiles"
     },
     {
+      "id": "jeena-sikho-lifecare",
+      "name": "Jeena Sikho Lifecare Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "jet-airways-india",
       "name": "Jet Airways (India) Limited",
       "sector": "Air Transportation"
@@ -3535,7 +4152,7 @@
     },
     {
       "id": "jindal-steel-and-power",
-      "name": "Jindal Steel and Power Limited",
+      "name": "Jindal Steel And Power Limited",
       "sector": "Utilities"
     },
     {
@@ -3557,6 +4174,11 @@
       "id": "jk-tyre-industries",
       "name": "Jk Tyre & Industries Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "jm-financial-asset-reconstruction",
+      "name": "Jm Financial Asset Reconstruction Company Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "jm-financial",
@@ -3584,8 +4206,18 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "jsw-infrastructure",
+      "name": "Jsw Infrastructure Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "jsw-ispat-special-products",
       "name": "Jsw Ispat Special Products Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "jsw-steel",
+      "name": "Jsw Steel Limited",
       "sector": "Metals & Mining"
     },
     {
@@ -3597,6 +4229,11 @@
       "id": "jtl-industries",
       "name": "Jtl Industries Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "jubilant-agri-and-consumer-products",
+      "name": "Jubilant Agri And Consumer Products Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "jubilant-foodworks",
@@ -3614,6 +4251,11 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "jupiter-life-line-hospitals",
+      "name": "Jupiter Life Line Hospitals Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "jupiter-wagons",
       "name": "Jupiter Wagons Limited",
       "sector": "Land Transportation"
@@ -3627,6 +4269,11 @@
       "id": "jyothy-labs",
       "name": "Jyothy Labs Limited",
       "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "jyoti-cnc-automation",
+      "name": "Jyoti Cnc Automation Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "k-p-i-global-infrastructure",
@@ -3644,11 +4291,6 @@
       "sector": "Construction Materials"
     },
     {
-      "id": "kennametal-india",
-      "name": "KENNAMETAL INDIA Limited",
-      "sector": "Metals & Mining"
-    },
-    {
       "id": "kirloskar-ferrous-industries",
       "name": "KIRLOSKAR FERROUS INDUSTRIES Limited",
       "sector": "Metals & Mining"
@@ -3661,11 +4303,6 @@
     {
       "id": "kp-energy",
       "name": "KP Energy Limited",
-      "sector": "Alternative Energy"
-    },
-    {
-      "id": "kpi-green-energy",
-      "name": "KPI Green Energy Limited",
       "sector": "Alternative Energy"
     },
     {
@@ -3687,6 +4324,11 @@
       "id": "kalpataru-projects-international",
       "name": "Kalpataru Projects International Limited",
       "sector": "Utilities"
+    },
+    {
+      "id": "kalpataru-properties-thane",
+      "name": "Kalpataru Properties (Thane) Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "kalyan-jewellers-india",
@@ -3747,6 +4389,16 @@
       "id": "kei-industries",
       "name": "Kei Industries Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "kennametal-india",
+      "name": "Kennametal India Limited",
+      "sector": "Metals & Mining"
+    },
+    {
+      "id": "kesar-india",
+      "name": "Kesar India Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "kesoram-industries",
@@ -3829,6 +4481,16 @@
       "sector": "Unclassified"
     },
     {
+      "id": "kovai-medical-center-and-hospitallimited",
+      "name": "Kovai Medical Center And Hospitallimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "kpi-green-energy",
+      "name": "Kpi Green Energy Limited",
+      "sector": "Alternative Energy"
+    },
+    {
       "id": "kpit-technologies",
       "name": "Kpit Technologies Limited",
       "sector": "Technology"
@@ -3849,6 +4511,11 @@
       "sector": "Health Care Providers"
     },
     {
+      "id": "krn-heat-exchanger-and-refrigeration",
+      "name": "Krn Heat Exchanger And Refrigeration Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "krsnaa-diagnostics",
       "name": "Krsnaa Diagnostics Limited",
       "sector": "Medical Technology"
@@ -3862,6 +4529,11 @@
       "id": "kuantum-papers",
       "name": "Kuantum Papers Limited",
       "sector": "Forestry & Paper"
+    },
+    {
+      "id": "l-g-balakrishnan-bros",
+      "name": "L G Balakrishnan & Bros Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "l-t-finance-holdings",
@@ -3882,11 +4554,6 @@
       "id": "lic-housing-finance",
       "name": "LIC Housing Finance Limited",
       "sector": "Corporate & Retail Banking"
-    },
-    {
-      "id": "lloyds-enterprises",
-      "name": "LLOYDs ENTERPRISES LIMITED",
-      "sector": "Unclassified"
     },
     {
       "id": "lti-mindtree",
@@ -3915,7 +4582,7 @@
     },
     {
       "id": "larsen-and-toubro",
-      "name": "Larsen and Toubro Limited",
+      "name": "Larsen And Toubro Limited",
       "sector": "Technology"
     },
     {
@@ -3954,6 +4621,16 @@
       "sector": "Chemicals"
     },
     {
+      "id": "lloyds-engineering-works",
+      "name": "Lloyds Engineering Works Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "lloyds-enterprises",
+      "name": "Lloyds Enterprises Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "lloyds-metals-and-energy",
       "name": "Lloyds Metals And Energy Limited",
       "sector": "Unclassified"
@@ -3962,6 +4639,11 @@
       "id": "lloyds-steels-industries",
       "name": "Lloyds Steels Industries Limited",
       "sector": "Construction Materials"
+    },
+    {
+      "id": "lmw-machinery",
+      "name": "Lmw Machinery Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "lt-foods",
@@ -3994,9 +4676,19 @@
       "sector": "Apparel & Textiles"
     },
     {
+      "id": "m-g-f-developments",
+      "name": "M G F Developments Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "m-k-proteins",
       "name": "M K Proteins Limited",
       "sector": "Food"
+    },
+    {
+      "id": "m-v-k-agro-food-product",
+      "name": "M.V.K. Agro Food Product Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "macrotech-developers",
@@ -4069,6 +4761,11 @@
       "sector": "Land Transportation"
     },
     {
+      "id": "mahindra-world-city-jaipur",
+      "name": "Mahindra World City (Jaipur) Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "mahindra-and-mahindra-financial-services",
       "name": "Mahindra and Mahindra Financial Services Limited",
       "sector": "Capital Markets"
@@ -4077,6 +4774,11 @@
       "id": "maithan-alloys",
       "name": "Maithan Alloys Limited",
       "sector": "Metals & Mining"
+    },
+    {
+      "id": "man-industries-india",
+      "name": "Man Industries (India) Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "man-infraconstruction",
@@ -4159,6 +4861,11 @@
       "sector": "Internet Media & Services"
     },
     {
+      "id": "max-estates",
+      "name": "Max Estates Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "max-financial-services",
       "name": "Max Financial Services Limited",
       "sector": "Capital Markets"
@@ -4182,6 +4889,11 @@
       "id": "mazagon-dock-shipbuilders",
       "name": "Mazagon Dock Shipbuilders Limited",
       "sector": "Marine Transportation"
+    },
+    {
+      "id": "medi-assist-healthcare-services",
+      "name": "Medi Assist Healthcare Services Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "media-matrix-worldwide",
@@ -4214,6 +4926,11 @@
       "sector": "Health Care Providers"
     },
     {
+      "id": "midwest-granite",
+      "name": "Midwest Granite Pvt Ltd",
+      "sector": "Unclassified"
+    },
+    {
       "id": "minda",
       "name": "Minda Corporation Limited",
       "sector": "Automobiles"
@@ -4237,6 +4954,11 @@
       "id": "mm-forgings",
       "name": "Mm Forgings Limited",
       "sector": "Metals & Mining"
+    },
+    {
+      "id": "mmtc-pamp-india",
+      "name": "Mmtc - Pamp India Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "mmtc",
@@ -4289,6 +5011,11 @@
       "sector": "Technology"
     },
     {
+      "id": "mphasis-software-and-services-india",
+      "name": "Mphasis Software And Services (India) Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "mps",
       "name": "Mps Limited",
       "sector": "Consumer Services"
@@ -4324,6 +5051,11 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "muthoot-microfin",
+      "name": "Muthoot Microfin Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "nirlon",
       "name": "NIRLON Limited",
       "sector": "Apparel & Textiles"
@@ -4337,11 +5069,6 @@
       "id": "nrb-bearing",
       "name": "NRB Bearing Limited",
       "sector": "Automobiles"
-    },
-    {
-      "id": "ntpc",
-      "name": "NTPC Limited",
-      "sector": "Alternative Energy"
     },
     {
       "id": "nacl-industries",
@@ -4389,6 +5116,11 @@
       "sector": "Real Estate"
     },
     {
+      "id": "nava-bharat-ventures",
+      "name": "Nava Bharat Ventures Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "nava",
       "name": "Nava Limited",
       "sector": "Industrials"
@@ -4405,7 +5137,7 @@
     },
     {
       "id": "nazara-technologies",
-      "name": "Nazara Technologies Limited",
+      "name": "Nazara Technologies Private Limited",
       "sector": "Technology"
     },
     {
@@ -4417,6 +5149,11 @@
       "id": "ncc",
       "name": "Ncc Limited",
       "sector": "Infrastructure"
+    },
+    {
+      "id": "ncc-urban-infrastructure",
+      "name": "Ncc Urban Infrastructure Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "nelco",
@@ -4439,6 +5176,16 @@
       "sector": "Consumer Discretionary Products"
     },
     {
+      "id": "netweb-technologies-india",
+      "name": "Netweb Technologies India Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "network-people-services-technologies",
+      "name": "Network People Services Technologies Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "network18-media-investments",
       "name": "Network18 Media & Investments Limited",
       "sector": "Media"
@@ -4459,6 +5206,11 @@
       "sector": "Alternative Energy"
     },
     {
+      "id": "niit-learning-systems",
+      "name": "Niit Learning Systems Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "niit",
       "name": "Niit Limited",
       "sector": "Sector Agnostic"
@@ -4474,9 +5226,19 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "nirlon-trade-finance",
+      "name": "Nirlon Trade & Finance Pvt Ltd",
+      "sector": "Unclassified"
+    },
+    {
       "id": "nitin-spinners",
       "name": "Nitin Spinners Limited",
       "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "niva-bupa-health-insurance",
+      "name": "Niva Bupa Health Insurance Company Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "nlc-india",
@@ -4494,6 +5256,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "northern-arc-investment-managers-privatelimited",
+      "name": "Northern Arc Investment Managers Privatelimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "novartis-india",
       "name": "Novartis India Limited",
       "sector": "Health Care Providers"
@@ -4504,9 +5271,29 @@
       "sector": "Unclassified"
     },
     {
+      "id": "nrb-bearings-full-fledgedpublic",
+      "name": "Nrb Bearings Limited (Full Fledgedpublic Co)",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "ntpc-green-energy",
+      "name": "Ntpc Green Energy Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "ntpc",
+      "name": "Ntpc Limited",
+      "sector": "Alternative Energy"
+    },
+    {
       "id": "nucleus-software-exports",
       "name": "Nucleus Software Exports Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "nuvama-wealth-and-investment",
+      "name": "Nuvama Wealth And Investment Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "nuvoco-vistas",
@@ -4522,6 +5309,11 @@
       "id": "oil-and-natural-gas",
       "name": "Oil And Natural Gas Corporation Limited",
       "sector": "Oil & Gas"
+    },
+    {
+      "id": "oil-india-international",
+      "name": "Oil India International Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "oil-india",
@@ -4559,6 +5351,11 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "oriana-power",
+      "name": "Oriana Power Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "orient-cement",
       "name": "Orient Cement Limited",
       "sector": "Construction Materials"
@@ -4579,19 +5376,14 @@
       "sector": "Restaurants"
     },
     {
-      "id": "pc-jeweller",
-      "name": "PC Jeweller Limited",
-      "sector": "Consumer Discretionary Products"
+      "id": "oswal-pumps",
+      "name": "Oswal Pumps Limited",
+      "sector": "Unclassified"
     },
     {
-      "id": "pds",
-      "name": "PDS Limited",
-      "sector": "Consumer Services"
-    },
-    {
-      "id": "piccadily-agro-industries",
-      "name": "PICCADILY AGRO INDUSTRIES Limited",
-      "sector": "Beverages"
+      "id": "p-n-gadgil-jewellers",
+      "name": "P N Gadgil Jewellers Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "page-industries",
@@ -4602,6 +5394,11 @@
       "id": "paisalo-digital",
       "name": "Paisalo Digital Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "panacea-biotec",
+      "name": "Panacea Biotec Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "panama-petrochem",
@@ -4624,6 +5421,11 @@
       "sector": "Technology"
     },
     {
+      "id": "paras-defence-and-space-technologieslimited",
+      "name": "Paras Defence And Space Technologieslimited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "patanjali-foods",
       "name": "Patanjali Foods Limited",
       "sector": "Food"
@@ -4644,9 +5446,24 @@
       "sector": "Insurance"
     },
     {
+      "id": "pc-jeweller",
+      "name": "Pc Jeweller Limited",
+      "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "pcbl-chemical",
+      "name": "Pcbl Chemical Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "pcbl",
       "name": "Pcbl Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "pds",
+      "name": "Pds Limited",
+      "sector": "Consumer Services"
     },
     {
       "id": "pearl-global-industries",
@@ -4682,6 +5499,11 @@
       "id": "pi-industries",
       "name": "Pi Industries Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "piccadily-agro-industries",
+      "name": "Piccadily Agro Industries Limited",
+      "sector": "Beverages"
     },
     {
       "id": "pidilite-industries",
@@ -4729,6 +5551,11 @@
       "sector": "Infrastructure"
     },
     {
+      "id": "pokarna-engineered-stone",
+      "name": "Pokarna Engineered Stone Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "poly-medicure",
       "name": "Poly Medicure Limited",
       "sector": "Health Care Retail"
@@ -4744,6 +5571,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "pondy-oxides-and-chemicals",
+      "name": "Pondy Oxides And Chemicals Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "poonawalla-fincorp",
       "name": "Poonawalla Fincorp Limited",
       "sector": "Corporate & Retail Banking"
@@ -4755,7 +5587,7 @@
     },
     {
       "id": "power-grid-of-india",
-      "name": "Power Grid Corporation of India Limited",
+      "name": "Power Grid Corporation Of India Limited",
       "sector": "Utilities"
     },
     {
@@ -4794,6 +5626,11 @@
       "sector": "Utilities"
     },
     {
+      "id": "premier-energies",
+      "name": "Premier Energies Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "prestige-estates-projects",
       "name": "Prestige Estates Projects Limited",
       "sector": "Real Estate"
@@ -4807,6 +5644,11 @@
       "id": "prime-focus",
       "name": "Prime Focus Limited",
       "sector": "Media"
+    },
+    {
+      "id": "prime-focus-technologies",
+      "name": "Prime Focus Technologies Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "prince-pipes-and-fittings",
@@ -4840,7 +5682,7 @@
     },
     {
       "id": "protean-egov-technologies",
-      "name": "Protean eGov Technologies Limited",
+      "name": "Protean Egov Technologies Limited",
       "sector": "Technology"
     },
     {
@@ -4889,9 +5731,19 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "punjab-small-industries-and-export",
+      "name": "Punjab Small Industries And Export Corporation Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "puravankara",
       "name": "Puravankara Limited",
       "sector": "Real Estate"
+    },
+    {
+      "id": "pvr-inox",
+      "name": "Pvr Inox Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "pvr",
@@ -4902,6 +5754,16 @@
       "id": "quess",
       "name": "Quess Corp Limited",
       "sector": "Technology"
+    },
+    {
+      "id": "r-c-fertilisers",
+      "name": "R C Fertilisers Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "r-r-kabel",
+      "name": "R R Kabel Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "r-systems-international",
@@ -4919,6 +5781,11 @@
       "sector": "Beverages"
     },
     {
+      "id": "raghav-productivity-enhancers",
+      "name": "Raghav Productivity Enhancers Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "rail-vikas-nigam",
       "name": "Rail Vikas Nigam Limited",
       "sector": "Land Transportation"
@@ -4932,6 +5799,11 @@
       "id": "rain-industries",
       "name": "Rain Industries Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "rainbow-children",
+      "name": "Rainbow Children",
+      "sector": "Unclassified"
     },
     {
       "id": "rainbow-childrens-medicare",
@@ -4954,6 +5826,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "ram-ratna-wires",
+      "name": "Ram Ratna Wires Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "rama-steel-tubes",
       "name": "Rama Steel Tubes Limited",
       "sector": "Industrials"
@@ -4974,9 +5851,19 @@
       "sector": "Infrastructure"
     },
     {
+      "id": "rane-madras",
+      "name": "Rane (Madras) Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "rane-holdings",
       "name": "Rane Holdings Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "rashi-peripherals",
+      "name": "Rashi Peripherals Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "rashtriya-chemicals-and-fertilizers",
@@ -4987,6 +5874,11 @@
       "id": "rategain-travel-technologies",
       "name": "Rategain Travel Technologies Limited",
       "sector": "Hospitality & Recreation"
+    },
+    {
+      "id": "rategain-travel-technologies-privatelimited",
+      "name": "Rategain Travel Technologies Privatelimited",
+      "sector": "Unclassified"
     },
     {
       "id": "ratnamani-metals-and-tubes",
@@ -5002,6 +5894,16 @@
       "id": "rattanindia-power",
       "name": "Rattanindia Power Limited",
       "sector": "Alternative Energy"
+    },
+    {
+      "id": "ravindra-energy",
+      "name": "Ravindra Energy Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "raymond-lifestyle",
+      "name": "Raymond Lifestyle Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "raymond",
@@ -5024,6 +5926,21 @@
       "sector": "Technology"
     },
     {
+      "id": "redington",
+      "name": "Redington Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "redtape",
+      "name": "Redtape Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "refex-industries",
+      "name": "Refex Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "relaxo-footwears",
       "name": "Relaxo Footwears Limited",
       "sector": "Apparel & Textiles"
@@ -5032,6 +5949,11 @@
       "id": "reliance-industrial-infrastructure",
       "name": "Reliance Industrial Infrastructure Limited",
       "sector": "Infrastructure"
+    },
+    {
+      "id": "reliance-industrial-investments-and-holdings",
+      "name": "Reliance Industrial Investments And Holdings Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "reliance-industries",
@@ -5085,7 +6007,7 @@
     },
     {
       "id": "rolex-rings",
-      "name": "Rolex Rings Limited",
+      "name": "Rolex Rings Private Limited",
       "sector": "Automobiles"
     },
     {
@@ -5097,6 +6019,11 @@
       "id": "rossell-india",
       "name": "Rossell India Limited",
       "sector": "Sector Agnostic"
+    },
+    {
+      "id": "rossell-techsys",
+      "name": "Rossell Techsys Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "roto-pumps",
@@ -5144,16 +6071,6 @@
       "sector": "Industrials"
     },
     {
-      "id": "sbi-life-insurance",
-      "name": "SBI Life Insurance Company Limited",
-      "sector": "Insurance"
-    },
-    {
-      "id": "shilchar-technologies",
-      "name": "SHILCHAR TECHNOLOGIES Limited",
-      "sector": "Utilities"
-    },
-    {
       "id": "spicejet",
       "name": "SPICEJET Limited",
       "sector": "Air Transportation"
@@ -5169,9 +6086,19 @@
       "sector": "Consumer Discretionary Products"
     },
     {
+      "id": "sagar-cements-r",
+      "name": "Sagar Cements (R) Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "sagar-cements",
       "name": "Sagar Cements Limited",
       "sector": "Construction Materials"
+    },
+    {
+      "id": "sai-life-sciences",
+      "name": "Sai Life Sciences Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "saksoft",
@@ -5179,9 +6106,29 @@
       "sector": "Technology"
     },
     {
+      "id": "sambhv-steel-tubes",
+      "name": "Sambhv Steel Tubes Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "samhi-hotels",
+      "name": "Samhi Hotels Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "sammaan-capital",
+      "name": "Sammaan Capital Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "samvardhana-motherson-international",
       "name": "Samvardhana Motherson International Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "sanathan-textiles",
+      "name": "Sanathan Textiles Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "sandhar-technologies",
@@ -5249,9 +6196,19 @@
       "sector": "Oil & Gas"
     },
     {
+      "id": "sbfc-finance",
+      "name": "Sbfc Finance Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "sbi-cards-and-payment-services",
       "name": "Sbi Cards And Payment Services Limited",
       "sector": "Corporate & Retail Banking"
+    },
+    {
+      "id": "sbi-life-insurance",
+      "name": "Sbi Life Insurance Company Limited",
+      "sector": "Insurance"
     },
     {
       "id": "schaeffler-india",
@@ -5267,6 +6224,11 @@
       "id": "seamec",
       "name": "Seamec Limited",
       "sector": "Marine Transportation"
+    },
+    {
+      "id": "senco-gold",
+      "name": "Senco Gold Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "sequent-scientific",
@@ -5292,6 +6254,11 @@
       "id": "shaily-engineering-plastics",
       "name": "Shaily Engineering Plastics Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "shakti-pumps-india",
+      "name": "Shakti Pumps (India) Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "shalby",
@@ -5324,6 +6291,11 @@
       "sector": "Automobiles"
     },
     {
+      "id": "share-india-securities-ifsc",
+      "name": "Share India Securities (Ifsc) Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "share-india-securities",
       "name": "Share India Securities Limited.",
       "sector": "Capital Markets"
@@ -5332,6 +6304,11 @@
       "id": "sheela-foam",
       "name": "Sheela Foam Limited",
       "sector": "Consumer Discretionary Products"
+    },
+    {
+      "id": "shilchar-technologies",
+      "name": "Shilchar Technologies Limited",
+      "sector": "Utilities"
     },
     {
       "id": "shilpa-medicare",
@@ -5394,9 +6371,24 @@
       "sector": "Metals & Mining"
     },
     {
+      "id": "siemens-energy-industrial-turbomachinery-india",
+      "name": "Siemens Energy Industrial Turbomachinery India Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "siemens",
       "name": "Siemens Limited",
       "sector": "Sector Agnostic"
+    },
+    {
+      "id": "sigma-advanced-systems",
+      "name": "Sigma Advanced Systems Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "signatureglobal-india",
+      "name": "Signatureglobal (India) Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "sindhu-trade-links",
@@ -5434,9 +6426,34 @@
       "sector": "Utilities"
     },
     {
+      "id": "skipper-plastics",
+      "name": "Skipper Plastics Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "sky-gold",
+      "name": "Sky Gold Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "smartworks-coworking-spaces",
+      "name": "Smartworks Coworking Spaces Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "sml-isuzu",
       "name": "Sml Isuzu Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "sml-mahindra",
+      "name": "Sml Mahindra Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "sms-pharmaceuticals",
+      "name": "Sms Pharmaceuticals Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "sobha",
@@ -5484,6 +6501,11 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "spectrum-electrical-industries",
+      "name": "Spectrum Electrical Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "sportking-india",
       "name": "Sportking India Limited",
       "sector": "Apparel & Textiles"
@@ -5494,14 +6516,34 @@
       "sector": "Chemicals"
     },
     {
+      "id": "sri-lotus-chick-foods",
+      "name": "Sri Lotus Chick Foods Private Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "standard-engineering-technology",
+      "name": "Standard Engineering Technology Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "star-cement",
       "name": "Star Cement Limited",
       "sector": "Construction Materials"
     },
     {
+      "id": "star-cement-meghalaya",
+      "name": "Star Cement Meghalaya Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "star-health-and-allied-insurance",
       "name": "Star Health And Allied Insurance Company Limited",
       "sector": "Insurance"
+    },
+    {
+      "id": "state-bank-operations-support-services",
+      "name": "State Bank Operations Support Services Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "state-bank-of-india",
@@ -5527,6 +6569,11 @@
       "id": "steelcast",
       "name": "Steelcast Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "sterling-wilson-waaree",
+      "name": "Sterling & Wilson - Waaree Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "sterling-tools",
@@ -5562,6 +6609,11 @@
       "id": "styrenix",
       "name": "Styrenix",
       "sector": "Chemicals"
+    },
+    {
+      "id": "styrenix-performance-materials",
+      "name": "Styrenix Performance Materials Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "subex",
@@ -5605,7 +6657,7 @@
     },
     {
       "id": "sundaram-clayton",
-      "name": "Sundaram Clayton Limited",
+      "name": "Sundaram -Clayton Limited",
       "sector": "Automobiles"
     },
     {
@@ -5679,6 +6731,11 @@
       "sector": "Alternative Energy"
     },
     {
+      "id": "swan",
+      "name": "Swan Corp Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "swan-energy",
       "name": "Swan Energy Limited",
       "sector": "Oil & Gas"
@@ -5687,6 +6744,11 @@
       "id": "swaraj-engines",
       "name": "Swaraj Engines Limited",
       "sector": "Automobiles"
+    },
+    {
+      "id": "symphony-concerto-india",
+      "name": "Symphony Concerto India Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "symphony",
@@ -5712,11 +6774,6 @@
       "id": "tv-today-network",
       "name": "TV Today Network Limited",
       "sector": "Media"
-    },
-    {
-      "id": "tvs-motor",
-      "name": "TVS Motor Company Limited",
-      "sector": "Automobiles"
     },
     {
       "id": "tajgvk",
@@ -5774,6 +6831,16 @@
       "sector": "Telecommunications"
     },
     {
+      "id": "tata-communications-payment-solutionslimited",
+      "name": "Tata Communications Payment Solutionslimited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "tata-consultancy-services",
+      "name": "Tata Consultancy Services Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "tata-consumer-products",
       "name": "Tata Consumer Products Limited",
       "sector": "Food"
@@ -5799,9 +6866,19 @@
       "sector": "Automobiles"
     },
     {
+      "id": "tata-motors-passenger-vehicles",
+      "name": "Tata Motors Passenger Vehicles Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "tata-power",
       "name": "Tata Power Company Limited",
       "sector": "Utilities"
+    },
+    {
+      "id": "tata-power-solar-systems",
+      "name": "Tata Power Solar Systems Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "tata-steel",
@@ -5814,14 +6891,24 @@
       "sector": "Metals & Mining"
     },
     {
+      "id": "tata-technologies",
+      "name": "Tata Technologies Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "tata-teleservices-maharashtra",
       "name": "Tata Teleservices (Maharashtra) Limited",
       "sector": "Telecommunications"
     },
     {
       "id": "tatva-chintan-pharma-chem",
-      "name": "Tatva Chintan Pharma Chem Limited",
+      "name": "Tatva Chintan Pharma Chem Private Limited",
       "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "tbo-tek",
+      "name": "Tbo Tek Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "tci-express",
@@ -5837,6 +6924,11 @@
       "id": "tcpl-packaging",
       "name": "Tcpl Packaging Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "tcs-e-serve-international",
+      "name": "Tcs E-Serve International Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "td-power-systems",
@@ -5864,6 +6956,11 @@
       "sector": "Industrials"
     },
     {
+      "id": "tega-industries-sez",
+      "name": "Tega Industries (Sez) Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "tega-industries",
       "name": "Tega Industries Limited",
       "sector": "Metals & Mining"
@@ -5887,6 +6984,16 @@
       "id": "andhra-sugars",
       "name": "The Andhra Sugars Limited",
       "sector": "Sector Agnostic"
+    },
+    {
+      "id": "anup-engineering",
+      "name": "The Anup Engineering Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "bombay-burmah-trading",
+      "name": "The Bombay Burmah Trading Corporation Limited",
+      "sector": "Food"
     },
     {
       "id": "federal-bank",
@@ -5964,6 +7071,11 @@
       "sector": "Biotechnology & Pharmaceuticals"
     },
     {
+      "id": "thermax-babcock-wilcox-energy-solutions",
+      "name": "Thermax Babcock & Wilcox Energy Solutions Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "thermax",
       "name": "Thermax Limited.",
       "sector": "Alternative Energy"
@@ -5999,6 +7111,11 @@
       "sector": "Industrials"
     },
     {
+      "id": "timex-group-india",
+      "name": "Timex Group India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "timken-india",
       "name": "Timken India Limited",
       "sector": "Industrials"
@@ -6007,6 +7124,16 @@
       "id": "tips-industries",
       "name": "Tips Industries Limited",
       "sector": "Consumer Services"
+    },
+    {
+      "id": "tips-music",
+      "name": "Tips Music Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "titagarh-rail-systems",
+      "name": "Titagarh Rail Systems Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "titagarh-wagons",
@@ -6034,14 +7161,29 @@
       "sector": "Alternative Energy"
     },
     {
+      "id": "tourism-finance-of-india",
+      "name": "Tourism Finance Corporation Of India Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "transport-of-india",
       "name": "Transport Corporation Of India Limited",
       "sector": "Consumer Services"
     },
     {
+      "id": "transrail-lighting",
+      "name": "Transrail Lighting Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "trent",
       "name": "Trent Limited",
       "sector": "Apparel & Textiles"
+    },
+    {
+      "id": "trident-automobiles",
+      "name": "Trident Automobiles Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "trident",
@@ -6055,7 +7197,7 @@
     },
     {
       "id": "triveni-engineering-and-industries",
-      "name": "Triveni Engineering And Industries limited",
+      "name": "Triveni Engineering And Industries Limited",
       "sector": "Unclassified"
     },
     {
@@ -6067,6 +7209,11 @@
       "id": "triveni-turbine",
       "name": "Triveni Turbine Limited",
       "sector": "Alternative Energy"
+    },
+    {
+      "id": "tsf-investments",
+      "name": "Tsf Investments Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "ttk-healthcare",
@@ -6089,19 +7236,29 @@
       "sector": "Media"
     },
     {
+      "id": "tvs-holdings",
+      "name": "Tvs Holdings Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "tvs-motor",
+      "name": "Tvs Motor Company Limited",
+      "sector": "Automobiles"
+    },
+    {
       "id": "tvs-srichakra",
       "name": "Tvs Srichakra Limited",
       "sector": "Automobiles"
     },
     {
+      "id": "tvs-supply-chain-solutions",
+      "name": "Tvs Supply Chain Solutions Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "uco-bank",
       "name": "UCO Bank",
       "sector": "Corporate & Retail Banking"
-    },
-    {
-      "id": "uno-minda",
-      "name": "UNO Minda Limited",
-      "sector": "Automobiles"
     },
     {
       "id": "udaipur-cement-works",
@@ -6119,6 +7276,11 @@
       "sector": "Corporate & Retail Banking"
     },
     {
+      "id": "ujaas-energy",
+      "name": "Ujaas Energy Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "ujjivan-financial-services",
       "name": "Ujjivan Financial Services Limited",
       "sector": "Corporate & Retail Banking"
@@ -6130,13 +7292,18 @@
     },
     {
       "id": "ultratech-cement",
-      "name": "UltraTech Cement Limited",
+      "name": "Ultratech Cement Limited",
       "sector": "Construction Materials"
     },
     {
       "id": "unichem-laboratories",
       "name": "Unichem Laboratories Limited",
       "sector": "Biotechnology & Pharmaceuticals"
+    },
+    {
+      "id": "unimech-aerospace-and-manufacturing",
+      "name": "Unimech Aerospace And Manufacturing Private Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "union-bank-of-india",
@@ -6169,6 +7336,11 @@
       "sector": "Industrials"
     },
     {
+      "id": "uno-minda",
+      "name": "Uno Minda Limited",
+      "sector": "Automobiles"
+    },
+    {
       "id": "upl",
       "name": "Upl Limited",
       "sector": "Chemicals"
@@ -6184,9 +7356,24 @@
       "sector": "Capital Markets"
     },
     {
+      "id": "utkarsh-small-finance-bank",
+      "name": "Utkarsh Small Finance Bank Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "uttam-sugar-mills",
       "name": "Uttam Sugar Mills Limited",
       "sector": "Food"
+    },
+    {
+      "id": "v-i-p-industries",
+      "name": "V I P Industries Limited",
+      "sector": "Unclassified"
+    },
+    {
+      "id": "v-guard-consumer-products",
+      "name": "V-Guard Consumer Products Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "v-guard-industries",
@@ -6202,6 +7389,11 @@
       "id": "v-s-t-tillers-tractors",
       "name": "V.S.T Tillers Tractors Limited",
       "sector": "Industrials"
+    },
+    {
+      "id": "v2-retail",
+      "name": "V2 Retail Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "veritas-india",
@@ -6239,6 +7431,11 @@
       "sector": "Chemicals"
     },
     {
+      "id": "valor-estate",
+      "name": "Valor Estate Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "vardhman-special-steels",
       "name": "Vardhman Special Steels Limited",
       "sector": "Metals & Mining"
@@ -6250,8 +7447,8 @@
     },
     {
       "id": "varroc-engineering",
-      "name": "Varroc Engineering Limited",
-      "sector": "Automobiles"
+      "name": "Varroc Engineering Private Limited",
+      "sector": "Metals & Mining"
     },
     {
       "id": "varun-beverages",
@@ -6260,7 +7457,7 @@
     },
     {
       "id": "vedant-fashions",
-      "name": "Vedant Fashions Limited",
+      "name": "Vedant Fashions Private Limited",
       "sector": "Apparel & Textiles"
     },
     {
@@ -6269,9 +7466,19 @@
       "sector": "Metals & Mining"
     },
     {
+      "id": "veedol",
+      "name": "Veedol Corporation Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "venky",
       "name": "Venky",
       "sector": "Food"
+    },
+    {
+      "id": "ventive-hospitality",
+      "name": "Ventive Hospitality Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "venus-pipes-tubes",
@@ -6299,6 +7506,11 @@
       "sector": "Health Care Providers"
     },
     {
+      "id": "vikram-solar",
+      "name": "Vikram Solar Private Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "vinati-organics",
       "name": "Vinati Organics Limited",
       "sector": "Chemicals"
@@ -6317,6 +7529,11 @@
       "id": "vishnu-chemicals",
       "name": "Vishnu Chemicals Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "viyash-scientific",
+      "name": "Viyash Scientific Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "vodafone-idea",
@@ -6349,9 +7566,9 @@
       "sector": "Industrials"
     },
     {
-      "id": "wpil",
-      "name": "WPIL Limited",
-      "sector": "Industrials"
+      "id": "waaree-energies",
+      "name": "Waaree Energies Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "waaree-renewable-technologies",
@@ -6362,6 +7579,11 @@
       "id": "wardwizard-innovations-mobility-limilted",
       "name": "Wardwizard Innovations & Mobility Limilted",
       "sector": "Industrials"
+    },
+    {
+      "id": "websol-energy-system",
+      "name": "Websol Energy System Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "welspun",
@@ -6379,6 +7601,11 @@
       "sector": "Apparel & Textiles"
     },
     {
+      "id": "welspun-living",
+      "name": "Welspun Living Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "wendt-india",
       "name": "Wendt India Limited",
       "sector": "Industrials"
@@ -6389,14 +7616,24 @@
       "sector": "Forestry & Paper"
     },
     {
+      "id": "westlife-development",
+      "name": "Westlife Development Limited",
+      "sector": "Unclassified"
+    },
+    {
       "id": "wheels-india",
       "name": "Wheels India Limited",
       "sector": "Automobiles"
     },
     {
       "id": "whirlpool-of-india",
-      "name": "Whirlpool of India Limited",
+      "name": "Whirlpool Of India Limited",
       "sector": "Utilities"
+    },
+    {
+      "id": "windsor-machines",
+      "name": "Windsor Machines Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "wipro",
@@ -6414,9 +7651,24 @@
       "sector": "Hospitality & Recreation"
     },
     {
+      "id": "wpil",
+      "name": "Wpil Limited",
+      "sector": "Industrials"
+    },
+    {
+      "id": "xpro-india",
+      "name": "Xpro India Limited",
+      "sector": "Chemicals"
+    },
+    {
       "id": "yasho-industries",
       "name": "Yasho Industries Limited",
       "sector": "Chemicals"
+    },
+    {
+      "id": "yatharth-hospital-trauma-care-services",
+      "name": "Yatharth Hospital & Trauma Care Services Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "yes-bank",
@@ -6424,9 +7676,9 @@
       "sector": "Corporate & Retail Banking"
     },
     {
-      "id": "zf-commercial-vehicle-control-systems-india",
-      "name": "ZF Commercial Vehicle Control Systems India Limited",
-      "sector": "Automobiles"
+      "id": "zaggle-prepaid-ocean-services",
+      "name": "Zaggle Prepaid Ocean Services Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "zee-entertainment-enterprises",
@@ -6444,9 +7696,19 @@
       "sector": "Technology"
     },
     {
+      "id": "zf-commercial-vehicle-control-systems-india",
+      "name": "Zf Commercial Vehicle Control Systems India Limited",
+      "sector": "Automobiles"
+    },
+    {
       "id": "zomato",
       "name": "Zomato Limited",
       "sector": "Consumer Services"
+    },
+    {
+      "id": "zota-health-care",
+      "name": "Zota Health Care Limited",
+      "sector": "Unclassified"
     },
     {
       "id": "zydus-lifesciences",
@@ -6460,21 +7722,29 @@
     }
   ],
   "spendByYear": {
-    "FY 2020-21": 13851.47,
-    "FY 2021-22": 12357.24,
-    "FY 2022-23": 13502.86
+    "FY 2014-15": 4989.04,
+    "FY 2015-16": 6616.02,
+    "FY 2016-17": 6785.83,
+    "FY 2017-18": 7968.34,
+    "FY 2018-19": 9493.42,
+    "FY 2019-20": 12080.64,
+    "FY 2020-21": 23980.77,
+    "FY 2021-22": 20113.44,
+    "FY 2022-23": 20995.15,
+    "FY 2023-24": 13404.62,
+    "FY 2024-25": 15549.26
   },
   "stats": {
-    "workbooks": 1,
-    "raw_rows": 34545,
-    "dropped_no_company": 982,
+    "workbooks": 2,
+    "raw_rows": 189640,
+    "dropped_no_company": 1773,
     "dropped_empty": 102,
-    "duplicates_removed": 700,
+    "duplicates_removed": 86438,
     "missing_year": 0,
-    "missing_spend": 292,
-    "sector_backfilled": 11659,
-    "sector_unknown": 557,
-    "negative_amounts": 7,
-    "aspirational_rows": 1726
+    "missing_spend": 311,
+    "sector_backfilled": 153761,
+    "sector_unknown": 12759,
+    "negative_amounts": 14,
+    "aspirational_rows": 4111
   }
 }

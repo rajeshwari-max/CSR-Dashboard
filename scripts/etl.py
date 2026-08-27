@@ -77,13 +77,16 @@ CORE_COLUMNS = {
     "sector": ["BRSR", "Sector", "Industry"],
     "year": ["YEAR", "Year", "Financial Year", "FY"],
     "project": ["CSR Project(s)", "CSR Project", "CSR_project", "Project Name"],
-    "theme": ["Thematic area", "Development_Sector", "Schedule VII", "Thematic Area"],
+    "theme": [
+        "Thematic area", "Development_Sector", "Development Sector(s)",
+        "Schedule VII", "Thematic Area",
+    ],
     "state": ["State"],
     "district": ["District", "Aspirational District"],
     "outlay": ["Project Amount Outlay (INR Cr.)", "Project_Amount_Outlay", "Project Outlay"],
     "mode": ["Mode of Implementation", "Mode_of_Implementation"],
-    "co_outlay": ["Total Amount Outlay(INR CR)"],
-    "co_spent": ["Total Amount Spent (INR CR)"],
+    "co_outlay": ["Total Amount Outlay(INR CR)", "Total Amount Outlay (INR Cr.)"],
+    "co_spent": ["Total Amount Spent (INR CR)", "Total Amount Spent (INR Cr.)"],
     "obligation": ["Total CSR Obligation As CSR Report", "CSR Obligation"],
     "two_pct": ["2 % of Average Net Profit", "2 % Net Profit"],
     "avg_profit": ["Average Net Profit (INR Crores)", "Average Net Profit"],
@@ -120,7 +123,7 @@ OPTIONAL_COLUMNS = {
 
 NON_FACT_SHEET_HINTS = {
     "overview", "analysis", "total list of company", "startups but not irman leads al",
-    "total graphs of all sectors", "updated fy 2023-2024", "sheet",
+    "total graphs of all sectors", "updated fy 2023-2024",
 }
 
 # ---------------------------------------------------------------------------
@@ -727,7 +730,7 @@ def main() -> int:
     }
 
     dataset_path = out_dir / "dataset.json"
-    with dataset_path.open("w", encoding="utf-8") as fh:
+    with dataset_path.open("w", encoding="utf-8", newline="\n") as fh:
         json.dump(dataset, fh, ensure_ascii=False, separators=(",", ":"))
 
     total_spend = sum(r[8] or 0 for r in rows)
@@ -760,7 +763,7 @@ def main() -> int:
         "spendByYear": {k: round(v, 2) for k, v in sorted(by_year.items())},
         "stats": stats,
     }
-    with (out_dir / "meta.json").open("w", encoding="utf-8") as fh:
+    with (out_dir / "meta.json").open("w", encoding="utf-8", newline="\n") as fh:
         json.dump(meta, fh, ensure_ascii=False, indent=2)
 
     size_mb = dataset_path.stat().st_size / 1_048_576

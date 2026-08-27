@@ -3,8 +3,8 @@
 Nine-page dashboard over project-level **Corporate Social Responsibility** disclosures by Indian
 companies, built with Next.js 15 (App Router), Tailwind CSS, shadcn/ui-style primitives and Recharts.
 
-Verified against your workbook: **32,761 CSR projects · 1,116 companies · ₹39,712 Cr · 39 states ·
-682 districts · 40 sectors**, FY 2020-21 → FY 2022-23.
+Verified against the current workbooks: **101,327 CSR projects · 1,347 companies · ₹141,976.53 Cr ·
+771 districts**, FY 2014-15 → FY 2024-25.
 
 ---
 
