@@ -88,8 +88,10 @@ export interface Filters {
   aspirationalOnly: boolean;
 }
 
+export const DEFAULT_REPORTING_YEARS = ["FY 2021-22", "FY 2022-23", "FY 2023-24", "FY 2024-25"];
+
 export const EMPTY_FILTERS: Filters = {
-  years: [],
+  years: [...DEFAULT_REPORTING_YEARS],
   sectors: [],
   states: [],
   districts: [],

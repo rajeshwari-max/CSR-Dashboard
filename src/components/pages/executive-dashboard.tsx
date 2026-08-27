@@ -23,7 +23,7 @@ import type { InsightsResponse, SummaryResponse } from "@/types";
  * Nothing is added or moved; only the numbers are real.
  */
 export function ExecutiveDashboard() {
-  const { filters, filterQuery, scope } = useDashboardFilters();
+  const { filters, filterQuery } = useDashboardFilters();
   const toggleValue = useFilterStore((state) => state.toggleValue);
   const setValues = useFilterStore((state) => state.setValues);
   const meta = useMeta();
@@ -44,11 +44,6 @@ export function ExecutiveDashboard() {
   return (
     <PageFrame
       title="Executive Dashboard"
-      subtitle={
-        meta.data
-          ? `${meta.data.years.length ? meta.data.years.join(" · ") : "No years"} · ${scope || "All states, all sectors"}`
-          : "Loading CSR disclosures…"
-      }
       meta={meta.data}
       filters={filters}
       onRefresh={refresh}
@@ -78,7 +73,7 @@ export function ExecutiveDashboard() {
             <div>
               <h3>CSR Spending Trend</h3>
               <div className="muted">
-                {meta.data?.years[0] ?? "—"} – {insights.data?.forecast.nextYear ?? meta.data?.years.slice(-1)[0] ?? "—"}, incl. forecast
+                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"}, reported spend
               </div>
             </div>
             <span className="card-badge">{kpis?.latestYear ?? "—"}</span>
@@ -87,7 +82,7 @@ export function ExecutiveDashboard() {
             {summary.isLoading ? (
               <div className="skeleton" style={{ height: "100%" }} />
             ) : (
-              <SpendTrend trend={summary.data?.trend ?? []} forecast={insights.data?.forecast.points} />
+              <SpendTrend trend={summary.data?.trend ?? []} />
             )}
           </div>
         </div>

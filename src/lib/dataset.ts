@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { DEFAULT_REPORTING_YEARS } from "@/types";
 import type {
   Capabilities,
   ColumnCoverage,
@@ -210,7 +211,41 @@ export function getDataset(): Dataset {
 }
 
 export function getMeta(): Meta {
-  if (!globalThis.__csrMeta) globalThis.__csrMeta = readJson<Meta>("meta.json");
+  if (!globalThis.__csrMeta) {
+    const base = readJson<Meta>("meta.json");
+    const data = getDataset();
+    const allowedYears = new Set(DEFAULT_REPORTING_YEARS);
+    const allowedYearIndexes = new Set(
+      data.years.flatMap((year, index) => (allowedYears.has(year) ? [index] : [])),
+    );
+    const companies = new Set<number>();
+    const spendByYear: Record<string, number> = {};
+    let rowCount = 0;
+    let totalSpend = 0;
+
+    for (let i = 0; i < data.count; i += 1) {
+      if (!allowedYearIndexes.has(data.yearIdx[i])) continue;
+      rowCount += 1;
+      companies.add(data.companyIdx[i]);
+      const spent = data.spent[i];
+      if (!Number.isNaN(spent)) {
+        totalSpend += spent;
+        const year = data.years[data.yearIdx[i]];
+        spendByYear[year] = (spendByYear[year] ?? 0) + spent;
+      }
+    }
+
+    globalThis.__csrMeta = {
+      ...base,
+      rowCount,
+      companyCount: companies.size,
+      totalSpend: round(totalSpend),
+      years: DEFAULT_REPORTING_YEARS.filter((year) => data.years.includes(year)),
+      spendByYear: Object.fromEntries(
+        Object.entries(spendByYear).map(([year, value]) => [year, round(value)]),
+      ),
+    };
+  }
   return globalThis.__csrMeta;
 }
 
@@ -231,6 +266,7 @@ function indexSet(values: string[], dictionary: string[]): Set<number> | null {
 export function selectRows(filters: Filters): Int32Array {
   const data = getDataset();
   const years = indexSet(filters.years, data.years);
+  const reportingYears = indexSet(DEFAULT_REPORTING_YEARS, data.years);
   const sectors = indexSet(filters.sectors, data.sectors);
   const states = indexSet(filters.states, data.states);
   const districts = indexSet(filters.districts, data.districts);
@@ -253,6 +289,7 @@ export function selectRows(filters: Filters): Int32Array {
   let size = 0;
 
   for (let i = 0; i < data.count; i += 1) {
+    if (reportingYears && !reportingYears.has(data.yearIdx[i])) continue;
     if (years && !years.has(data.yearIdx[i])) continue;
     if (sectors && !sectors.has(data.sectorIdx[i])) continue;
     if (states && !states.has(data.stateIdx[i])) continue;

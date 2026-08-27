@@ -1,6 +1,6 @@
 /** Filter <-> URLSearchParams conversion shared by client fetchers and route handlers. */
 
-import { EMPTY_FILTERS, type Filters, type SortDirection, type SortField } from "@/types";
+import { DEFAULT_REPORTING_YEARS, EMPTY_FILTERS, type Filters, type SortDirection, type SortField } from "@/types";
 
 export const LIST_KEYS = ["years", "sectors", "states", "districts", "themes", "companies", "modes"] as const;
 export type ListKey = (typeof LIST_KEYS)[number];
@@ -41,7 +41,7 @@ export function paramsToFilters(params: URLSearchParams): Filters {
 
   return {
     ...EMPTY_FILTERS,
-    years: read("years"),
+    years: params.has("years") ? read("years") : [...DEFAULT_REPORTING_YEARS],
     sectors: read("sectors"),
     states: read("states"),
     districts: read("districts"),
