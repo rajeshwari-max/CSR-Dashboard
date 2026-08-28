@@ -10,7 +10,7 @@ import type { Insight, InsightsResponse } from "@/types";
 const DOT_CLASS = ["teal", "amber", "blue", "purple"] as const;
 
 /**
- * Compact "AI-generated insights" card exactly as positioned in the draft:
+ * Compact automated-insights card exactly as positioned in the draft:
  * four one-line observations plus a full-width action. The complete analysis
  * lives behind "View full analysis", which opens a side drawer — the dashboard
  * never gets taken over by it.
@@ -48,8 +48,8 @@ export function AiInsightCard({
       <div className="card hoverable stack" style={{ height: "100%" }}>
         <div className="card-head">
           <div>
-            <h3>AI-generated insights</h3>
-            <div className="muted">Computed from the current selection</div>
+            <h3>Automated data insights</h3>
+            <div className="muted">Formula-driven · current selection</div>
           </div>
           <span className="card-badge purple">
             <Sparkles width={9} height={9} style={{ marginRight: 3, display: "inline" }} />

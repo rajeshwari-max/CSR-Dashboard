@@ -6,6 +6,8 @@ This handbook explains the source data, filtering rules, formulas, charts, and u
 
 The ETL reads CSR workbooks from `data/raw/` and generates `data/dataset.json` and `data/meta.json`. One normalized fact row represents one disclosed CSR project line.
 
+If more than one workbook contains the same financial year, the ETL selects one canonical workbook for that whole year: the source with the widest distinct-company coverage, followed by row count and file name as deterministic tie-breakers. It does not add overlapping annual registers together. This rule prevents duplicate projects with slightly different district or classification text from inflating totals.
+
 The dashboard currently uses these fields:
 
 | Field | Purpose |
@@ -30,16 +32,7 @@ All filters are combined with AND logic. Multiple values inside one filter are c
 
 The free-text search is case-insensitive and searches company, project name, Schedule VII category, state, and district. Amount filters compare against each project's `Amount Spent` value. Rows without a disclosed amount are excluded when an amount range is active.
 
-The preset amount bands are:
-
-| Band | Applied condition |
-| --- | --- |
-| ₹0–1 Cr | `spent >= 0 AND spent <= 1` |
-| ₹1–5 Cr | `spent >= 1 AND spent <= 5` |
-| ₹5–10 Cr | `spent >= 5 AND spent <= 10` |
-| More than ₹10 Cr | `spent >= 10` |
-
-The manual minimum and maximum inputs remain available for custom ranges. Filters are serialized into the URL, so a filtered view can be bookmarked or shared.
+The CSR Amount control accepts a manual minimum and/or maximum in INR crore. Filters are serialized into the URL, so a filtered view can be bookmarked or shared. The same Zustand filter store is mounted above every analytical page: navigating through the sidebar retains the selection, and each destination page writes that same scope into its URL. An explicitly filtered bookmarked URL remains authoritative when opened.
 
 ## 3. KPI formulas
 
@@ -93,6 +86,7 @@ District shares use district-attributed spend as the denominator, not total CSR 
 | Chart | X/Category | Y/Value | Plotting rule |
 | --- | --- | --- | --- |
 | CSR spending trend | Financial year | Sum of spend | One point per year after filters |
+| Executive spend/project trend | Financial year | Spend on the left axis; project rows on the right axis | Two series make changes in money distinguishable from changes in reporting volume |
 | Sector donut | Sector | Sector spend share | Sectors ranked by spend; percentages use total sector spend in view |
 | Company bars/ranks | Company | Sum of spend | Companies sorted descending by spend |
 | India choropleth | State shape | State spend | `Pan India` and `Not Specified` cannot be mapped; colour intensity uses square-root scaling to reduce domination by very large states |
@@ -100,6 +94,7 @@ District shares use district-attributed spend as the denominator, not total CSR 
 | Sector trajectories | Financial year | Sector spend | Lines for the six highest-spending sectors in the current view |
 | Sector YoY growth | Sector | YoY percentage | Prior-year base must be at least ₹5 Cr; positive and negative bars use different semantic colours |
 | Funding flow | Schedule VII category | Spend and share | Categories ranked by spend; bar width is category spend divided by total category spend |
+| Project size distribution | Spend band | Count of disclosed project rows | Six non-overlapping bands from below ₹10 lakh through above ₹25 crore; clicking a bar applies the amount range globally |
 | Sparklines | Financial year | KPI value | Compact trend without axes, using the same filtered yearly aggregation |
 | Project register | Project rows | Existing source columns | Server-side pagination and sorting; no derived or invented columns |
 
@@ -124,6 +119,7 @@ The Herfindahl concentration index is `sum((group spend / total spend)^2)`. The 
 - Project outlay is not aggregated because a company-level outlay is repeated across many project rows in part of FY 2020-21.
 - Rows with no disclosed spend still count as project disclosures and contribute zero to spend totals.
 - Reporting-company coverage changes by year, so changes in annual totals are not perfectly like-for-like.
+- Overlapping source workbooks are resolved to one canonical source per financial year; the skipped-overlap count is recorded in ETL statistics.
 - `Unclassified` is retained where sector resolution is impossible and excluded only when a panel explicitly states that it reports classified sectors.
 - Counts should be described as coverage across India, not as a claim that India has a particular number of states.
 
@@ -138,6 +134,8 @@ The Herfindahl concentration index is `sum((group spend / total spend)^2)`. The 
 cd E:\DownloadFolder\csr-dashboard
 npm install
 npm run etl
+npm test
+npm run validate
 npm run typecheck
 npm run build
 npm run dev
@@ -161,6 +159,8 @@ vercel --prod
 
 After an ETL rebuild, verify `data/meta.json` for row count, years, total spend, capabilities, and source names. Then compare a filtered dashboard view with its CSV or Excel export: project count and summed spend must match.
 
+The in-app Merge mode accepts genuinely new financial years only. It blocks a year already present in the dataset rather than risk double counting. To revise an existing financial year, rebuild the complete canonical dataset from `data/raw/`, validate it, and deploy or upload it in Replace mode.
+
 ## 9. Code map for audit and maintenance
 
 | Concern | Main implementation |
@@ -170,9 +170,112 @@ After an ETL rebuild, verify `data/meta.json` for row count, years, total spend,
 | URL filter conversion | `src/lib/query.ts` |
 | Forecasts, anomalies, concentration, recommendations | `src/lib/insights.ts` |
 | Currency, number, and percentage display | `src/lib/format.ts` |
-| Shared filters and spend presets | `src/components/dashboard/filter-bar.tsx` |
+| Shared cross-page filters | `src/components/shell/filter-bar.tsx`, `src/components/shared/use-dashboard-filters.ts`, `src/store/filters.ts` |
 | Project register | `src/components/dashboard/projects-table.tsx` |
 | Charts and page composition | `src/components/pages/`, `src/components/charts/` |
 | PDF, Excel, PowerPoint, and CSV reports | `src/lib/reports/builders.ts` |
+| Login and session protection | `src/middleware.ts`, `src/app/login/`, `src/app/api/auth/` |
+| Automated validation | `tests/dashboard-calculations.test.mjs`, `scripts/validate-dashboard.mjs` |
 
 The formulas in this handbook describe the live code paths. They should be updated whenever a metric, filter, source field, or chart rule changes.
+
+## 10. Application architecture and request flow
+
+The application is built with Next.js 15, React 19, TypeScript, Recharts, Zustand, and Tailwind CSS. The checked-in JSON dataset is dictionary encoded: repeated labels are stored once and project rows contain integer indexes. On the first server request, `src/lib/dataset.ts` loads those rows into typed arrays and caches the decoded structure for later API calls.
+
+The normal request flow is:
+
+1. A page reads the shared filter store.
+2. `useDashboardFilters` converts the filter object into URL parameters.
+3. Data hooks request `/api/summary`, `/api/breakdown`, `/api/projects`, or `/api/insights` with that exact query.
+4. `paramsToFilters` validates and caps list inputs.
+5. `selectRows` scans the typed arrays once and enforces FY 2020-21 as the earliest visible year.
+6. Summary, grouping, insight, report, and export builders work only on the selected row indexes.
+7. The page renders the response and keeps the same filter scope when the user navigates elsewhere.
+
+API responses are cached by dataset generation timestamp plus query string. Uploading and rebuilding a dataset changes that timestamp, so new requests do not reuse old analytical results.
+
+## 11. Page-by-page functionality
+
+| Page | Functionality |
+| --- | --- |
+| Executive Dashboard | Six KPI cards, spend/project trend, top states, top sectors, India map, leading companies, and four decision-relevant automated insights |
+| Company Analysis | Search, select up to four filers, annual comparison, benchmark table, sector mix, source-document links, and filtered project register |
+| State Analysis | Choropleth, mapped/unmapped coverage, fastest-growing states, annual state comparison, state table, districts, and source rows |
+| Sector Analysis | Spend-share donut, six-sector trajectories, positive/negative YoY movements, Schedule VII funding flow, full sector table, and source rows |
+| Implementation Analysis | Direct versus agency/trust delivery modes, mode table, state presence, and Schedule VII focus areas |
+| Project Analytics | Project KPIs, six-band project-size histogram with click-to-filter, district ranking, amount-filter status, and sortable paginated register |
+| Trend Analysis | Annual totals, growth, CAGR, reporting coverage, forecast, and comparable yearly table |
+| Reports | PDF, Excel, PowerPoint, and CSV generated from the active filters; recent downloads are remembered in the browser |
+| AI Insights | Deterministic executive summary, grounded insight cards, projection, anomaly table, recommendations, data-quality checks, and natural-language queries |
+| Data Explorer | Filtered tabular exploration and export |
+| Data Upload | Workbook upload, column detection, ETL rebuild, and capability refresh |
+
+## 12. How AI Insights are produced
+
+No model is trained on this dashboard and no model is allowed to calculate KPI values. The default insight system is deterministic TypeScript code in `src/lib/insights.ts`:
+
+1. It calls the same `buildSummary` and `selectRows` functions used by the visible pages.
+2. It calculates YoY movement, reporting participation, company/state/category concentration, geographic attribution gaps, aspirational share, sector movers, forecast, anomalies, and data-quality counts.
+3. Each insight stores evidence values alongside its title and explanation.
+4. The executive card selects one trend, anomaly, concentration, and gap item where available.
+5. The built-in natural-language engine in `src/lib/nlq.ts` parses supported questions and computes the answer from the current filter selection.
+
+An external LLM is optional. When `LLM_API_KEY` is configured, it receives a compact fact pack that has already been calculated. Its system prompt requires it to use only supplied figures and to state when a requested fact is absent. It can narrate the findings or answer broader questions, but it cannot modify data or become the source of a number. If no key is configured, narration controls are hidden while deterministic insights and supported natural-language queries continue to work.
+
+The forecast is not AI training. It is ordinary least-squares regression over the visible annual totals. “Projected” means an estimated next-year value, not a reported amount. R² describes how closely the straight line fits the observed totals; a low value means the projection should receive little weight.
+
+## 13. Login and access control
+
+Set `APP_PASSWORD` in the deployment environment to enable the login window. When it is set:
+
+- Middleware protects pages, APIs, uploads, and downloads.
+- An unauthenticated page request redirects to `/login` and preserves the intended destination.
+- A successful password check creates a secure, HTTP-only, same-site session cookie valid for 12 hours.
+- API calls without the session return HTTP 401 rather than HTML.
+- Sign out deletes the session cookie.
+- Static Next.js assets and the login endpoint remain public so the window can load.
+
+Leaving `APP_PASSWORD` empty disables authentication for local development. The password must be configured in the host environment and must never be committed to the repository.
+
+## 14. Professional visual system and accessibility
+
+The interface uses a restrained semantic palette: blue for primary financial series and actions, teal for operational volume, indigo for comparison, amber for warnings, green for positive results, red for risks, and slate for neutral context. Colour is never the only carrier of meaning: legends, labels, signs, text, and tooltips accompany it. Charts share one palette and tooltip treatment through `src/components/charts/chart-theme.ts`.
+
+KPI cards switch from six columns to three at laptop widths and two on small screens. Labels reserve space for the icon, long values expose their full value as a title, and figures use tabular numerals. Empty charts render an explicit empty state instead of a blank plotting area.
+
+## 15. Capability-based hiding
+
+The ETL records whether optional columns are present and sufficiently populated. Features without source support are not fabricated:
+
+- Named NGO/partner panels are hidden because NGO name coverage is absent; implementation-mode analysis remains because that field exists.
+- Beneficiary, project status, dates, SDGs, duration, monthly, and quarterly controls remain hidden while their columns are unavailable.
+- External-model narration is hidden when no LLM key is configured.
+- Unsupported notices and placeholder cards are removed from analytical pages; supported underlying data remains visible.
+- Project outlay remains visible per row but aggregate utilization is withheld because FY 2020-21 contains repeated company-level outlay values.
+
+## 16. Test, validation, and release checklist
+
+`npm test` independently recomputes the reporting-year boundary, annual reconciliation, dimension reconciliation, project-size buckets, YoY, dictionary indexes, company averages/median, compliance, and linear-fit constraints from `data/dataset.json`.
+
+`npm run validate` performs a dataset-wide audit and prints the included years, rows, companies, disclosed-spend rows, total, annual totals, warnings, and errors. `npm run typecheck` validates TypeScript contracts, and `npm run build` performs the production compilation and route generation.
+
+Before release, all four commands must pass. Then verify in a rendered build that:
+
+1. KPI labels and values do not collide with icons at desktop, laptop, and mobile widths.
+2. A filter selected on the Executive Dashboard remains active after navigating to State, Sector, Project, Reports, and AI pages.
+3. Reset clears the same shared scope.
+4. The year filter begins at FY 2020-21 and automatically includes later uploaded years.
+5. A CSV export reconciles to the filtered project count and spend total.
+6. With `APP_PASSWORD` set, protected pages redirect to login, a valid sign-in returns to the requested page, and sign-out removes access.
+
+## 17. Current limitations and work remaining
+
+The requested functionality is implemented. What remains depends on new source data or deployment configuration rather than missing dashboard code:
+
+- Populate NGO names to enable named-partner rankings and profiles.
+- Populate beneficiary, project status, date, SDG, and duration columns to enable those analyses.
+- Supply consistently project-level outlay values before enabling aggregate budget utilization.
+- Set `APP_PASSWORD` on the deployment host for the login window.
+- Set an optional `LLM_API_KEY`, provider, and model only if external narration is wanted; deterministic insights do not require it.
+- Review the 289 current rows with no disclosed spend and the remaining Unclassified sector rows as data-quality remediation.

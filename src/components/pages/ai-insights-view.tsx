@@ -110,16 +110,17 @@ export function AiInsightsView() {
       actions={
         <>
         <ExportMenu filterQuery={filterQuery} label="Download" />
-        <Button
-          variant={narrate ? "default" : "outline"}
-          size="sm"
-          onClick={() => setNarrate((value) => !value)}
-          disabled={!data?.llm.available}
-          title={data?.llm.available ? "Ask the configured model to narrate these findings" : "Set LLM_API_KEY to enable"}
-        >
-          <Sparkles className="size-4" />
-          {narrate ? "AI narration on" : "AI narration"}
-        </Button>
+        {data?.llm.available ? (
+          <Button
+            variant={narrate ? "default" : "outline"}
+            size="sm"
+            onClick={() => setNarrate((value) => !value)}
+            title="Ask the configured model to narrate these findings"
+          >
+            <Sparkles className="size-4" />
+            {narrate ? "AI narration on" : "AI narration"}
+          </Button>
+        ) : null}
         </>
       }
     >
@@ -190,15 +191,15 @@ export function AiInsightsView() {
                 dataKey="upper"
                 name="Confidence band"
                 stroke="none"
-                fill="hsl(var(--chart-3))"
+                fill="var(--c3)"
                 fillOpacity={0.18}
                 isAnimationActive={false}
               />
-              <Area dataKey="lower" name=" " stroke="none" fill="hsl(var(--background))" isAnimationActive={false} />
+              <Area dataKey="lower" name=" " stroke="none" fill="var(--bg)" isAnimationActive={false} />
               <Line
                 dataKey="spend"
                 name="Actual"
-                stroke="hsl(var(--chart-1))"
+                stroke="var(--c1)"
                 strokeWidth={2.5}
                 dot={{ r: 3 }}
                 connectNulls
@@ -206,7 +207,7 @@ export function AiInsightsView() {
               <Line
                 dataKey="projected"
                 name="Projected"
-                stroke="hsl(var(--chart-3))"
+                stroke="var(--c3)"
                 strokeWidth={2.5}
                 strokeDasharray="6 4"
                 dot={{ r: 3 }}
@@ -237,6 +238,7 @@ export function AiInsightsView() {
               <span className="numeric text-[13px] font-semibold">{data?.forecast.r2?.toFixed(3) ?? "—"}</span>
             </div>
             <p className="rounded-lg bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
+              <strong className="text-foreground">Projected means estimated, not reported.</strong>{" "}
               {data?.forecast.caveat}
             </p>
           </CardContent>
@@ -384,7 +386,7 @@ export function AiInsightsView() {
                 <span className="text-xs text-muted-foreground">{note.label}</span>
                 <span
                   className={cn(
-                    "shrink-0 text-right text-[12px] font-medium",
+                    "min-w-0 max-w-[62%] text-right text-[12px] font-medium",
                     note.severity === "warning" && "text-amber-600",
                     note.severity === "positive" && "text-success",
                   )}
@@ -404,8 +406,8 @@ export function AiInsightsView() {
             <CardTitle>Natural language search</CardTitle>
             <CardDescription>
               {data?.llm.available
-                ? `Grounded on the current selection · answered by ${data.llm.model}`
-                : "Set the LLM_API_KEY environment variable to enable — every panel above works without it"}
+                ? `Verified queries use the built-in engine; broader questions use ${data.llm.model}`
+                : "Answered by the built-in deterministic query engine using the current selection"}
             </CardDescription>
           </div>
         </CardHeader>

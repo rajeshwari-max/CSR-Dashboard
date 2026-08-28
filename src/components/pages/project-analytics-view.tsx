@@ -8,7 +8,6 @@ import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-t
 import { RankList } from "@/components/charts/rank-list";
 import { ProjectsTable } from "@/components/dashboard/projects-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
-import { Unavailable } from "@/components/shared/unavailable";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,16 +15,6 @@ import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { ProjectsResponse, SortDirection, SortField, SummaryResponse } from "@/types";
-
-/** Log-ish buckets: CSR project sizes span five orders of magnitude. */
-const BUCKETS = [
-  { label: "< ₹10 L", min: 0, max: 0.1 },
-  { label: "₹10 L – ₹50 L", min: 0.1, max: 0.5 },
-  { label: "₹50 L – ₹1 Cr", min: 0.5, max: 1 },
-  { label: "₹1 – 5 Cr", min: 1, max: 5 },
-  { label: "₹5 – 25 Cr", min: 5, max: 25 },
-  { label: "> ₹25 Cr", min: 25, max: Number.POSITIVE_INFINITY },
-];
 
 export function ProjectAnalyticsView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
@@ -44,28 +33,8 @@ export function ProjectAnalyticsView() {
     `/api/projects?${filterQuery}&page=${page}&pageSize=${pageSize}&sort=${sort}&direction=${direction}`,
   );
 
-  // One request per bucket would be wasteful; the histogram is derived from the
-  // sampled first page plus the aggregate KPIs instead of a full scan.
-  const sizes = useApi<ProjectsResponse>(`/api/projects?${filterQuery}&page=1&pageSize=200&sort=spent&direction=desc`);
-
   const kpis = summary.data?.kpis;
-  const capabilities = meta.data?.capabilities;
-
-  const histogram = React.useMemo(() => {
-    const rows = sizes.data?.rows ?? [];
-    return BUCKETS.map((bucket) => {
-      const matching = rows.filter(
-        (row) => row.spent !== null && row.spent >= bucket.min && row.spent < bucket.max,
-      );
-      return {
-        label: bucket.label,
-        projects: matching.length,
-        value: matching.reduce((sum, row) => sum + (row.spent ?? 0), 0),
-        min: bucket.min,
-        max: bucket.max,
-      };
-    });
-  }, [sizes.data]);
+  const histogram = summary.data?.projectSizeDistribution ?? [];
 
   const handleSort = (field: SortField) => {
     if (field === sort) setDirection((current) => (current === "asc" ? "desc" : "asc"));
@@ -88,7 +57,6 @@ export function ProjectAnalyticsView() {
       onRefresh={() => {
         summary.refetch();
         projects.refetch();
-        sizes.refetch();
       }}
       isRefreshing={summary.isValidating || projects.isValidating}
     >
@@ -125,11 +93,11 @@ export function ProjectAnalyticsView() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
           title="Project size distribution"
-          description="Largest 200 projects in view · click a bar to filter by amount"
+          description="All projects with disclosed spend in view · click a bar to filter by amount"
           className="xl:col-span-2"
           height={320}
-          isLoading={sizes.isLoading}
-          error={sizes.error}
+          isLoading={summary.isLoading}
+          error={summary.error}
           isEmpty={!histogram.some((bucket) => bucket.projects > 0)}
         >
           <ResponsiveContainer width="100%" height="100%">
@@ -148,9 +116,9 @@ export function ProjectAnalyticsView() {
                 radius={[6, 6, 0, 0]}
                 maxBarSize={60}
                 cursor="pointer"
-                onClick={(entry: { payload?: { min: number; max: number } }) => {
+                onClick={(entry: { payload?: { min: number; max: number | null } }) => {
                   const bucket = entry?.payload;
-                  if (bucket) setRange(bucket.min, Number.isFinite(bucket.max) ? bucket.max : null);
+                  if (bucket) setRange(bucket.min, bucket.max);
                 }}
               >
                 {histogram.map((bucket, index) => (
@@ -175,36 +143,6 @@ export function ProjectAnalyticsView() {
             onSelect={(name) => toggleValue("districts", name)}
           />
         </ChartCard>
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        {capabilities?.beneficiaries ? (
-          <ChartCard title="Beneficiaries &amp; impact metrics" height={300} isLoading={false}>
-            <div />
-          </ChartCard>
-        ) : (
-          <Unavailable
-            title="Beneficiaries & impact metrics"
-            column="beneficiaries"
-            description="No headcount or impact-metric column in the source data"
-            headers={["Beneficiaries", "Beneficiaries Reached", "No. of Beneficiaries", "Lives Impacted"]}
-            height={200}
-          />
-        )}
-
-        {capabilities?.start_date || capabilities?.status ? (
-          <ChartCard title="Timeline" height={300} isLoading={false}>
-            <div />
-          </ChartCard>
-        ) : (
-          <Unavailable
-            title="Project timeline & status"
-            column="start / end date or status"
-            description="Disclosures are annual totals with no project dates or status"
-            headers={["Start Date", "End Date", "Project Status", "Project Duration"]}
-            height={200}
-          />
-        )}
       </div>
 
       <SectionLabel>Project register</SectionLabel>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Filter, RotateCcw, Save, X } from "lucide-react";
+import { ChevronDown, Filter, RotateCcw, Search, Target, X } from "lucide-react";
 
 import { activeFilterCount } from "@/lib/query";
 import { useFilterStore, type ListKey } from "@/store/filters";
@@ -39,19 +39,33 @@ const CHIPS: ChipSpec[] = [
   { key: "modes", label: "Implementation", options: (meta) => meta.modes },
 ];
 
-const DISABLED_CHIPS = [
-  { label: "Quarter", reason: "CSR disclosures are annual — no quarter column in the dataset." },
-  { label: "Month", reason: "CSR disclosures are annual — no month or date column in the dataset." },
-  { label: "NGO", reason: "No implementing-agency name column in the dataset." },
-  { label: "Status", reason: "No project status column in the dataset." },
-];
-
-export function FilterBar({ meta, filters }: { meta: Meta | null; filters: Filters }) {
+export function FilterBar({
+  meta,
+  filters,
+  hide = [],
+  resultCount,
+}: {
+  meta: Meta | null;
+  filters: Filters;
+  hide?: ListKey[];
+  resultCount?: number;
+}) {
   const [openChip, setOpenChip] = React.useState<string | null>(null);
   const setValues = useFilterStore((state) => state.setValues);
+  const setSearch = useFilterStore((state) => state.setSearch);
   const setRange = useFilterStore((state) => state.setRange);
+  const setAspirationalOnly = useFilterStore((state) => state.setAspirationalOnly);
   const clearAll = useFilterStore((state) => state.clearAll);
   const barRef = React.useRef<HTMLDivElement>(null);
+  const [term, setTerm] = React.useState(filters.search);
+
+  React.useEffect(() => setTerm(filters.search), [filters.search]);
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (term !== filters.search) setSearch(term);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [filters.search, setSearch, term]);
 
   React.useEffect(() => {
     const close = (event: MouseEvent) => {
@@ -70,7 +84,7 @@ export function FilterBar({ meta, filters }: { meta: Meta | null; filters: Filte
         Filters
       </span>
 
-      {CHIPS.map((chip) => {
+      {CHIPS.filter((chip) => !hide.includes(chip.key) && (!meta || chip.options(meta).length > 0)).map((chip) => {
         const selected = filters[chip.key];
         const options =
           meta && chip.optionValue
@@ -107,19 +121,6 @@ export function FilterBar({ meta, filters }: { meta: Meta | null; filters: Filte
           </div>
         );
       })}
-
-      {DISABLED_CHIPS.map((chip) => (
-        <button
-          key={chip.label}
-          type="button"
-          className="select-chip"
-          data-tip={chip.reason}
-          style={{ opacity: 0.5, cursor: "not-allowed", borderStyle: "dashed" }}
-          onClick={(event) => event.preventDefault()}
-        >
-          {chip.label}
-        </button>
-      ))}
 
       <div className="pos-rel">
         <button
@@ -162,12 +163,33 @@ export function FilterBar({ meta, filters }: { meta: Meta | null; filters: Filte
         ) : null}
       </div>
 
+      <label className="filter-search">
+        <Search width={13} height={13} />
+        <input
+          value={term}
+          onChange={(event) => setTerm(event.target.value)}
+          placeholder="Search projects…"
+          aria-label="Search projects and companies"
+        />
+      </label>
+
+      {(meta?.stats.aspirational_rows ?? 0) > 0 ? (
+        <button
+          type="button"
+          className={`select-chip${filters.aspirationalOnly ? " active" : ""}`}
+          onClick={() => setAspirationalOnly(!filters.aspirationalOnly)}
+        >
+          <Target width={12} height={12} />
+          Aspirational
+        </button>
+      ) : null}
+
       <div className="spacer" />
 
-      <button type="button" className="fb-text" onClick={() => window.dispatchEvent(new CustomEvent("cms:save-view"))}>
-        <Save width={13} height={13} />
-        Save
-      </button>
+      {resultCount !== undefined ? (
+        <span className="filter-count">{resultCount.toLocaleString("en-IN")} projects</span>
+      ) : null}
+
       <button type="button" className="fb-text" onClick={clearAll} disabled={count === 0}>
         <RotateCcw width={13} height={13} />
         Reset{count ? ` (${count})` : ""}

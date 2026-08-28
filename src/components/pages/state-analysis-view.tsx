@@ -36,9 +36,15 @@ export function StateAnalysisView() {
   const districts = useApi<BreakdownResponse>(`/api/breakdown?dimension=district&${filterQuery}&limit=400`);
   const stateSeries = useApi<BreakdownResponse>(`/api/breakdown?dimension=state&${filterQuery}&limit=60`);
 
-  const states = summary.data?.byState ?? [];
-  const mapped = states.filter((row) => !NON_GEOGRAPHIC.has(row.name));
-  const years = summary.data?.trend.map((point) => point.year) ?? [];
+  const states = React.useMemo(() => summary.data?.byState ?? [], [summary.data]);
+  const mapped = React.useMemo(
+    () => states.filter((row) => !NON_GEOGRAPHIC.has(row.name)),
+    [states],
+  );
+  const years = React.useMemo(
+    () => summary.data?.trend.map((point) => point.year) ?? [],
+    [summary.data],
+  );
 
   // Grouped bars: top 8 mapped states × every financial year in view.
   const comparison = React.useMemo(() => {

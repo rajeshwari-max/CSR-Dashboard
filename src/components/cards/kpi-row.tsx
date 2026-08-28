@@ -67,7 +67,7 @@ export function KpiRow({
     {
       label: "Total CSR Spend",
       value: formatCrore(kpis.totalSpend),
-      sub: `${kpis.latestYear ?? "—"}, all reporting`,
+      sub: `${kpis.latestYear ?? "—"} latest · cumulative view`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
     },
@@ -78,7 +78,7 @@ export function KpiRow({
       icon: Building2,
     },
     {
-      label: "Active Projects",
+      label: "Projects Reported",
       value: formatNumber(kpis.projectCount),
       sub: `Across ${kpis.stateCount} states`,
       icon: FolderKanban,
@@ -143,7 +143,11 @@ export function KpiRow({
               <Icon width={15} height={15} />
             </span>
             <div className="kpi-label">{card.label}</div>
-            <div className="kpi-value" style={dimmed ? { color: "var(--text-soft)" } : undefined}>
+            <div
+              className="kpi-value"
+              title={card.value}
+              style={dimmed ? { color: "var(--text-soft)" } : undefined}
+            >
               {card.value}
             </div>
             <div className="kpi-sub">

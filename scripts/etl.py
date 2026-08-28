@@ -23,8 +23,10 @@ Just drop the data in and re-run `npm run etl`. Both shapes work:
 The largest fact-shaped sheet in each workbook is always ingested (that is the
 main register). Per-sector sheets (`Chemicals`, `Automobiles`, …) are *not*
 ingested as facts — they duplicate the main register — but they are still read
-to rebuild the company→sector lookup. Identical rows arriving from two sources
-are de-duplicated and the count is reported.
+to rebuild the company→sector lookup. When workbooks overlap on a financial
+year, the workbook with the widest distinct-company coverage is used as that
+year's canonical source. Exact duplicates inside it are then collapsed. This
+prevents slightly different copies of the same annual register inflating KPIs.
 
 Optional columns
 ----------------
@@ -503,6 +505,50 @@ def main() -> int:
     aspirational = build_aspirational_districts(workbooks)
     print(f"[etl] sector lookup: {len(sector_lookup):,} companies · aspirational districts: {len(aspirational)}")
 
+    # Select one canonical workbook per financial year before building facts.
+    # Exact fingerprints are insufficient across overlapping registers because
+    # classification fields (especially district) can drift between copies.
+    source_year_companies: dict[tuple[str, str], set[str]] = {}
+    source_year_rows: dict[tuple[str, str], int] = {}
+    for path, xls in workbooks:
+        for sheet in fact_sheets[str(path)]:
+            frame = pd.read_excel(xls, sheet_name=sheet)
+            core = resolve_columns(frame.columns, {**CORE_COLUMNS, **REQUIRED_COLUMNS})
+            company_column = core.get("company")
+            year_column = core.get("year")
+            sheet_year = normalise_year(sheet)
+            if company_column is None:
+                continue
+            for record in frame.to_dict("records"):
+                name = clean_text(record.get(company_column))
+                if not name or len(re.findall(r"[A-Za-z]", name)) < 3:
+                    continue
+                year = normalise_year(record.get(year_column)) if year_column is not None else None
+                year = year or sheet_year
+                if year is None:
+                    continue
+                key = (year, str(path))
+                source_year_companies.setdefault(key, set()).add(company_key(name))
+                source_year_rows[key] = source_year_rows.get(key, 0) + 1
+
+    preferred_source_by_year: dict[str, str] = {}
+    for year in sorted({year for year, _ in source_year_companies}):
+        candidates = [key for key in source_year_companies if key[0] == year]
+        chosen = max(
+            candidates,
+            key=lambda key: (
+                len(source_year_companies[key]),
+                source_year_rows.get(key, 0),
+                Path(key[1]).name.lower(),
+            ),
+        )
+        preferred_source_by_year[year] = chosen[1]
+        if len(candidates) > 1:
+            print(
+                f"[etl]   canonical {year}: {Path(chosen[1]).name} "
+                f"({len(source_year_companies[chosen]):,} companies)"
+            )
+
     companies: dict[str, dict] = {}
     tables: dict[str, dict[str, int]] = {
         "years": {}, "sectors": {}, "states": {}, "themes": {},
@@ -520,7 +566,7 @@ def main() -> int:
         "workbooks": len(sources), "raw_rows": 0, "dropped_no_company": 0,
         "dropped_empty": 0, "duplicates_removed": 0, "missing_year": 0,
         "missing_spend": 0, "sector_backfilled": 0, "sector_unknown": 0,
-        "negative_amounts": 0, "aspirational_rows": 0,
+        "negative_amounts": 0, "aspirational_rows": 0, "overlap_rows_skipped": 0,
     }
 
     def intern(table: str, value: str) -> int:
@@ -558,16 +604,19 @@ def main() -> int:
                     stats["dropped_empty"] += 1
                     continue
 
+                # Year priority: the row's own value, else the sheet name.
+                year = normalise_year(cell(record, "year")) or sheet_year
+                if year is None:
+                    stats["missing_year"] += 1
+                elif preferred_source_by_year.get(year) != str(path):
+                    stats["overlap_rows_skipped"] += 1
+                    continue
+
                 raw_spent = cell(record, "spent")
                 if isinstance(raw_spent, (int, float)) and not math.isnan(raw_spent) and raw_spent < 0:
                     stats["negative_amounts"] += 1
                 if spent is None:
                     stats["missing_spend"] += 1
-
-                # Year priority: the row's own value, else the sheet name.
-                year = normalise_year(cell(record, "year")) or sheet_year
-                if year is None:
-                    stats["missing_year"] += 1
 
                 cid = company_key(name)
                 cin = clean_text(cell(record, "cin"))
@@ -771,6 +820,7 @@ def main() -> int:
     print(f"[etl] workbooks           : {stats['workbooks']}")
     print(f"[etl] rows kept           : {len(rows):,} of {stats['raw_rows']:,} read")
     print(f"[etl] duplicates removed  : {stats['duplicates_removed']:,}")
+    print(f"[etl] overlap rows skipped: {stats['overlap_rows_skipped']:,}")
     print(f"[etl] companies           : {len(company_list):,}")
     print(f"[etl] years               : {', '.join(sorted(year_list))}")
     print(f"[etl] sectors/states/dist : {len(tables['sectors'])} / {len(tables['states'])} / {len(tables['districts'])}")

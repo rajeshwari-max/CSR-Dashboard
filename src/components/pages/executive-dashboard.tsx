@@ -73,12 +73,12 @@ export function ExecutiveDashboard() {
             <div>
               <h3>CSR Spending Trend</h3>
               <div className="muted">
-                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"}, reported spend
+                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · spend and project volume
               </div>
             </div>
             <span className="card-badge">{kpis?.latestYear ?? "—"}</span>
           </div>
-          <div className="chart-wrap h-180">
+          <div className="chart-wrap" style={{ height: 230 }}>
             {summary.isLoading ? (
               <div className="skeleton" style={{ height: "100%" }} />
             ) : (

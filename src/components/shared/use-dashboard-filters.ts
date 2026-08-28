@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
 import { useApi } from "@/lib/api";
-import { describeFilters, filtersToParams, paramsToFilters } from "@/lib/query";
+import { describeFilters, filtersToParams, LIST_KEYS, paramsToFilters } from "@/lib/query";
 import { selectFilters, useFilterStore } from "@/store/filters";
 import type { Meta } from "@/types";
 
@@ -25,23 +25,33 @@ export function useDashboardFilters() {
 
   const filters = useFilterStore(useShallow(selectFilters));
   const hydrate = useFilterStore((state) => state.hydrate);
+  const [ready, setReady] = React.useState(false);
 
   const hydrated = React.useRef(false);
   React.useEffect(() => {
     if (hydrated.current) return;
     hydrated.current = true;
-    hydrate(paramsToFilters(new URLSearchParams(searchParams.toString())));
+    const params = new URLSearchParams(searchParams.toString());
+    const hasFilterParams =
+      LIST_KEYS.some((key) => params.has(key)) ||
+      ["search", "minSpend", "maxSpend", "aspirational"].some((key) => params.has(key));
+
+    // A URL with explicit filters is authoritative (shared/bookmarked view).
+    // A bare URL reached through sidebar navigation keeps the in-memory filter
+    // selection, so the same scope follows the user across every dashboard page.
+    if (hasFilterParams) hydrate(paramsToFilters(params));
+    setReady(true);
   }, [hydrate, searchParams]);
 
   const filterQuery = React.useMemo(() => filtersToParams(filters).toString(), [filters]);
 
   const lastPushed = React.useRef<string | null>(null);
   React.useEffect(() => {
-    if (!hydrated.current) return;
+    if (!ready) return;
     if (lastPushed.current === filterQuery) return;
     lastPushed.current = filterQuery;
     router.replace(filterQuery ? `${pathname}?${filterQuery}` : pathname, { scroll: false });
-  }, [filterQuery, pathname, router]);
+  }, [filterQuery, pathname, ready, router]);
 
   const scope = React.useMemo(() => describeFilters(filters), [filters]);
 

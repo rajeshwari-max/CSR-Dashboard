@@ -31,6 +31,8 @@ export function SpendTrend({
   forecast?: ForecastPoint[];
   height?: number;
 }) {
+  const hasForecast = Boolean(forecast?.length);
+  const trendByYear = new Map(trend.map((point) => [point.year, point]));
   const data =
     forecast && forecast.length
       ? forecast.map((point) => ({
@@ -39,8 +41,16 @@ export function SpendTrend({
           projected: point.projected,
           band: point.upper !== null && point.lower !== null ? point.upper - point.lower : null,
           lower: point.lower,
+          projects: trendByYear.get(point.year)?.projects ?? null,
         }))
-      : trend.map((point) => ({ year: point.year, spend: point.spend, projected: null, band: null, lower: null }));
+      : trend.map((point) => ({
+          year: point.year,
+          spend: point.spend,
+          projected: null,
+          band: null,
+          lower: null,
+          projects: point.projects,
+        }));
 
   return (
     <ResponsiveContainer width="100%" height={height ?? "100%"}>
@@ -53,30 +63,44 @@ export function SpendTrend({
         </defs>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="year" {...AXIS} />
-        <YAxis {...AXIS} tickFormatter={(value: number) => formatCompact(value)} />
+        <YAxis yAxisId="spend" {...AXIS} tickFormatter={(value: number) => formatCompact(value)} />
+        <YAxis
+          yAxisId="projects"
+          orientation="right"
+          width={42}
+          {...AXIS}
+          tickFormatter={(value: number) => formatCompact(value)}
+        />
         <Tooltip content={<ChartTip />} />
         <Legend iconType="circle" iconSize={7} />
-        <Area
-          dataKey="lower"
-          name=" "
-          stackId="band"
-          stroke="none"
-          fill="transparent"
-          legendType="none"
-          isAnimationActive={false}
-        />
-        <Area
-          dataKey="band"
-          name="Forecast range"
-          stackId="band"
-          stroke="none"
-          fill="var(--c6)"
-          fillOpacity={0.14}
-          isAnimationActive={false}
-        />
+        {hasForecast ? (
+          <>
+            <Area
+              dataKey="lower"
+              yAxisId="spend"
+              name=" "
+              stackId="band"
+              stroke="none"
+              fill="transparent"
+              legendType="none"
+              isAnimationActive={false}
+            />
+            <Area
+              dataKey="band"
+              yAxisId="spend"
+              name="Forecast range"
+              stackId="band"
+              stroke="none"
+              fill="var(--c6)"
+              fillOpacity={0.14}
+              isAnimationActive={false}
+            />
+          </>
+        ) : null}
         <Area
           type="monotone"
           dataKey="spend"
+          yAxisId="spend"
           name="Amount spent"
           stroke="var(--c1)"
           strokeWidth={2.2}
@@ -84,14 +108,27 @@ export function SpendTrend({
           dot={{ r: 2.5 }}
           connectNulls
         />
+        {hasForecast ? (
+          <Line
+            type="monotone"
+            dataKey="projected"
+            yAxisId="spend"
+            name="Projected"
+            stroke="var(--c6)"
+            strokeWidth={2.2}
+            strokeDasharray="5 4"
+            dot={{ r: 2.5 }}
+            connectNulls
+          />
+        ) : null}
         <Line
           type="monotone"
-          dataKey="projected"
-          name="Projected"
-          stroke="var(--c6)"
-          strokeWidth={2.2}
-          strokeDasharray="5 4"
-          dot={{ r: 2.5 }}
+          dataKey="projects"
+          yAxisId="projects"
+          name="Projects reported"
+          stroke="var(--c2)"
+          strokeWidth={1.8}
+          dot={{ r: 2.2 }}
           connectNulls
         />
       </ComposedChart>

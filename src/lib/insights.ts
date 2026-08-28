@@ -119,7 +119,7 @@ export function buildForecast(trend: TrendPoint[]) {
 function findAnomalies(rows: Int32Array, dimension: "company" | "state" | "sector"): AnomalyRow[] {
   const data = getDataset();
   const grouped = groupBy(rows, dimension);
-  const years = data.yearOrder.map((index) => data.years[index]);
+  const years = grouped.series.length ? Object.keys(grouped.series[0].values) : [];
   if (years.length < 2) return [];
 
   const changes: { entry: NamedValue; year: string; value: number; expected: number; delta: number }[] = [];
@@ -399,7 +399,14 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
 
   // ---- Data quality ------------------------------------------------------
   const stats = data.stats ?? {};
-  const noSpend = Number(stats.missing_spend ?? 0);
+  let noSpend = 0;
+  let unclassifiedSector = 0;
+  for (const row of rows) {
+    if (Number.isNaN(data.spent[row])) noSpend += 1;
+    if ((data.sectors[data.sectorIdx[row]] ?? "Unclassified") === "Unclassified") {
+      unclassifiedSector += 1;
+    }
+  }
   const dataQuality: InsightsResponse["dataQuality"] = [
     {
       label: "Rows in view",
@@ -408,23 +415,23 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
     },
     {
       label: "Projects with no disclosed amount",
-      value: `${noSpend.toLocaleString("en-IN")} (${((noSpend / Math.max(1, data.count)) * 100).toFixed(1)}% of dataset)`,
-      severity: noSpend > data.count * 0.05 ? "warning" : "neutral",
+      value: `${noSpend.toLocaleString("en-IN")} (${((noSpend / Math.max(1, rows.length)) * 100).toFixed(1)}% of view)`,
+      severity: noSpend > rows.length * 0.05 ? "warning" : "neutral",
     },
     {
-      label: "Duplicate rows removed at ingest",
+      label: "Duplicate rows removed at ingest (dataset)",
       value: Number(stats.duplicates_removed ?? 0).toLocaleString("en-IN"),
       severity: "neutral",
     },
     {
-      label: "Sector backfilled from per-sector sheets",
+      label: "Sector backfilled at ingest (dataset)",
       value: Number(stats.sector_backfilled ?? 0).toLocaleString("en-IN"),
       severity: "neutral",
     },
     {
       label: "Unclassified sector rows",
-      value: Number(stats.sector_unknown ?? 0).toLocaleString("en-IN"),
-      severity: Number(stats.sector_unknown ?? 0) > 0 ? "warning" : "positive",
+      value: unclassifiedSector.toLocaleString("en-IN"),
+      severity: unclassifiedSector > 0 ? "warning" : "positive",
     },
     {
       label: "Project outlay column",
@@ -463,10 +470,10 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       impact: `${summary.byTheme.length} categories in view`,
     });
   }
-  if (Number(stats.sector_unknown ?? 0) > 0) {
+  if (unclassifiedSector > 0) {
     recommendations.push({
       title: "Classify the remaining Unclassified companies",
-      detail: `${Number(stats.sector_unknown).toLocaleString("en-IN")} rows have no BRSR sector even after backfilling from the per-sector sheets.`,
+      detail: `${unclassifiedSector.toLocaleString("en-IN")} rows in the current view have no BRSR sector even after backfilling from the per-sector sheets.`,
       impact: "Improves sector benchmarking accuracy",
     });
   }

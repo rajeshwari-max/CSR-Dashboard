@@ -38,9 +38,12 @@ export function SectorAnalysisView() {
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=5`);
   const sectorSeries = useApi<BreakdownResponse>(`/api/breakdown?dimension=sector&${filterQuery}&limit=60`);
 
-  const sectors = summary.data?.bySector ?? [];
-  const themes = summary.data?.byTheme ?? [];
-  const years = summary.data?.trend.map((point) => point.year) ?? [];
+  const sectors = React.useMemo(() => summary.data?.bySector ?? [], [summary.data]);
+  const themes = React.useMemo(() => summary.data?.byTheme ?? [], [summary.data]);
+  const years = React.useMemo(
+    () => summary.data?.trend.map((point) => point.year) ?? [],
+    [summary.data],
+  );
 
   const trendData = React.useMemo(() => {
     const top = sectors.slice(0, 6).map((row) => row.name);
@@ -162,7 +165,7 @@ export function SectorAnalysisView() {
                 {[...growth.slice(0, 6), ...growth.slice(-6)].map((row) => (
                   <Cell
                     key={row.name}
-                    fill={(row.yoyGrowthPct ?? 0) >= 0 ? "hsl(var(--success))" : "hsl(var(--destructive))"}
+                    fill={(row.yoyGrowthPct ?? 0) >= 0 ? "var(--success)" : "var(--danger)"}
                   />
                 ))}
               </Bar>

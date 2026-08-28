@@ -2,7 +2,7 @@
 
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
-export function Sparkline({ data, color = "hsl(var(--primary))" }: { data: { label: string; value: number }[]; color?: string }) {
+export function Sparkline({ data, color = "var(--accent)" }: { data: { label: string; value: number }[]; color?: string }) {
   if (!data || data.length < 2) return <div className="h-full" />;
   const gradientId = `spark-${color.replace(/[^a-z0-9]/gi, "")}`;
 

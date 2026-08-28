@@ -138,7 +138,7 @@ export function round(value: number, digits = 2): number {
   return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 
-/** Include FY 2021-22 and every later financial year present in an uploaded dataset. */
+/** Include FY 2020-21 and every later financial year present in an uploaded dataset. */
 function isReportingYear(label: string): boolean {
   const match = /^FY\s+(\d{4})-\d{2}$/.exec(label.trim());
   return match !== null && Number.parseInt(match[1], 10) >= REPORTING_START_YEAR;
@@ -354,6 +354,15 @@ export function dimensionSpec(data: Dataset, dimension: Dimension): DimensionSpe
   }
 }
 
+function yearOrderForRows(rows: Int32Array, data: Dataset): number[] {
+  const present = new Set<number>();
+  for (let i = 0; i < rows.length; i += 1) {
+    const year = data.yearIdx[rows[i]];
+    if (year >= 0) present.add(year);
+  }
+  return data.yearOrder.filter((index) => present.has(index));
+}
+
 /** Group rows by a dimension, with per-year splits and YoY growth. */
 export function groupBy(
   rows: Int32Array,
@@ -384,7 +393,7 @@ export function groupBy(
     companySets[key].add(data.companyIdx[row]);
   }
 
-  const order = data.yearOrder;
+  const order = yearOrderForRows(rows, data);
   const result: NamedValue[] = [];
   const series: { name: string; values: Record<string, number> }[] = [];
 
@@ -434,7 +443,7 @@ export function buildBreakdown(
     rows: grouped.rows.slice(0, limit),
     total: grouped.total,
     projectCount: rows.length,
-    years: data.yearOrder.map((index) => data.years[index]),
+    years: yearOrderForRows(rows, data).map((index) => data.years[index]),
     series: grouped.series.slice(0, Math.min(limit, 30)),
     generatedAt: data.generatedAt,
   };
@@ -504,6 +513,9 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
   const data = getDataset();
   const rows = selectRows(filters);
   const trend = buildTrend(rows);
+  const selectedYearOrder = trend
+    .map((point) => data.years.indexOf(point.year))
+    .filter((index) => index >= 0);
 
   const byCompany = groupBy(rows, "company");
   const bySector = groupBy(rows, "sector");
@@ -516,6 +528,14 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
   let spentRows = 0;
   let aspirationalSpend = 0;
   const districts = new Set<number>();
+  const projectSizeDistribution = [
+    { label: "< ₹10 L", min: 0, max: 0.1, projects: 0, spend: 0 },
+    { label: "₹10–50 L", min: 0.1, max: 0.5, projects: 0, spend: 0 },
+    { label: "₹50 L–₹1 Cr", min: 0.5, max: 1, projects: 0, spend: 0 },
+    { label: "₹1–5 Cr", min: 1, max: 5, projects: 0, spend: 0 },
+    { label: "₹5–25 Cr", min: 5, max: 25, projects: 0, spend: 0 },
+    { label: "> ₹25 Cr", min: 25, max: null, projects: 0, spend: 0 },
+  ];
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
     const value = data.spent[row];
@@ -523,6 +543,13 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
       totalSpend += value;
       spentRows += 1;
       if (data.aspirational[row]) aspirationalSpend += value;
+      const bucket = projectSizeDistribution.find(
+        (candidate) => value >= candidate.min && (candidate.max === null || value < candidate.max),
+      );
+      if (bucket) {
+        bucket.projects += 1;
+        bucket.spend += value;
+      }
     }
     if (data.districtIdx[row] >= 0) districts.add(data.districtIdx[row]);
   }
@@ -539,7 +566,8 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
    * So: the set of companies comes from the current view, but each one's spend
    * is its unfiltered national total for the latest year.
    */
-  const complianceYear = data.yearOrder.length ? data.yearOrder[data.yearOrder.length - 1] : -1;
+  const selectedLatestYear = trend.length ? trend[trend.length - 1].year : null;
+  const complianceYear = selectedLatestYear ? data.years.indexOf(selectedLatestYear) : -1;
   const nationalLatestSpend = latestYearSpendByCompany(complianceYear);
 
   let complianceBase = 0;
@@ -570,17 +598,17 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
       beneficiaryTotal += people;
     }
   }
-  const districtSparkline = data.yearOrder.map((yearIndex) => ({
+  const districtSparkline = selectedYearOrder.map((yearIndex) => ({
     label: data.years[yearIndex],
     value: districtsPerYear[yearIndex].size,
   }));
-  const beneficiarySparkline = data.yearOrder.map((yearIndex) => ({
+  const beneficiarySparkline = selectedYearOrder.map((yearIndex) => ({
     label: data.years[yearIndex],
     value: round(beneficiariesPerYear[yearIndex]),
   }));
 
   // Per-year compliance, so the card's sparkline shows a real series.
-  const complianceSparkline = data.yearOrder.map((yearIndex) => {
+  const complianceSparkline = selectedYearOrder.map((yearIndex) => {
     const spend = latestYearSpendByCompany(yearIndex);
     let base = 0;
     let met = 0;
@@ -663,6 +691,10 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
     byTheme: byTheme.rows,
     byMode: byMode.rows,
     byDistrict: byDistrict.rows.slice(0, 60),
+    projectSizeDistribution: projectSizeDistribution.map((bucket) => ({
+      ...bucket,
+      spend: round(bucket.spend),
+    })),
     filteredRows: rows.length,
     generatedAt: data.generatedAt,
   };

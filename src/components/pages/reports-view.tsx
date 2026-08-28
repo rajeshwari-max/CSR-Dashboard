@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CheckCircle2, Clock, Download, Loader2, Trash2 } from "lucide-react";
+import { CheckCircle2, Download, Loader2, Trash2 } from "lucide-react";
 
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { REPORT_FORMATS, type ReportFormat } from "@/components/shared/export-menu";
@@ -213,18 +213,6 @@ export function ReportsView() {
         </CardContent>
       </Card>
 
-      <SectionLabel>Scheduled reports</SectionLabel>
-      <Card className="border-dashed">
-        <CardContent className="flex flex-col items-center gap-2 py-8 text-center">
-          <Clock className="size-5 text-muted-foreground" />
-          <p className="text-sm font-medium">Scheduling needs a mail service and a job runner</p>
-          <p className="max-w-xl text-xs text-muted-foreground">
-            The report endpoints are plain HTTP GETs
-            (<code className="rounded bg-muted px-1">/api/report/pdf?years=FY 2022-23</code>), so any scheduler — cron,
-            GitHub Actions, Vercel Cron — can fetch and email them. Wire one up and this panel becomes the UI for it.
-          </p>
-        </CardContent>
-      </Card>
     </PageFrame>
   );
 }

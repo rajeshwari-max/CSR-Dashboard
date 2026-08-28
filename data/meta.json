@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T05:35:43+00:00",
+  "generatedAt": "2026-08-28T17:45:19+00:00",
   "sources": [
     {
       "file": "AAAMaster.xlsm",
@@ -68,9 +68,9 @@
       "available": false
     }
   },
-  "rowCount": 101327,
-  "companyCount": 1347,
-  "totalSpend": 141976.53,
+  "rowCount": 88118,
+  "companyCount": 1331,
+  "totalSpend": 116598.74,
   "years": [
     "FY 2014-15",
     "FY 2015-16",
@@ -170,7 +170,6 @@
   ],
   "themes": [
     "Agro Forestry",
-    "Andhra Pradesh",
     "Animal Welfare",
     "Armed Forces, Veterans, War Widows/ Dependants",
     "Art And Culture",
@@ -210,10 +209,7 @@
     "Trust / Society / Sec-8 company (own)"
   ],
   "districts": [
-    "1.02",
-    "1.88",
     "25.09",
-    "3.76",
     "9.35",
     "9.93",
     "Adilabad",
@@ -248,7 +244,6 @@
     "Araria",
     "Aravalli",
     "Ariyalur",
-    "Arvalli",
     "Arwal",
     "Ashoknagar",
     "Auraiya",
@@ -269,7 +264,6 @@
     "Ballia",
     "Balod",
     "Balrampur",
-    "Balrampur-Ramanujganj",
     "Banas Kantha",
     "Banaskantha",
     "Banda",
@@ -352,7 +346,6 @@
     "Chhatrapati Sambhajinagar",
     "Chhindwara",
     "Chhota Udaipur",
-    "Chhotaudepur",
     "Chikkaballapur",
     "Chikkaballapura",
     "Chikkamagaluru",
@@ -606,7 +599,6 @@
     "Krishna",
     "Krishnagiri",
     "Kullu",
-    "Kumuram Bheem Asifabad",
     "Kupwara",
     "Kurnool",
     "Kurukshetra",
@@ -1261,11 +1253,6 @@
       "sector": "Sector Agnostic"
     },
     {
-      "id": "allied-blenders-and-distillers",
-      "name": "Allied Blenders And Distillers Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "alok-industries",
       "name": "Alok Industries Limited",
       "sector": "Apparel & Textiles"
@@ -1461,11 +1448,6 @@
       "sector": "Industrials"
     },
     {
-      "id": "ask-automotive",
-      "name": "Ask Automotive Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "asm-technologies",
       "name": "Asm Technologies Limited",
       "sector": "Unclassified"
@@ -1544,11 +1526,6 @@
       "id": "avadh-sugar-energy",
       "name": "Avadh Sugar & Energy Limited",
       "sector": "Food"
-    },
-    {
-      "id": "avalon-technologies",
-      "name": "Avalon Technologies Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "avantel",
@@ -1881,11 +1858,6 @@
       "sector": "Apparel & Textiles"
     },
     {
-      "id": "biocon-biologics",
-      "name": "Biocon Biologics Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "biocon",
       "name": "Biocon Limited",
       "sector": "Biotechnology & Pharmaceuticals"
@@ -2093,11 +2065,6 @@
     {
       "id": "ceigall-india",
       "name": "Ceigall India Limited",
-      "sector": "Unclassified"
-    },
-    {
-      "id": "cello-world",
-      "name": "Cello World Limited",
       "sector": "Unclassified"
     },
     {
@@ -2741,11 +2708,6 @@
       "sector": "Unclassified"
     },
     {
-      "id": "epack-durable",
-      "name": "Epack Durable Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "epl",
       "name": "Epl Limited",
       "sector": "Industrials"
@@ -3381,11 +3343,6 @@
       "sector": "Industrials"
     },
     {
-      "id": "harsha-engineers-international",
-      "name": "Harsha Engineers International Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "harsha-engineers",
       "name": "Harsha Engineers Limited",
       "sector": "Industrials"
@@ -3609,11 +3566,6 @@
       "id": "home-first-finance-india",
       "name": "Home First Finance Company India Private Limited",
       "sector": "Corporate & Retail Banking"
-    },
-    {
-      "id": "honasa-consumer",
-      "name": "Honasa Consumer Private Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "honda-india-power-products",
@@ -3994,11 +3946,6 @@
       "id": "interglobe-aviation",
       "name": "Interglobe Aviation Limited",
       "sector": "Air Transportation"
-    },
-    {
-      "id": "inventurus-knowledge-solutions",
-      "name": "Inventurus Knowledge Solutions Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "iol-chemicals-and-pharmaceuticals",
@@ -4509,11 +4456,6 @@
       "id": "krishna-institute-of-medical-sciences",
       "name": "Krishna Institute Of Medical Sciences Limited",
       "sector": "Health Care Providers"
-    },
-    {
-      "id": "krn-heat-exchanger-and-refrigeration",
-      "name": "Krn Heat Exchanger And Refrigeration Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "krsnaa-diagnostics",
@@ -5176,11 +5118,6 @@
       "sector": "Consumer Discretionary Products"
     },
     {
-      "id": "netweb-technologies-india",
-      "name": "Netweb Technologies India Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "network-people-services-technologies",
       "name": "Network People Services Technologies Limited",
       "sector": "Unclassified"
@@ -5224,11 +5161,6 @@
       "id": "nippon-life-india-asset-management",
       "name": "Nippon Life India Asset Management Limited",
       "sector": "Capital Markets"
-    },
-    {
-      "id": "nirlon-trade-finance",
-      "name": "Nirlon Trade & Finance Pvt Ltd",
-      "sector": "Unclassified"
     },
     {
       "id": "nitin-spinners",
@@ -5374,11 +5306,6 @@
       "id": "oriental-hotels",
       "name": "Oriental Hotels Limited",
       "sector": "Restaurants"
-    },
-    {
-      "id": "oswal-pumps",
-      "name": "Oswal Pumps Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "p-n-gadgil-jewellers",
@@ -5859,11 +5786,6 @@
       "id": "rane-holdings",
       "name": "Rane Holdings Limited",
       "sector": "Automobiles"
-    },
-    {
-      "id": "rashi-peripherals",
-      "name": "Rashi Peripherals Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "rashtriya-chemicals-and-fertilizers",
@@ -6386,11 +6308,6 @@
       "sector": "Unclassified"
     },
     {
-      "id": "signatureglobal-india",
-      "name": "Signatureglobal (India) Limited",
-      "sector": "Unclassified"
-    },
-    {
       "id": "sindhu-trade-links",
       "name": "Sindhu Trade Links Limited",
       "sector": "Unclassified"
@@ -6904,11 +6821,6 @@
       "id": "tatva-chintan-pharma-chem",
       "name": "Tatva Chintan Pharma Chem Private Limited",
       "sector": "Biotechnology & Pharmaceuticals"
-    },
-    {
-      "id": "tbo-tek",
-      "name": "Tbo Tek Limited",
-      "sector": "Unclassified"
     },
     {
       "id": "tci-express",
@@ -7728,9 +7640,9 @@
     "FY 2017-18": 7968.34,
     "FY 2018-19": 9493.42,
     "FY 2019-20": 12080.64,
-    "FY 2020-21": 23980.77,
-    "FY 2021-22": 20113.44,
-    "FY 2022-23": 20995.15,
+    "FY 2020-21": 13851.47,
+    "FY 2021-22": 12357.24,
+    "FY 2022-23": 13502.86,
     "FY 2023-24": 13404.62,
     "FY 2024-25": 15549.26
   },
@@ -7739,12 +7651,13 @@
     "raw_rows": 189640,
     "dropped_no_company": 1773,
     "dropped_empty": 102,
-    "duplicates_removed": 86438,
+    "duplicates_removed": 68414,
     "missing_year": 0,
-    "missing_spend": 311,
-    "sector_backfilled": 153761,
-    "sector_unknown": 12759,
-    "negative_amounts": 14,
-    "aspirational_rows": 4111
+    "missing_spend": 303,
+    "sector_backfilled": 124692,
+    "sector_unknown": 10595,
+    "negative_amounts": 12,
+    "aspirational_rows": 3880,
+    "overlap_rows_skipped": 31233
   }
 }

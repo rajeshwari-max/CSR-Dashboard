@@ -1,38 +1,39 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-/**
- * Single shared-password gate via HTTP Basic auth.
- *
- * Runs at the edge before any page or API route, so nothing — including the
- * upload endpoint and generated reports — is reachable without the password.
- * Set APP_PASSWORD in the host's environment; leaving it unset disables the
- * gate entirely (handy for local development).
- */
-export function middleware(request: NextRequest) {
+const SESSION_COOKIE = "cms_csr_session";
+
+/** Password-backed session gate with a first-party login window. */
+export async function middleware(request: NextRequest) {
   const password = process.env.APP_PASSWORD;
   if (!password) return NextResponse.next();
 
-  const header = request.headers.get("authorization");
-  if (header?.startsWith("Basic ")) {
-    try {
-      const decoded = atob(header.slice(6));
-      // Accept "anything:password" so the username field can be left blank.
-      const supplied = decoded.slice(decoded.indexOf(":") + 1);
-      if (timingSafeEqual(supplied, password)) return NextResponse.next();
-    } catch {
-      /* malformed header falls through to the challenge */
-    }
+  const pathname = request.nextUrl.pathname;
+  const publicRoute = pathname === "/login" || pathname === "/api/auth/login";
+  const expected = await sessionToken(password);
+  const supplied = request.cookies.get(SESSION_COOKIE)?.value ?? "";
+  const authenticated = timingSafeEqual(supplied, expected);
+
+  if (publicRoute) {
+    if (pathname === "/login" && authenticated) return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.next();
+  }
+  if (authenticated) return NextResponse.next();
+
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
   }
 
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="CMS CSR Intelligence", charset="UTF-8"',
-    },
-  });
+  const login = new URL("/login", request.url);
+  login.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+  return NextResponse.redirect(login);
 }
 
-/** Constant-time compare so the password can't be guessed by timing. */
+async function sessionToken(password: string): Promise<string> {
+  const bytes = new TextEncoder().encode(`cms-csr-session:${password}`);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function timingSafeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let diff = 0;
@@ -41,6 +42,5 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 export const config = {
-  // Everything except Next's static assets and the favicon.
   matcher: ["/((?!_next/static|_next/image|favicon.svg|robots.txt).*)"],
 };

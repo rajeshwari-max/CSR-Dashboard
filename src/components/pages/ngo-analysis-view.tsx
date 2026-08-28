@@ -8,11 +8,10 @@ import { colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
 import { RankList } from "@/components/charts/rank-list";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
-import { Unavailable } from "@/components/shared/unavailable";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCrore, formatNumber, formatShare } from "@/lib/format";
+import { formatCrore, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 
@@ -31,7 +30,6 @@ export function NgoAnalysisView() {
   const modeSeries = useApi<BreakdownResponse>(`/api/breakdown?dimension=mode&${filterQuery}`);
 
   const modes = summary.data?.byMode ?? [];
-  const ngoAvailable = meta.data?.capabilities.ngo ?? false;
   const throughAgencies = modes
     .filter((row) => /agenc|trust|societ|section 8/i.test(row.name))
     .reduce((sum, row) => sum + row.value, 0);
@@ -39,7 +37,7 @@ export function NgoAnalysisView() {
 
   return (
     <PageFrame
-      title="NGO / Implementation Analysis"
+      title="Implementation Analysis"
       subtitle={`How CSR money is delivered · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
@@ -72,7 +70,7 @@ export function NgoAnalysisView() {
                 innerRadius="55%"
                 outerRadius="80%"
                 paddingAngle={1.5}
-                stroke="hsl(var(--card))"
+                stroke="var(--surface)"
                 strokeWidth={2}
                 cursor="pointer"
                 onClick={(entry: { name?: string }) => entry?.name && toggleValue("modes", entry.name)}
@@ -112,29 +110,6 @@ export function NgoAnalysisView() {
         </Card>
       </div>
 
-      <SectionLabel>Named partners</SectionLabel>
-      {ngoAvailable ? (
-        <Card>
-          <CardHeader>
-            <div>
-              <CardTitle>Top implementing partners</CardTitle>
-              <CardDescription>{formatNumber(meta.data?.ngos.length ?? 0)} agencies recorded</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="px-0">
-            <NgoTable filterQuery={filterQuery} />
-          </CardContent>
-        </Card>
-      ) : (
-        <Unavailable
-          title="Top NGOs, NGO profile and CSR partnerships"
-          column="implementing agency / NGO name"
-          description="The workbook records how projects are implemented, but not who implements them"
-          headers={["NGO Name", "Implementing Agency", "Agency Name", "Partner Name", "CSR Registration Number"]}
-          height={220}
-        />
-      )}
-
       <SectionLabel>Where agency-delivered money goes</SectionLabel>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
@@ -169,9 +144,4 @@ export function NgoAnalysisView() {
       </div>
     </PageFrame>
   );
-}
-
-function NgoTable({ filterQuery }: { filterQuery: string }) {
-  const ngos = useApi<BreakdownResponse>(`/api/breakdown?dimension=mode&${filterQuery}`);
-  return <BreakdownTable rows={ngos.data?.rows ?? []} label="Partner" limit={25} />;
 }

@@ -2,12 +2,14 @@
 
 import * as React from "react";
 import { AlertTriangle, Database } from "lucide-react";
+import Link from "next/link";
 
-import { FilterBar } from "@/components/dashboard/filter-bar";
-import { useSidebar } from "@/components/layout/app-shell";
-import { Topbar } from "@/components/layout/topbar";
-import { Card } from "@/components/ui/card";
+import { useShell } from "@/components/shell/app-shell";
+import { FilterBar } from "@/components/shell/filter-bar";
+import { Topbar } from "@/components/shell/topbar";
 import { ApiRequestError } from "@/lib/api";
+import { formatDateTime } from "@/lib/format";
+import type { ListKey } from "@/store/filters";
 import type { Filters, Meta } from "@/types";
 
 interface PageFrameProps {
@@ -18,8 +20,7 @@ interface PageFrameProps {
   filters: Filters;
   filterQuery: string;
   resultCount?: number;
-  hideFacets?: React.ComponentProps<typeof FilterBar>["hide"];
-  /** Set false on pages that operate on their own controls (e.g. Reports). */
+  hideFacets?: ListKey[];
   showFilters?: boolean;
   actions?: React.ReactNode;
   onRefresh?: () => void;
@@ -28,14 +29,12 @@ interface PageFrameProps {
   children: React.ReactNode;
 }
 
-/** Shared chrome: topbar, filter bar, dataset-missing screen, error banner. */
+/** One visual and filter shell for every analytical page. */
 export function PageFrame({
   title,
   subtitle,
   meta,
-  metaLoading,
   filters,
-  filterQuery,
   resultCount,
   hideFacets,
   showFilters = true,
@@ -45,71 +44,67 @@ export function PageFrame({
   error,
   children,
 }: PageFrameProps) {
-  const { openSidebar } = useSidebar();
+  const { openMobileNav, openPalette } = useShell();
   const datasetMissing = error instanceof ApiRequestError && error.status === 503;
-
-  if (datasetMissing) {
-    return (
-      <>
-        <Topbar title={title} onMenu={openSidebar} />
-        <main className="p-6">
-          <Card className="mx-auto max-w-xl p-8 text-center">
-            <Database className="mx-auto size-8 text-muted-foreground" />
-            <h2 className="mt-4 text-lg font-semibold">Dataset not built yet</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Put your workbook(s) in <code className="rounded bg-muted px-1">data/raw/</code> and run{" "}
-              <code className="rounded bg-muted px-1">npm run etl</code> to generate{" "}
-              <code className="rounded bg-muted px-1">data/dataset.json</code>, then reload.
-            </p>
-          </Card>
-        </main>
-      </>
-    );
-  }
 
   return (
     <>
       <Topbar
-        title={title}
-        subtitle={subtitle}
-        onMenu={openSidebar}
+        onMenu={openMobileNav}
+        onOpenPalette={openPalette}
         onRefresh={onRefresh}
         isRefreshing={isRefreshing}
-        actions={actions}
+        datasetLabel={meta ? formatDateTime(meta.generatedAt) : undefined}
       />
-      <main className="flex flex-col gap-5 p-4 md:p-6">
-        {showFilters ? (
-          <FilterBar
-            meta={meta}
-            isLoading={metaLoading}
-            filters={filters}
-            filterQuery={filterQuery}
-            resultCount={resultCount}
-            hide={hideFacets}
-          />
-        ) : null}
+      {showFilters ? (
+        <FilterBar meta={meta} filters={filters} hide={hideFacets} resultCount={resultCount} />
+      ) : null}
 
-        {error && !datasetMissing ? (
-          <Card className="flex items-center gap-3 border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">
-            <AlertTriangle className="size-4 shrink-0" />
-            <span>
-              {error.message}
-              {error instanceof ApiRequestError && error.detail ? ` — ${error.detail}` : ""}
-            </span>
-          </Card>
-        ) : null}
+      <main className="content">
+        <div className="page-head">
+          <div>
+            <h1>{title}</h1>
+            {subtitle ? <p>{subtitle}</p> : null}
+          </div>
+          {actions ? <div className="page-head-actions">{actions}</div> : null}
+        </div>
 
-        {children}
+        {datasetMissing ? (
+          <div className="card empty-state">
+            <Database width={28} height={28} />
+            <h3>No dataset loaded</h3>
+            <p>Upload a CSV or Excel file to populate the dashboard.</p>
+            <Link href="/data-upload" className="btn btn-gradient btn-sm">
+              Go to Data Upload
+            </Link>
+          </div>
+        ) : (
+          <>
+            {error ? (
+              <div className="card error-banner">
+                <AlertTriangle width={15} height={15} />
+                <span>
+                  {error.message}
+                  {error instanceof ApiRequestError && error.detail ? ` — ${error.detail}` : ""}
+                </span>
+              </div>
+            ) : null}
+            {children}
+          </>
+        )}
       </main>
+
+      <footer className="footer">
+        <span>
+          CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · all
+          amounts INR Crore
+        </span>
+        <span>Dataset built {meta ? formatDateTime(meta.generatedAt) : "—"}</span>
+      </footer>
     </>
   );
 }
 
-/** Consistent section heading between panel groups. */
 export function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="mt-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-      {children}
-    </h2>
-  );
+  return <div className="mini-label">{children}</div>;
 }

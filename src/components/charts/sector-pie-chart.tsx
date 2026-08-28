@@ -35,7 +35,7 @@ export function SectorPieChart({ data, sliceCount = 8, onSelect }: SectorPieChar
           innerRadius="52%"
           outerRadius="80%"
           paddingAngle={1.5}
-          stroke="hsl(var(--card))"
+          stroke="var(--surface)"
           strokeWidth={2}
           onClick={(entry: { name?: string }) => {
             if (entry?.name && onSelect && !entry.name.startsWith("Other")) onSelect(entry.name);

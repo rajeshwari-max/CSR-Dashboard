@@ -40,7 +40,7 @@ export function YearTrendChart({ data }: { data: TrendPoint[] }) {
           yAxisId="left"
           dataKey="spend"
           name="Amount spent"
-          fill="hsl(var(--chart-1))"
+          fill="var(--c1)"
           radius={[6, 6, 0, 0]}
           maxBarSize={64}
         />
@@ -54,7 +54,7 @@ export function YearTrendChart({ data }: { data: TrendPoint[] }) {
           type="monotone"
           dataKey="projects"
           name="Projects"
-          stroke="hsl(var(--chart-2))"
+          stroke="var(--c2)"
           strokeWidth={2}
           strokeDasharray="5 4"
           dot={{ r: 3 }}
@@ -64,7 +64,7 @@ export function YearTrendChart({ data }: { data: TrendPoint[] }) {
           type="monotone"
           dataKey="companies"
           name="Companies reporting"
-          stroke="hsl(var(--chart-3))"
+          stroke="var(--c3)"
           strokeWidth={2.5}
           dot={{ r: 3 }}
         />

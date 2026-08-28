@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronDown, Menu, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, Menu, RefreshCw, Search } from "lucide-react";
 
 import { BREADCRUMB } from "@/components/shell/nav";
 
@@ -18,14 +18,12 @@ interface TopbarProps {
 /** Topbar: menu, breadcrumbs, ⌘K trigger, notifications, avatar — as drafted. */
 export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
   const pathname = usePathname();
-  const [notifOpen, setNotifOpen] = React.useState(false);
   const [avatarOpen, setAvatarOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const close = (event: MouseEvent) => {
       if (!wrapRef.current?.contains(event.target as Node)) {
-        setNotifOpen(false);
         setAvatarOpen(false);
       }
     };
@@ -69,48 +67,9 @@ export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, dataset
         <div className="pos-rel">
           <button
             type="button"
-            className="icon-btn"
-            onClick={() => {
-              setNotifOpen((open) => !open);
-              setAvatarOpen(false);
-            }}
-            aria-label="Notifications"
-          >
-            <Bell className="icon" width={17} height={17} />
-            <span className="dot" />
-          </button>
-          <div className={`dropdown${notifOpen ? " open" : ""}`}>
-            <div className="dropdown-head">
-              Notifications <span>Mark all read</span>
-            </div>
-            <div className="notif-item">
-              <div>
-                <p>Dataset rebuilt from the latest upload.</p>
-                <time>Just now</time>
-              </div>
-            </div>
-            <div className="notif-item">
-              <div>
-                <p>Anomaly detected in the latest financial year.</p>
-                <time>On last insight run</time>
-              </div>
-            </div>
-            <div className="notif-item">
-              <div>
-                <p>Reports are available in PDF, Excel, PowerPoint and CSV.</p>
-                <time>Always</time>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="pos-rel">
-          <button
-            type="button"
             className="avatar-btn"
             onClick={() => {
               setAvatarOpen((open) => !open);
-              setNotifOpen(false);
             }}
           >
             <span className="avatar">RC</span>
@@ -127,6 +86,11 @@ export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, dataset
             <Link href="/data-explorer" className="menu-item">
               Saved views
             </Link>
+            <form action="/api/auth/logout" method="post">
+              <button type="submit" className="menu-item" style={{ width: "100%", border: 0 }}>
+                Sign out
+              </button>
+            </form>
           </div>
         </div>
       </div>

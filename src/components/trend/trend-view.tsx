@@ -41,8 +41,8 @@ export function TrendView() {
   const sectors = useApi<BreakdownResponse>(`/api/breakdown?dimension=sector&${filterQuery}&limit=80`);
   const states = useApi<BreakdownResponse>(`/api/breakdown?dimension=state&${filterQuery}&limit=60`);
 
-  const trend = summary.data?.trend ?? [];
-  const years = trend.map((point) => point.year);
+  const trend = React.useMemo(() => summary.data?.trend ?? [], [summary.data]);
+  const years = React.useMemo(() => trend.map((point) => point.year), [trend]);
 
   const growth = React.useMemo(
     () =>
@@ -289,19 +289,6 @@ export function TrendView() {
         </table>
       </div>
 
-      <div className="card unavailable" style={{ marginTop: 16 }}>
-        <div className="row gap-8" style={{ alignItems: "flex-start" }}>
-          <Info width={15} height={15} style={{ color: "var(--text-soft)", flexShrink: 0, marginTop: 2 }} />
-          <div>
-            <div style={{ fontWeight: 650, fontSize: 12.5 }}>Monthly / quarterly trend not available</div>
-            <p className="unavailable-note" style={{ margin: "4px 0 0" }}>
-              CSR disclosures in this dataset are annual totals — there is no date or quarter column to break them
-              down. Upload a file containing <code>Start Date</code> or <code>Project Duration</code> and this section
-              will add intra-year trends automatically.
-            </p>
-          </div>
-        </div>
-      </div>
     </PageFrame>
   );
 }

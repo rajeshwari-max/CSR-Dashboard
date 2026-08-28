@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SECTOR_ALIASES } from "@/lib/etl/vocab";
+import { CORE_COLUMNS, SECTOR_ALIASES, normaliseYear, resolveColumns } from "@/lib/etl/vocab";
 import { buildDataset, isFactTable, type SourceTable } from "@/lib/etl/build";
 import { parseCsv, parseXlsx, sectorLookupFrom, selectFactTables } from "@/lib/etl/parse";
 import { backupCurrent, persist, readDataset } from "@/lib/etl/store";
@@ -107,6 +107,31 @@ export async function POST(request: Request) {
         status: "warn",
         detail: "No existing dataset to merge into — this upload will become the dataset.",
       });
+    }
+
+    if (mode === "merge" && existing) {
+      const uploadedYears = new Set<string>();
+      for (const table of facts) {
+        const columns = resolveColumns(table.headers, CORE_COLUMNS);
+        const sheetYear = normaliseYear(table.name);
+        const yearColumn = columns.year;
+        for (const row of table.rows) {
+          const year = (yearColumn ? normaliseYear(row[yearColumn]) : null) ?? sheetYear;
+          if (year) uploadedYears.add(year);
+        }
+      }
+      const existingYears = new Set(existing.dictionaries.years);
+      const overlaps = [...uploadedYears].filter((year) => existingYears.has(year)).sort();
+      if (overlaps.length) {
+        checks.push({
+          label: "Financial-year overlap",
+          status: "fail",
+          detail:
+            `${overlaps.join(", ")} already exists. Merge is blocked to prevent double counting. ` +
+            "Rebuild and upload one complete canonical dataset when revising an existing year.",
+        });
+        return NextResponse.json({ ok: false, checks, mode, overlappingYears: overlaps }, { status: 409 });
+      }
     }
 
     const dataset = buildDataset(facts, {

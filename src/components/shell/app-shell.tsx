@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 
 import { CommandPalette } from "@/components/shell/command-palette";
 import { Sidebar } from "@/components/shell/sidebar";
@@ -24,6 +25,7 @@ export function useShell() {
 const COLLAPSE_KEY = "cms.sidebar.collapsed";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [paletteOpen, setPaletteOpen] = React.useState(false);
@@ -75,6 +77,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }),
     [toast],
   );
+
+  if (pathname === "/login") return <>{children}</>;
 
   return (
     <ShellContext.Provider value={value}>

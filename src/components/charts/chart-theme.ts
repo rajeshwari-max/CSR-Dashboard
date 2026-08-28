@@ -18,12 +18,12 @@ export const AXIS_PROPS = {
 export const TOOLTIP_STYLES = {
   contentStyle: {
     borderRadius: 12,
-    border: "1px solid hsl(var(--border))",
-    background: "hsl(var(--popover))",
-    color: "hsl(var(--popover-foreground))",
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
+    color: "var(--text)",
     fontSize: 12,
     boxShadow: "0 12px 40px -12px rgb(15 23 42 / 0.28)",
   },
   labelStyle: { fontWeight: 600, marginBottom: 4 },
-  cursor: { fill: "hsl(var(--muted))", opacity: 0.5 },
+  cursor: { fill: "var(--surface-2)", opacity: 0.5 },
 } as const;

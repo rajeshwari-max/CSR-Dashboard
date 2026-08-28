@@ -89,7 +89,7 @@ export interface Filters {
 }
 
 /** Earliest financial year exposed by the application; later years are discovered from each dataset. */
-export const REPORTING_START_YEAR = 2021;
+export const REPORTING_START_YEAR = 2020;
 
 export const EMPTY_FILTERS: Filters = {
   years: [],
@@ -172,6 +172,14 @@ export interface TrendPoint {
   companies: number;
 }
 
+export interface ProjectSizeBucket {
+  label: string;
+  min: number;
+  max: number | null;
+  projects: number;
+  spend: number;
+}
+
 export interface SummaryResponse {
   kpis: Kpis;
   trend: TrendPoint[];
@@ -181,6 +189,7 @@ export interface SummaryResponse {
   byTheme: NamedValue[];
   byMode: NamedValue[];
   byDistrict: NamedValue[];
+  projectSizeDistribution: ProjectSizeBucket[];
   filteredRows: number;
   generatedAt: string;
 }
