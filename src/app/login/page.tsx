@@ -11,7 +11,6 @@ export default function LoginPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [accessCode, setAccessCode] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -21,7 +20,6 @@ export default function LoginPage() {
     setError(null);
     setPassword("");
     setConfirmPassword("");
-    setAccessCode("");
   };
 
   const submit = async (event: React.FormEvent) => {
@@ -41,7 +39,7 @@ export default function LoginPage() {
         body: JSON.stringify(
           mode === "signin"
             ? { email, password }
-            : { name, email, password, accessCode },
+            : { name, email, password },
         ),
       });
       const body = (await response.json()) as { error?: string };
@@ -74,7 +72,7 @@ export default function LoginPage() {
         <p className="login-copy">
           {mode === "signin"
             ? "Sign in with a registered account, or leave email blank to use the administrator password."
-            : "Registration requires the dashboard access code supplied by the administrator."}
+            : "Create an account using your email address and a password of your choice."}
         </p>
 
         <div className="login-tabs" role="tablist" aria-label="Authentication options">
@@ -165,19 +163,6 @@ export default function LoginPage() {
                   required
                 />
               </div>
-
-              <label htmlFor="dashboard-access-code">Dashboard access code</label>
-              <div className="login-input-wrap">
-                <input
-                  id="dashboard-access-code"
-                  type="password"
-                  value={accessCode}
-                  onChange={(event) => setAccessCode(event.target.value)}
-                  autoComplete="one-time-code"
-                  required
-                />
-              </div>
-              <p className="login-help">Use the current APP_PASSWORD as the registration access code.</p>
             </>
           ) : null}
 
@@ -185,7 +170,7 @@ export default function LoginPage() {
           <button
             type="submit"
             className="login-submit"
-            disabled={busy || !password || (mode === "register" && (!name || !email || !confirmPassword || !accessCode))}
+            disabled={busy || !password || (mode === "register" && (!name || !email || !confirmPassword))}
           >
             {busy
               ? (mode === "signin" ? "Signing in…" : "Creating account…")

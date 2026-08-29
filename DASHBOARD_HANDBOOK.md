@@ -232,7 +232,7 @@ Set `APP_PASSWORD` in the deployment environment to enable the login window. Whe
 - Middleware protects pages, APIs, uploads, and downloads.
 - An unauthenticated page request redirects to `/login` and preserves the intended destination.
 - The sign-in tab accepts either a registered email/password pair or the administrator `APP_PASSWORD` with the email left blank.
-- The register tab requires name, email, a password of at least 10 characters, and the current `APP_PASSWORD` as its dashboard access code. This prevents public self-registration.
+- The register tab requires name, email, and a password of the user's choice with at least 10 characters. `APP_PASSWORD` is not requested during registration.
 - Registered passwords are salted and hashed with scrypt. Accounts are stored in `users.json` on `CSR_DATA_DIR` (or `AUTH_DATA_DIR` when explicitly set), so the Render persistent disk preserves them across deployments.
 - A successful sign-in or registration creates a secure, HTTP-only, same-site session cookie valid for 12 hours.
 - API calls without the session return HTTP 401 rather than HTML.

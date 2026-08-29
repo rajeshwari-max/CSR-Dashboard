@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE, sessionToken, timingSafeEqual } from "@/lib/auth-session";
+import { SESSION_COOKIE, sessionToken } from "@/lib/auth-session";
 import { registerUser } from "@/lib/auth-store";
 
 export async function POST(request: Request) {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Registration is unavailable until APP_PASSWORD is configured." }, { status: 503 });
   }
 
-  let body: { name?: unknown; email?: unknown; password?: unknown; accessCode?: unknown };
+  let body: { name?: unknown; email?: unknown; password?: unknown };
   try {
     body = (await request.json()) as typeof body;
   } catch {
@@ -19,10 +19,6 @@ export async function POST(request: Request) {
   const name = typeof body.name === "string" ? body.name : "";
   const email = typeof body.email === "string" ? body.email : "";
   const password = typeof body.password === "string" ? body.password : "";
-  const accessCode = typeof body.accessCode === "string" ? body.accessCode : "";
-  if (!timingSafeEqual(accessCode, configured)) {
-    return NextResponse.json({ error: "Incorrect dashboard access code." }, { status: 403 });
-  }
 
   try {
     await registerUser({ name, email, password });
