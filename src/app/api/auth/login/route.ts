@@ -1,21 +1,27 @@
 import { NextResponse } from "next/server";
 
-const SESSION_COOKIE = "cms_csr_session";
+import { SESSION_COOKIE, sessionToken, timingSafeEqual } from "@/lib/auth-session";
+import { authenticateUser } from "@/lib/auth-store";
 
 export async function POST(request: Request) {
   const configured = process.env.APP_PASSWORD;
   if (!configured) return NextResponse.json({ ok: true, authenticationDisabled: true });
 
   let supplied = "";
+  let email = "";
   try {
-    const body = (await request.json()) as { password?: unknown };
+    const body = (await request.json()) as { email?: unknown; password?: unknown };
     supplied = typeof body.password === "string" ? body.password : "";
+    email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   } catch {
     return NextResponse.json({ error: "Enter the dashboard password." }, { status: 400 });
   }
 
-  if (!timingSafeEqual(supplied, configured)) {
-    return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
+  if (email) {
+    const user = await authenticateUser(email, supplied);
+    if (!user) return NextResponse.json({ error: "Incorrect email or password." }, { status: 401 });
+  } else if (!timingSafeEqual(supplied, configured)) {
+    return NextResponse.json({ error: "Incorrect administrator password." }, { status: 401 });
   }
 
   const response = NextResponse.json({ ok: true });
@@ -27,17 +33,4 @@ export async function POST(request: Request) {
     maxAge: 60 * 60 * 12,
   });
   return response;
-}
-
-async function sessionToken(password: string): Promise<string> {
-  const bytes = new TextEncoder().encode(`cms-csr-session:${password}`);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i += 1) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
 }

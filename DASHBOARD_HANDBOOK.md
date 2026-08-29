@@ -231,10 +231,13 @@ Set `APP_PASSWORD` in the deployment environment to enable the login window. Whe
 
 - Middleware protects pages, APIs, uploads, and downloads.
 - An unauthenticated page request redirects to `/login` and preserves the intended destination.
-- A successful password check creates a secure, HTTP-only, same-site session cookie valid for 12 hours.
+- The sign-in tab accepts either a registered email/password pair or the administrator `APP_PASSWORD` with the email left blank.
+- The register tab requires name, email, a password of at least 10 characters, and the current `APP_PASSWORD` as its dashboard access code. This prevents public self-registration.
+- Registered passwords are salted and hashed with scrypt. Accounts are stored in `users.json` on `CSR_DATA_DIR` (or `AUTH_DATA_DIR` when explicitly set), so the Render persistent disk preserves them across deployments.
+- A successful sign-in or registration creates a secure, HTTP-only, same-site session cookie valid for 12 hours.
 - API calls without the session return HTTP 401 rather than HTML.
-- Sign out deletes the session cookie.
-- Static Next.js assets and the login endpoint remain public so the window can load.
+- Sign out deletes the session cookie and uses a relative `/login` redirect so a reverse proxy cannot expose its internal localhost address.
+- Static Next.js assets and the login/register endpoints remain public so the window can load.
 
 Leaving `APP_PASSWORD` empty disables authentication for local development. The password must be configured in the host environment and must never be committed to the repository.
 
