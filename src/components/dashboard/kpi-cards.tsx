@@ -54,7 +54,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
       sub: `${kpis.sectorCount} sectors represented`,
       icon: Building2,
       spark: kpis.companySparkline,
-      color: "var(--c2)",
+      color: "var(--c1)",
     },
     {
       key: "average",
@@ -63,7 +63,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
       sub: `Median ${formatCrore(kpis.medianSpendPerCompany)}`,
       icon: Wallet,
       spark: kpis.avgSparkline,
-      color: "var(--c4)",
+      color: "var(--c1)",
     },
     {
       key: "growth",
@@ -76,7 +76,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
       icon: TrendingUp,
       delta: kpis.yoyGrowthPct,
       spark: kpis.spendSparkline,
-      color: "var(--c3)",
+      color: "var(--c1)",
     },
   ];
 

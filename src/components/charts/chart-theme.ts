@@ -1,8 +1,8 @@
 /** Shared Recharts styling helpers so every chart reads from the CSS tokens. */
 
 export const CHART_COLORS = [
-  "var(--c1)", "var(--c2)", "var(--c3)", "var(--c4)",
-  "var(--c5)", "var(--c6)", "var(--c7)", "var(--c8)",
+  "var(--c1)", "var(--c2)", "var(--c3)",
+  "var(--c4)", "var(--c5)", "var(--c6)",
 ];
 
 export function colorAt(index: number) {

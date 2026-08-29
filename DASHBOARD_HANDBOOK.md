@@ -243,7 +243,7 @@ Leaving `APP_PASSWORD` empty disables authentication for local development. The 
 
 ## 14. Professional visual system and accessibility
 
-The interface uses a restrained semantic palette: blue for primary financial series and actions, teal for operational volume, indigo for comparison, amber for warnings, green for positive results, red for risks, and slate for neutral context. Colour is never the only carrier of meaning: legends, labels, signs, text, and tooltips accompany it. Charts share one palette and tooltip treatment through `src/components/charts/chart-theme.ts`.
+The interface uses one fixed professional palette: navy/blue for financial series and primary actions, teal for operational comparison, and slate for neutral context. KPI cards share the same white surface and navy icon treatment; rankings use one consistent blue rather than rotating colours. Green, amber, and red are reserved strictly for positive, warning, and risk states. Colour is never the only carrier of meaning: legends, labels, signs, text, and tooltips accompany it. Charts share the same six-token blue/teal/slate palette and tooltip treatment through `src/components/charts/chart-theme.ts`.
 
 KPI cards switch from six columns to three at laptop widths and two on small screens. Labels reserve space for the icon, long values expose their full value as a title, and figures use tabular numerals. Empty charts render an explicit empty state instead of a blank plotting area.
 

@@ -16,7 +16,7 @@
   --slate-700:#334155;
   --slate-800:#1e293b;
   --slate-900:#0f172a;
-  --blue:#1d4ed8;
+  --blue:#1e40af;
   --blue-light:#eff6ff;
   --indigo:#1e40af;
   --purple:#0f766e;
@@ -36,7 +36,7 @@
   --accent:var(--blue);
   --accent-2:var(--indigo);
   --accent-3:var(--purple);
-  --accent-grad:linear-gradient(90deg,#1d4ed8,#0369a1 58%,#0f766e);
+  --accent-grad:#1e40af;
 
   --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
@@ -476,47 +476,43 @@ tbody tr:hover{background:var(--surface-2);}
 
 /* ============================================================
    COLOUR LAYER
-   Saturated enough to look designed, disciplined enough for a
-   board pack: colour identifies things (a KPI, a series, a
-   ranking) and never decorates for its own sake.
+   One fixed professional palette. Navy represents CSR spend and
+   primary actions, teal represents operational comparison, slate
+   is neutral, and traffic-light colours are reserved for status.
    ============================================================ */
 
 :root{
-  --c1:#1d4ed8;   /* primary blue */
+  --c1:#1e40af;   /* primary navy */
   --c2:#0f766e;   /* teal */
-  --c3:#0369a1;   /* information blue */
-  --c4:#b45309;   /* amber */
-  --c5:#4f46e5;   /* indigo */
-  --c6:#64748b;   /* slate */
+  --c3:#64748b;   /* neutral slate */
+  --c4:#2563eb;   /* supporting blue */
+  --c5:#0891b2;   /* supporting cyan */
+  --c6:#94a3b8;   /* light slate */
   --c7:#15803d;   /* positive green */
   --c8:#b91c1c;   /* risk red */
 
-  --accent:#1d4ed8;
+  --accent:#1e40af;
   --accent-2:#1e40af;
   --accent-3:#0f766e;
-  --accent-grad:linear-gradient(90deg,#1d4ed8,#0369a1 58%,#0f766e);
+  --accent-grad:#1e40af;
   --blue-light:#eff6ff;
 
-  /* Soft washes for KPI surfaces — tinted, never loud. */
-  --tint-1:linear-gradient(150deg,#eff6ff 0%,#ffffff 72%);
-  --tint-2:linear-gradient(150deg,#f0fdfa 0%,#ffffff 72%);
-  --tint-3:linear-gradient(150deg,#f0f9ff 0%,#ffffff 72%);
-  --tint-4:linear-gradient(150deg,#fffbeb 0%,#ffffff 72%);
-  --tint-5:linear-gradient(150deg,#eef2ff 0%,#ffffff 72%);
-  --tint-6:linear-gradient(150deg,#f0fdf4 0%,#ffffff 72%);
+  --tint-1:var(--surface);
+  --tint-2:var(--surface);
+  --tint-3:var(--surface);
+  --tint-4:var(--surface);
+  --tint-5:var(--surface);
+  --tint-6:var(--surface);
 }
 
 [data-theme="dark"]{
-  --c1:#60a5fa; --c2:#2dd4bf; --c3:#38bdf8; --c4:#fbbf24;
-  --c5:#818cf8; --c6:#94a3b8; --c7:#4ade80; --c8:#f87171;
+  --c1:#60a5fa; --c2:#2dd4bf; --c3:#94a3b8; --c4:#93c5fd;
+  --c5:#67e8f9; --c6:#cbd5e1; --c7:#4ade80; --c8:#f87171;
   --accent:#60a5fa; --accent-2:#93c5fd; --accent-3:#2dd4bf;
   --blue-light:#10223f;
-  --tint-1:linear-gradient(150deg,#1e1b4b 0%,#121826 70%);
-  --tint-2:linear-gradient(150deg,#083344 0%,#121826 70%);
-  --tint-3:linear-gradient(150deg,#2e1065 0%,#121826 70%);
-  --tint-4:linear-gradient(150deg,#3b2c07 0%,#121826 70%);
-  --tint-5:linear-gradient(150deg,#042f2e 0%,#121826 70%);
-  --tint-6:linear-gradient(150deg,#022c22 0%,#121826 70%);
+  --accent-grad:#60a5fa;
+  --tint-1:var(--surface); --tint-2:var(--surface); --tint-3:var(--surface);
+  --tint-4:var(--surface); --tint-5:var(--surface); --tint-6:var(--surface);
 }
 
 .filter-search{height:30px;min-width:170px;max-width:220px;display:flex;align-items:center;gap:6px;padding:0 9px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text-soft);}
@@ -526,7 +522,7 @@ tbody tr:hover{background:var(--surface-2);}
 .error-banner{display:flex;align-items:center;gap:8px;color:var(--danger);border-color:var(--danger);background:var(--danger-bg);margin-bottom:18px;}
 
 /* ---------- Authentication ---------- */
-.login-page{min-height:100svh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 15% 15%,#dbeafe 0,transparent 34%),radial-gradient(circle at 85% 80%,#ccfbf1 0,transparent 30%),var(--slate-50);}
+.login-page{min-height:100svh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 18% 18%,#dbeafe 0,transparent 38%),var(--slate-50);}
 .login-panel{width:min(430px,100%);padding:34px;border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 24px 70px -30px rgba(15,23,42,.35);}
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:34px;}
 .login-brand>div{display:flex;flex-direction:column;line-height:1.25;}
@@ -557,91 +553,70 @@ tbody tr:hover{background:var(--surface-2);}
 .nav-item.active{background:var(--blue-light);}
 .nav-item.active .icon{color:var(--accent);}
 
-/* ---------- KPI cards: tinted surface, coloured icon, NO top rule ---------- */
+/* ---------- KPI cards: one surface and one icon colour ---------- */
 .kpi-card{overflow:hidden;}
 .kpi-card::before{display:none;}          /* the hairline across the top */
-.kpi-card[data-hue="1"]{background:var(--tint-1);}
-.kpi-card[data-hue="2"]{background:var(--tint-2);}
-.kpi-card[data-hue="3"]{background:var(--tint-3);}
-.kpi-card[data-hue="4"]{background:var(--tint-5);}
-.kpi-card[data-hue="5"]{background:var(--tint-4);}
-.kpi-card[data-hue="6"]{background:var(--tint-6);}
-.kpi-card:hover{box-shadow:0 10px 26px -12px rgba(79,70,229,.3);transform:translateY(-2px);}
+.kpi-card[data-hue]{background:var(--surface);}
+.kpi-card:hover{box-shadow:0 10px 26px -12px rgba(30,64,175,.22);transform:translateY(-2px);}
 
 .kpi-icon{
   position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;color:#fff;
+  display:flex;align-items:center;justify-content:center;color:#fff;background:var(--accent);
 }
-.kpi-card[data-hue="1"] .kpi-icon{background:var(--c1);}
-.kpi-card[data-hue="2"] .kpi-icon{background:var(--c2);}
-.kpi-card[data-hue="3"] .kpi-icon{background:var(--c3);}
-.kpi-card[data-hue="4"] .kpi-icon{background:var(--c5);}
-.kpi-card[data-hue="5"] .kpi-icon{background:var(--c4);}
-.kpi-card[data-hue="6"] .kpi-icon{background:var(--c7);}
 
 /* ---------- Cards ---------- */
-.card.hoverable:hover{box-shadow:var(--shadow-md);border-color:#c7d2fe;}
+.card.hoverable:hover{box-shadow:var(--shadow-md);border-color:#bfdbfe;}
 .card-head h3::before{
-  content:"";width:3px;height:13px;border-radius:2px;background:var(--accent-grad);flex-shrink:0;
+  content:"";width:3px;height:13px;border-radius:2px;background:var(--accent);flex-shrink:0;
 }
 
 /* ---------- Section labels ---------- */
 .mini-label{color:var(--accent-2);}
-.mini-label::after{background:linear-gradient(90deg,rgba(79,70,229,.28),transparent);}
+.mini-label::after{background:linear-gradient(90deg,rgba(30,64,175,.25),transparent);}
 
-/* ---------- Rank rows: hue-cycled ---------- */
-.rank-row:nth-child(6n+1) .rank-bar-fill{background:var(--c1);}
-.rank-row:nth-child(6n+2) .rank-bar-fill{background:var(--c2);}
-.rank-row:nth-child(6n+3) .rank-bar-fill{background:var(--c5);}
-.rank-row:nth-child(6n+4) .rank-bar-fill{background:var(--c4);}
-.rank-row:nth-child(6n+5) .rank-bar-fill{background:var(--c6);}
-.rank-row:nth-child(6n+6) .rank-bar-fill{background:var(--c3);}
-.rank-row:nth-child(6n+1) .rank-num{background:rgba(79,70,229,.11);color:var(--c1);}
-.rank-row:nth-child(6n+2) .rank-num{background:rgba(8,145,178,.11);color:var(--c2);}
-.rank-row:nth-child(6n+3) .rank-num{background:rgba(13,148,136,.11);color:var(--c5);}
-.rank-row:nth-child(6n+4) .rank-num{background:rgba(217,119,6,.13);color:var(--c4);}
-.rank-row:nth-child(6n+5) .rank-num{background:rgba(219,39,119,.11);color:var(--c6);}
-.rank-row:nth-child(6n+6) .rank-num{background:rgba(124,58,237,.11);color:var(--c3);}
+/* ---------- Rank rows: consistent financial-data colour ---------- */
+.rank-row .rank-bar-fill{background:var(--accent);}
+.rank-row .rank-num{background:var(--blue-light);color:var(--accent);}
 .rank-row:hover{background:var(--surface-2);}
 
 /* ---------- Filter chips ---------- */
 .select-chip.active{
-  background:var(--accent-grad);border-color:transparent;color:#fff;
-  box-shadow:0 2px 8px -3px rgba(79,70,229,.5);
+  background:var(--accent);border-color:transparent;color:#fff;
+  box-shadow:0 2px 8px -3px rgba(30,64,175,.45);
 }
 .select-chip.active:hover{color:#fff;filter:brightness(1.05);}
 
 /* ---------- Badges ---------- */
 .card-badge{background:var(--blue-light);color:var(--accent-2);}
-.card-badge.purple{background:#f5f3ff;color:var(--accent-3);}
+.card-badge.purple{background:var(--blue-light);color:var(--accent-2);}
 .card-badge.amber{background:var(--warning-bg);color:var(--warning);}
 .card-badge.rose{background:var(--danger-bg);color:var(--danger);}
 .tag{background:var(--blue-light);color:var(--accent-2);}
 
 /* ---------- Tables ---------- */
-thead th{background:linear-gradient(180deg,rgba(79,70,229,.07),rgba(79,70,229,.02));color:var(--accent-2);}
+thead th{background:linear-gradient(180deg,rgba(30,64,175,.07),rgba(30,64,175,.02));color:var(--accent-2);}
 tbody tr:hover{background:var(--surface-2);}
 
 /* ---------- Buttons ---------- */
 .btn-primary{background:var(--slate-900);}
 .btn-primary:hover{background:var(--slate-700);}
-.btn-gradient{background:var(--accent-grad);color:#fff;box-shadow:0 3px 12px -4px rgba(79,70,229,.55);}
+.btn-gradient{background:var(--accent);color:#fff;box-shadow:0 3px 12px -4px rgba(30,64,175,.5);}
 .btn-gradient:hover{filter:brightness(1.07);}
 
 /* ---------- Insights ---------- */
 .insight-item{padding:10px;border-radius:var(--radius-sm);transition:background .14s ease;}
 .insight-item:hover{background:var(--surface-2);}
-.insight-dot.teal{background:var(--c5);}
-.insight-dot.amber{background:var(--c4);}
+.insight-dot.teal{background:var(--c2);}
+.insight-dot.amber{background:var(--warning);}
 .insight-dot.blue{background:var(--c1);}
 .insight-dot.purple{background:var(--c3);}
 
 /* ---------- Topbar ---------- */
-.avatar{background:var(--accent-grad);}
+.avatar{background:var(--accent);}
 
 /* ---------- Upload ---------- */
 .dropzone{background:var(--tint-1);}
-.dropzone .dz-icon{background:var(--accent-grad);color:#fff;}
+.dropzone .dz-icon{background:var(--accent);color:#fff;}
 
 /* Call-to-action shown in place of a sparkline when a column is missing. */
 .kpi-cta{
