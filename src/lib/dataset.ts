@@ -228,6 +228,7 @@ export function getMeta(): Meta {
       data.years.flatMap((year, index) => (allowedYears.has(year) ? [index] : [])),
     );
     const companies = new Set<number>();
+    const aspirationalDistricts = new Set<string>();
     const spendByYear: Record<string, number> = {};
     let rowCount = 0;
     let totalSpend = 0;
@@ -236,6 +237,9 @@ export function getMeta(): Meta {
       if (!allowedYearIndexes.has(data.yearIdx[i])) continue;
       rowCount += 1;
       companies.add(data.companyIdx[i]);
+      if (data.aspirational[i] && data.districtIdx[i] >= 0) {
+        aspirationalDistricts.add(data.districts[data.districtIdx[i]]);
+      }
       const spent = data.spent[i];
       if (!Number.isNaN(spent)) {
         totalSpend += spent;
@@ -250,6 +254,7 @@ export function getMeta(): Meta {
       companyCount: companies.size,
       totalSpend: round(totalSpend),
       years: [...reportingYears].sort((a, b) => a.localeCompare(b)),
+      aspirationalDistricts: [...aspirationalDistricts].sort((a, b) => a.localeCompare(b)),
       spendByYear: Object.fromEntries(
         Object.entries(spendByYear).map(([year, value]) => [year, round(value)]),
       ),
@@ -308,10 +313,14 @@ export function selectRows(filters: Filters): Int32Array {
     if (companies && !companies.has(data.companyIdx[i])) continue;
     if (filters.aspirationalOnly && !data.aspirational[i]) continue;
     if (min !== null || max !== null) {
+      // Half-open band [min, max): a ₹5 Cr project belongs to "5-10 Cr" only,
+      // never to both "1-5" and "5-10". This matches the project-size
+      // histogram buckets, so clicking a bar and picking the matching CSR
+      // Amount band return the same row set.
       const value = data.spent[i];
       if (Number.isNaN(value)) continue;
       if (min !== null && value < min) continue;
-      if (max !== null && value > max) continue;
+      if (max !== null && value >= max) continue;
     }
     if (term && !data.searchBlob[i].includes(term)) continue;
     out[size] = i;
@@ -661,7 +670,7 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
     // "Pan India" and "Not Specified" are filing conventions, not places, and
     // "Unclassified" is not a sector — counting them would overstate reach.
     stateCount: byState.rows.filter(
-      (row) => row.name !== "Pan India" && row.name !== "Not Specified",
+      (row) => !["Pan India", "Not Specified", "District Not Classified Elsewhere"].includes(row.name),
     ).length,
     districtCount: districts.size,
     sectorCount: bySector.rows.filter((row) => row.name !== "Unclassified").length,

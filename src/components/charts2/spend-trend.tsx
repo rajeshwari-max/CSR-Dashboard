@@ -54,7 +54,7 @@ export function SpendTrend({
 
   return (
     <ResponsiveContainer width="100%" height={height ?? "100%"}>
-      <ComposedChart data={data} margin={{ top: 6, right: 6, bottom: 0, left: -14 }}>
+      <ComposedChart data={data} margin={{ top: 6, right: 12, bottom: 0, left: 8 }}>
         <defs>
           <linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--c1)" stopOpacity={0.22} />
@@ -63,13 +63,20 @@ export function SpendTrend({
         </defs>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="year" {...AXIS} />
-        <YAxis yAxisId="spend" {...AXIS} tickFormatter={(value: number) => formatCompact(value)} />
+        <YAxis
+          yAxisId="spend"
+          width={52}
+          {...AXIS}
+          tickFormatter={(value: number) => formatCompact(value)}
+          label={{ value: "₹ Cr", angle: -90, position: "insideLeft", style: { fontSize: 10 } }}
+        />
         <YAxis
           yAxisId="projects"
           orientation="right"
           width={42}
           {...AXIS}
           tickFormatter={(value: number) => formatCompact(value)}
+          label={{ value: "Projects", angle: 90, position: "insideRight", style: { fontSize: 10 } }}
         />
         <Tooltip content={<ChartTip />} />
         <Legend iconType="circle" iconSize={7} />

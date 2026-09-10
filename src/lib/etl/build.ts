@@ -13,12 +13,12 @@ import {
   companyKey,
   displayName,
   normaliseMode,
+  normaliseDistrict,
   normaliseSector,
   normaliseState,
   normaliseTheme,
   normaliseYear,
   resolveColumns,
-  titleCase,
   toAmount,
   toInt,
 } from "@/lib/etl/vocab";
@@ -272,7 +272,7 @@ export function buildDataset(tables: SourceTable[], options: BuildOptions): Buil
       attribute("companyType", "company_type", cleanText);
 
       const stateName = normaliseState(cell(record, "state"));
-      const district = titleCase(cleanText(cell(record, "district")));
+      const district = normaliseDistrict(cell(record, "district"));
       const theme = normaliseTheme(cell(record, "theme"));
       const mode = normaliseMode(cell(record, "mode"));
 

@@ -17,6 +17,7 @@ import {
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { ChartTip } from "@/components/charts2/chart-tooltip";
 import { SectorPieChart } from "@/components/charts/sector-pie-chart";
 import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
@@ -117,7 +118,7 @@ export function SectorAnalysisView() {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="year" {...AXIS_PROPS} />
               <YAxis {...AXIS_PROPS} />
-              <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
+              <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
               <Legend iconType="circle" iconSize={8} />
               {sectors.slice(0, 6).map((sector, index) => (
                 <Line
@@ -228,7 +229,12 @@ export function SectorAnalysisView() {
         </CardContent>
       </Card>
 
-      <ProjectRegisterSection filterQuery={filterQuery} />
+      <ProjectRegisterSection
+        filterQuery={filterQuery}
+        label="Projects behind these sectors"
+        description="Every disclosed project inside the current sector and Schedule VII scope. Click a slice, a category or a table row above to narrow it."
+        scopeSpend={summary.data?.kpis.totalSpend}
+      />
     </PageFrame>
   );
 }

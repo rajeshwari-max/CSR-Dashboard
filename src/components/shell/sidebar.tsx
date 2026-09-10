@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronsLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -32,7 +33,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
   return (
     <aside className={`sidebar${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
       <div className="sidebar-top">
-        <span className="brand-mark">CMS</span>
+        <Image className="brand-mark" src="/favicon.svg" alt="CMS logo" width={32} height={32} priority />
         <div className="brand-name">
           CMS
           <small>CSR Intelligence</small>

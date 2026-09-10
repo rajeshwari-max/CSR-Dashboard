@@ -30,9 +30,26 @@ The current data does not have sufficiently populated NGO name, beneficiary, pro
 
 All filters are combined with AND logic. Multiple values inside one filter are combined with OR logic. For example, selecting Goa and Kerala plus Technology means `(Goa OR Kerala) AND Technology`.
 
-The free-text search is case-insensitive and searches company, project name, Schedule VII category, state, and district. Amount filters compare against each project's `Amount Spent` value. Rows without a disclosed amount are excluded when an amount range is active.
+There is exactly one free-text search box, in the filter bar. It is case-insensitive, debounced by 300 ms, and searches company, project name, Schedule VII category, state, and district. It drives every panel on the page at once, including the company list on Company Analysis — that page has no search field of its own, so a company name is typed in one place and narrows the list, the charts, and the register together.
 
-The CSR Amount control accepts a manual minimum and/or maximum in INR crore. Filters are serialized into the URL, so a filtered view can be bookmarked or shared. The same Zustand filter store is mounted above every analytical page: navigating through the sidebar retains the selection, and each destination page writes that same scope into its URL. An explicitly filtered bookmarked URL remains authoritative when opened.
+Amount filters compare against each project's `Amount Spent` value. Rows without a disclosed amount are excluded when an amount range is active.
+
+### The CSR Amount bands
+
+The CSR Amount control offers four preset bands rather than free-entry numbers:
+
+| Band | Applied range (INR Cr) |
+| --- | --- |
+| 0 – 1 Cr | `0 <= spent < 1` |
+| 1 – 5 Cr | `1 <= spent < 5` |
+| 5 – 10 Cr | `5 <= spent < 10` |
+| More than 10 Cr | `spent >= 10` |
+
+Bands are half-open, `[min, max)`. A project of exactly ₹5 Cr belongs to `5 – 10 Cr` and to nothing else, so the four bands partition the disclosed rows without double counting. This matches the six project-size histogram buckets on Project Analytics, which use the same half-open rule — clicking a histogram bar and choosing the equivalent band return the same rows. Selecting the band that is already active clears it, and "Any amount" removes the filter.
+
+One band is active at a time. The underlying `minSpend`/`maxSpend` filter still accepts any pair of numbers from a URL, so an older bookmarked link with a custom range keeps working; the chip simply shows "CSR Amount" instead of a band name when the values match no preset.
+
+Filters are serialized into the URL, so a filtered view can be bookmarked or shared. The same Zustand filter store is mounted above every analytical page: navigating through the sidebar retains the selection, and each destination page writes that same scope into its URL. An explicitly filtered bookmarked URL remains authoritative when opened.
 
 ## 3. KPI formulas
 
@@ -40,19 +57,19 @@ Let `R` be the rows remaining after filters and let `spent(r)` be zero when a ro
 
 | Metric | Formula |
 | --- | --- |
-| Total CSR Spend | `sum(spent(r)) for r in R` |
+| Total CSR Amount Spent | `sum(spent(r)) for r in R` |
 | Companies Reporting | Count of distinct company IDs in `R` |
 | Projects | Count of rows in `R`; one disclosed project line is one project |
-| Average Spend per Company | `Total CSR Spend / distinct companies in R` |
+| Average Spend per Company | `Total CSR Amount Spent / distinct companies in R` |
 | Median Spend per Company | Median of company-level spend totals, excluding companies whose filtered rows contain no disclosed amount |
-| Average Project Size | `Total CSR Spend / rows in R with a disclosed spend` |
+| Average Project Size | `Total CSR Amount Spent / rows in R with a disclosed spend` |
 | Latest-year Spend | Sum of spend for the chronologically latest financial year in view |
 | Year-on-Year Growth | `((latest spend - previous spend) / previous spend) * 100` |
 | Districts Reached | Count of distinct populated districts in `R` |
-| States with Spend | Count of distinct mapped state labels, excluding `Pan India` and `Not Specified` where the page explicitly describes mapped coverage |
+| States with Spend | Count of distinct mapped state labels, excluding `Pan India` and `Not Specified` where the page explicitly describes mapped coverage. This count is a property of the uploaded data's state vocabulary, not a claim about India's administrative geography, so KPI captions read "Across India" rather than printing the number as a state count |
 | Aspirational Spend | Sum of spend on rows marked as aspirational district |
-| Aspirational Share | `Aspirational Spend / Total CSR Spend` |
-| Top-10 Company Share | `sum(spend of ten highest-spending companies) / Total CSR Spend` |
+| Aspirational Share | `Aspirational Spend / Total CSR Amount Spent` |
+| Top-10 Company Share | `sum(spend of ten highest-spending companies) / Total CSR Amount Spent` |
 
 ### Compliance rate
 
@@ -81,6 +98,25 @@ For each group:
 
 District shares use district-attributed spend as the denominator, not total CSR spend, because many rows have no district. The UI labels this as share of the shown/attributed dimension.
 
+### Company profile formulas
+
+The company profile shown on Company Analysis when one filer is selected comes from `buildCompanyDetail` in `src/lib/dataset.ts`. It scopes to that company and deliberately drops the sector facet — a company has exactly one sector, so an active sector filter for a different sector would empty the page — while keeping year, state, district, category, and mode so the profile still respects the filter bar.
+
+| Stat | Formula |
+| --- | --- |
+| Total CSR spend | Sum of that company's disclosed spend across every year in view |
+| Latest FY spend | That company's spend in the latest financial year in view |
+| Year-on-year | `((latest - previous) / previous) * 100` on the company's own annual totals |
+| Obligation use | `(latest FY spend / disclosed obligation) * 100`. The obligation is a single-year figure — 2% of average net profit — so it is compared against one year, never against the multi-year total. `CSR obligation` is used when present, otherwise `two percent of net profit` |
+| National rank | Position of the company in the ranking of all filers by unfiltered national total spend. Computed once and memoised, so it does not move when filters change |
+| National share | Company total in view divided by the sum of all companies' national totals |
+| Projects | Count of the company's rows in view, including rows with no disclosed amount |
+| Geographic reach | Distinct mapped state labels for that company, excluding `Pan India` and `Not Specified` |
+| Sector rank | Position within the national ranking filtered to the company's own BRSR sector |
+| Largest projects | The company's rows sorted by disclosed spend descending, top 25; rows with no disclosed amount sort last |
+
+`Obligation use` and `Compliance rate` answer different questions and will not agree. Obligation use is one company's ratio against its own disclosure and is uncapped, so a company that overspends shows above 100%. Compliance rate is a population statistic — the share of disclosing filers clearing 95% — and applies the 95% tolerance that obligation use does not.
+
 ## 5. How charts are plotted
 
 | Chart | X/Category | Y/Value | Plotting rule |
@@ -96,9 +132,26 @@ District shares use district-attributed spend as the denominator, not total CSR 
 | Funding flow | Schedule VII category | Spend and share | Categories ranked by spend; bar width is category spend divided by total category spend |
 | Project size distribution | Spend band | Count of disclosed project rows | Six non-overlapping bands from below ₹10 lakh through above ₹25 crore; clicking a bar applies the amount range globally |
 | Sparklines | Financial year | KPI value | Compact trend without axes, using the same filtered yearly aggregation |
+| Company spend trajectory | Financial year | Company spend | Shown on Company Analysis when exactly one filer is selected; bars are that company's disclosed spend per year within the current filters |
+| Company category / state split | Schedule VII category or state | Company spend | Ranked tables with proportional bars; share is of that company's own spend, not national spend |
+| Sector peers | Company | National total spend | The selected company's sector cohort, ranked; the selected company's row is highlighted |
 | Project register | Project rows | Existing source columns | Server-side pagination and sorting; no derived or invented columns |
 
-Tooltips format monetary values in crore and show the financial year/series name. Legends map each colour to a year or category. Project registers are included on company, state, and sector pages so clicking those filters immediately exposes the underlying rows.
+### Tooltip and legend rules
+
+Tooltips format monetary values in crore and name the financial year or series. Legends map each colour to a year or category.
+
+Multi-series charts use the shared `ChartTip` component rather than the Recharts default. The default prints each series name in that series' own colour, which fails contrast for the lighter palette tokens against a light card — this was the unreadable tooltip on the state comparison chart. `ChartTip` carries the colour in a small dot and prints the text in the body colour instead.
+
+`ChartTip` takes a `money` prop:
+
+- `"auto"` (default) formats as currency unless the series name mentions projects or companies, which are counts.
+- `money` (i.e. `true`) always formats as currency. The state and sector trend charts pass this, because a BRSR sector name can legitimately contain the word "companies" and would otherwise be printed as a bare count.
+- `money={false}` always formats as a count, used by the reporting-coverage charts on Trend Analysis.
+
+The tooltip surface, border, and hover cursor read from `--surface`, `--border`, and `--surface-2` in `chart-theme.ts`. These are plain colour tokens, so they must not be wrapped in `hsl()`.
+
+Project registers are included on Company, State, and Sector pages, each with a four-stat header (projects, spend in view, average project size, share of the scope shown above), so clicking a state on the map or a slice in the donut immediately exposes the underlying rows and their totals.
 
 ## 6. Forecast, anomaly, and concentration formulas
 
@@ -172,6 +225,9 @@ The in-app Merge mode accepts genuinely new financial years only. It blocks a ye
 | Currency, number, and percentage display | `src/lib/format.ts` |
 | Shared cross-page filters | `src/components/shell/filter-bar.tsx`, `src/components/shared/use-dashboard-filters.ts`, `src/store/filters.ts` |
 | Project register | `src/components/dashboard/projects-table.tsx` |
+| Project register embedded in an analysis tab | `src/components/dashboard/project-register-section.tsx` |
+| Chart tooltip and colour tokens | `src/components/charts2/chart-tooltip.tsx`, `src/components/charts/chart-theme.ts` |
+| Company profile block | `CompanyProfile` in `src/components/pages/company-analysis-view.tsx`, fed by `buildCompanyDetail` |
 | Charts and page composition | `src/components/pages/`, `src/components/charts/` |
 | PDF, Excel, PowerPoint, and CSV reports | `src/lib/reports/builders.ts` |
 | Login and session protection | `src/middleware.ts`, `src/app/login/`, `src/app/api/auth/` |
@@ -200,11 +256,11 @@ API responses are cached by dataset generation timestamp plus query string. Uplo
 | Page | Functionality |
 | --- | --- |
 | Executive Dashboard | Six KPI cards, spend/project trend, top states, top sectors, India map, leading companies, and four decision-relevant automated insights |
-| Company Analysis | Search, select up to four filers, annual comparison, benchmark table, sector mix, source-document links, and filtered project register |
+| Company Analysis | One search box (the filter bar's), a filer list, top filers in view; selecting exactly one filer opens a company profile — six headline stats, spend trajectory, Schedule VII split, states reached, sector peers, largest projects; selecting two to four opens the annual comparison and benchmark table; then sector mix, source-document links, and the filtered project register |
 | State Analysis | Choropleth, mapped/unmapped coverage, fastest-growing states, annual state comparison, state table, districts, and source rows |
 | Sector Analysis | Spend-share donut, six-sector trajectories, positive/negative YoY movements, Schedule VII funding flow, full sector table, and source rows |
 | Implementation Analysis | Direct versus agency/trust delivery modes, mode table, state presence, and Schedule VII focus areas |
-| Project Analytics | Project KPIs, six-band project-size histogram with click-to-filter, district ranking, amount-filter status, and sortable paginated register |
+| Embedded project registers | Project KPIs and sortable project records are included inside Company, State, and Sector analysis so the selected entity and its projects stay in one workflow. The former standalone Project Analytics item is intentionally removed from navigation. |
 | Trend Analysis | Annual totals, growth, CAGR, reporting coverage, forecast, and comparable yearly table |
 | Reports | PDF, Excel, PowerPoint, and CSV generated from the active filters; recent downloads are remembered in the browser |
 | AI Insights | Deterministic executive summary, grounded insight cards, projection, anomaly table, recommendations, data-quality checks, and natural-language queries |

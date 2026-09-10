@@ -72,7 +72,7 @@ export function ProjectAnalyticsView() {
         <Stat
           label="Districts reached"
           value={formatNumber(kpis?.districtCount ?? 0)}
-          sub={`${kpis?.stateCount ?? 0} states`}
+          sub="Across India"
         />
       </div>
 

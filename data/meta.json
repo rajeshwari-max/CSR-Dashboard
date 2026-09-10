@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T17:45:19+00:00",
+  "generatedAt": "2026-09-10T05:38:51+00:00",
   "sources": [
     {
       "file": "AAAMaster.xlsm",
@@ -137,7 +137,6 @@
     "Dadra and Nagar Haveli",
     "Daman and Diu",
     "Delhi",
-    "District Not Classified Elsewhere",
     "Goa",
     "Gujarat",
     "Haryana",
@@ -209,9 +208,6 @@
     "Trust / Society / Sec-8 company (own)"
   ],
   "districts": [
-    "25.09",
-    "9.35",
-    "9.93",
     "Adilabad",
     "Agra",
     "Ahilyanagar",
@@ -401,7 +397,6 @@
     "Dimapur",
     "Dindigul",
     "Dindori",
-    "District Not Classified Elsewhere",
     "Doda",
     "Dumka",
     "Dungarpur",

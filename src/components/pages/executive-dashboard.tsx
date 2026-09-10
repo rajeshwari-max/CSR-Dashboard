@@ -33,7 +33,9 @@ export function ExecutiveDashboard() {
 
   const kpis = summary.data?.kpis ?? null;
   const states = summary.data?.byState ?? [];
-  const mappedStates = states.filter((row) => row.name !== "Pan India" && row.name !== "Not Specified");
+  const mappedStates = states.filter(
+    (row) => !["Pan India", "Not Specified", "District Not Classified Elsewhere"].includes(row.name),
+  );
 
   const refresh = () => {
     meta.refetch();
@@ -71,9 +73,9 @@ export function ExecutiveDashboard() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <h3>CSR Spending Trend</h3>
+              <h3>CSR Amount Spent Trend</h3>
               <div className="muted">
-                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · spend and project volume
+                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · amount spent (₹ Cr) and projects reported
               </div>
             </div>
             <span className="card-badge">{kpis?.latestYear ?? "—"}</span>
@@ -147,7 +149,7 @@ export function ExecutiveDashboard() {
           <div className="row" style={{ justifyContent: "space-between", marginTop: 12, gap: 8 }}>
             <MiniStat label="Mapped" value={formatCrore(mappedStates.reduce((sum, row) => sum + row.value, 0))} />
             <MiniStat label="Districts" value={formatNumber(kpis?.districtCount ?? 0)} />
-            <MiniStat label="Aspirational" value={formatShare(kpis?.aspirationalShare ?? 0)} />
+            <MiniStat label="Aspirational spend" value={formatShare(kpis?.aspirationalShare ?? 0)} />
           </div>
         </div>
 

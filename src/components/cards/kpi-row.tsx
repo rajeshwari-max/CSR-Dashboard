@@ -65,7 +65,7 @@ export function KpiRow({
   const beneficiaries = meta?.capabilities.beneficiaries ?? false;
   const cards: KpiSpec[] = [
     {
-      label: "Total CSR Spend",
+      label: "Total CSR Amount Spent",
       value: formatCrore(kpis.totalSpend),
       sub: `${kpis.latestYear ?? "—"} latest · cumulative view`,
       delta: kpis.yoyGrowthPct,
@@ -80,7 +80,7 @@ export function KpiRow({
     {
       label: "Projects Reported",
       value: formatNumber(kpis.projectCount),
-      sub: `Across ${kpis.stateCount} states`,
+      sub: "Across India",
       icon: FolderKanban,
     },
     beneficiaries
@@ -96,7 +96,7 @@ export function KpiRow({
           // a "Beneficiaries Reached" column is uploaded.
           label: "Districts Reached",
           value: formatNumber(kpis.districtCount),
-          sub: `${kpis.stateCount} states and UTs`,
+          sub: "States and UTs across India",
           icon: MapPinned,
         },
     {

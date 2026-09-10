@@ -39,6 +39,24 @@ const CHIPS: ChipSpec[] = [
   { key: "modes", label: "Implementation", options: (meta) => meta.modes },
 ];
 
+/**
+ * CSR-amount bands, in INR crore, applied to the per-project "amount spent"
+ * column. `max: null` is the open-ended top band. Bands are half-open
+ * [min, max) so a ₹5 Cr project lands in "₹5–10 Cr" and never in two bands.
+ */
+const AMOUNT_BANDS: { label: string; min: number; max: number | null }[] = [
+  { label: "0 – 1 Cr", min: 0, max: 1 },
+  { label: "1 – 5 Cr", min: 1, max: 5 },
+  { label: "5 – 10 Cr", min: 5, max: 10 },
+  { label: "More than 10 Cr", min: 10, max: null },
+];
+
+function activeBand(filters: Filters) {
+  return AMOUNT_BANDS.find(
+    (band) => band.min === filters.minSpend && (band.max ?? null) === filters.maxSpend,
+  );
+}
+
 export function FilterBar({
   meta,
   filters,
@@ -128,36 +146,57 @@ export function FilterBar({
           className={`select-chip${filters.minSpend !== null || filters.maxSpend !== null ? " active" : ""}`}
           onClick={() => setOpenChip(openChip === "amount" ? null : "amount")}
         >
-          CSR Amount
+          <span className="truncate1" style={{ maxWidth: 150 }}>
+            {activeBand(filters)?.label ?? "CSR Amount"}
+          </span>
           <ChevronDown width={12} height={12} />
         </button>
         {openChip === "amount" ? (
           <div
             className="dropdown open"
-            style={{ top: 34, left: 0, right: "auto", width: 240, padding: 12 }}
+            style={{ top: 34, left: 0, right: "auto", width: 220, padding: 8 }}
           >
-            <div className="mini-label no-rule" style={{ marginBottom: 8 }}>
-              Project spend (INR Cr)
+            <div className="mini-label no-rule" style={{ margin: "2px 4px 8px" }}>
+              Spend per project (INR Cr)
             </div>
-            <div className="row gap-8">
-              <input
-                className="mono"
-                defaultValue={filters.minSpend ?? ""}
-                placeholder="min"
-                onBlur={(event) =>
-                  setRange(event.target.value === "" ? null : Number(event.target.value), filters.maxSpend)
-                }
-                style={{ width: "50%", padding: "6px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)", fontSize: 12 }}
-              />
-              <input
-                className="mono"
-                defaultValue={filters.maxSpend ?? ""}
-                placeholder="max"
-                onBlur={(event) =>
-                  setRange(filters.minSpend, event.target.value === "" ? null : Number(event.target.value))
-                }
-                style={{ width: "50%", padding: "6px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)", fontSize: 12 }}
-              />
+            {AMOUNT_BANDS.map((band) => {
+              const active =
+                filters.minSpend === band.min && filters.maxSpend === (band.max ?? null);
+              return (
+                <button
+                  key={band.label}
+                  type="button"
+                  className="cmdk-result"
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    background: active ? "var(--blue-light)" : "transparent",
+                    fontWeight: active ? 600 : 500,
+                  }}
+                  onClick={() => {
+                    // Clicking the live band clears it, so the chip toggles.
+                    if (active) setRange(null, null);
+                    else setRange(band.min, band.max);
+                    setOpenChip(null);
+                  }}
+                >
+                  <span style={{ fontSize: 12.5 }}>{band.label}</span>
+                  {active ? <span style={{ marginLeft: "auto", fontSize: 11 }}>✓</span> : null}
+                </button>
+              );
+            })}
+            <div className="cmdk-foot">
+              <button
+                type="button"
+                className="fb-text"
+                onClick={() => {
+                  setRange(null, null);
+                  setOpenChip(null);
+                }}
+                disabled={filters.minSpend === null && filters.maxSpend === null}
+              >
+                Any amount
+              </button>
             </div>
           </div>
         ) : null}
@@ -174,14 +213,38 @@ export function FilterBar({
       </label>
 
       {(meta?.stats.aspirational_rows ?? 0) > 0 ? (
-        <button
-          type="button"
-          className={`select-chip${filters.aspirationalOnly ? " active" : ""}`}
-          onClick={() => setAspirationalOnly(!filters.aspirationalOnly)}
-        >
-          <Target width={12} height={12} />
-          Aspirational
-        </button>
+        <div className="pos-rel">
+          <button
+            type="button"
+            className={`select-chip${filters.aspirationalOnly ? " active" : ""}`}
+            onClick={() => setOpenChip(openChip === "aspirational" ? null : "aspirational")}
+          >
+            <Target width={12} height={12} />
+            Aspirational districts
+            <ChevronDown width={12} height={12} />
+          </button>
+          {openChip === "aspirational" ? (
+            <AspirationalPopover
+              options={meta?.aspirationalDistricts ?? []}
+              selected={filters.districts}
+              allActive={filters.aspirationalOnly && filters.districts.length === 0}
+              onAll={() => {
+                setValues("districts", []);
+                setAspirationalOnly(true);
+                setOpenChip(null);
+              }}
+              onSelect={(district) => {
+                setValues("districts", [district]);
+                setAspirationalOnly(true);
+                setOpenChip(null);
+              }}
+              onClear={() => {
+                setAspirationalOnly(false);
+                setOpenChip(null);
+              }}
+            />
+          ) : null}
+        </div>
       ) : null}
 
       <div className="spacer" />
@@ -284,9 +347,80 @@ function ChipPopover({
         )}
       </div>
       <div className="cmdk-foot">
-        <span>{selected.length} selected</span>
-        <button type="button" className="fb-text" style={{ marginLeft: "auto" }} onClick={onClose}>
+        <button
+          type="button"
+          className="fb-text"
+          onClick={() => onChange(filtered.map((option) => option.value))}
+          disabled={filtered.length === 0}
+        >
+          Select all{term.trim() ? " shown" : ""}
+        </button>
+        <button type="button" className="fb-text" onClick={() => onChange([])} disabled={selected.length === 0}>
+          Clear all
+        </button>
+        <span style={{ marginLeft: "auto" }}>{selected.length} selected</span>
+        <button type="button" className="fb-text" onClick={onClose}>
           Done
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AspirationalPopover({
+  options,
+  selected,
+  allActive,
+  onAll,
+  onSelect,
+  onClear,
+}: {
+  options: string[];
+  selected: string[];
+  allActive: boolean;
+  onAll: () => void;
+  onSelect: (district: string) => void;
+  onClear: () => void;
+}) {
+  const [term, setTerm] = React.useState("");
+  const filtered = options.filter((name) => name.toLowerCase().includes(term.trim().toLowerCase()));
+
+  return (
+    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
+      <div className="cmdk-input-row" style={{ padding: "9px 12px" }}>
+        <input
+          autoFocus
+          value={term}
+          placeholder="Search aspirational districts…"
+          onChange={(event) => setTerm(event.target.value)}
+        />
+      </div>
+      <div style={{ maxHeight: 280, overflowY: "auto", padding: 6 }}>
+        <button
+          type="button"
+          className="cmdk-result"
+          style={{ width: "100%", border: "none", background: allActive ? "var(--blue-light)" : "transparent" }}
+          onClick={onAll}
+        >
+          <strong>All aspirational districts</strong>
+        </button>
+        {filtered.map((district) => (
+          <button
+            key={district}
+            type="button"
+            className="cmdk-result"
+            style={{ width: "100%", border: "none", background: selected.includes(district) ? "var(--blue-light)" : "transparent" }}
+            onClick={() => onSelect(district)}
+          >
+            {district}
+          </button>
+        ))}
+        {filtered.length === 0 ? <div className="empty-state"><p>No matching district</p></div> : null}
+      </div>
+      <div className="cmdk-foot">
+        <span>{options.length} named districts</span>
+        <button type="button" className="fb-text" style={{ marginLeft: "auto" }} onClick={onClear}>
+          Clear
         </button>
       </div>
     </div>

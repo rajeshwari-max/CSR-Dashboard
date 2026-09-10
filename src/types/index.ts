@@ -67,6 +67,8 @@ export interface Meta {
   themes: string[];
   modes: string[];
   districts: string[];
+  /** District labels attached to rows flagged as aspirational in the source data. */
+  aspirationalDistricts: string[];
   ngos: string[];
   statuses: string[];
   companies: CompanyOption[];

@@ -24,8 +24,9 @@ import {
   YAxis,
 } from "recharts";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { ChartTip } from "@/components/charts2/chart-tooltip";
 
-const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified"]);
+const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified", "District Not Classified Elsewhere"]);
 
 export function StateAnalysisView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
@@ -100,7 +101,7 @@ export function StateAnalysisView() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <Row label="States with spend" value={String(mapped.length)} />
+              <Row label="Geographic coverage" value="Across India" />
               <Row label="Districts with spend" value={formatNumber(summary.data?.kpis.districtCount ?? 0)} />
               <Row label="State-attributed spend" value={formatCrore(totalMapped)} />
               {unmapped.map((row) => (
@@ -145,8 +146,8 @@ export function StateAnalysisView() {
 
       <SectionLabel>State comparison</SectionLabel>
       <ChartCard
-        title="Annual CSR spend across leading states"
-        description="Top 8 mapped states; values are project spend in INR crore"
+        title="Annual CSR amount spent across leading states"
+        description="Top 8 mapped state and UT entries; values are amount spent in ₹ crore"
         height={340}
         isLoading={summary.isLoading}
         error={summary.error}
@@ -157,7 +158,10 @@ export function StateAnalysisView() {
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="name" {...AXIS_PROPS} interval={0} angle={-18} textAnchor="end" height={60} />
             <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} />
-            <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
+            {/* Custom tip: the default Recharts tooltip prints each series in its
+                own series colour, which is unreadable for the lighter hues. This
+                one keeps a colour dot and prints the text in the body colour. */}
+            <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
             <Legend iconType="circle" iconSize={8} />
             {years.map((year, index) => (
               <Bar key={year} dataKey={year} name={year} fill={colorAt(index)} radius={[5, 5, 0, 0]} maxBarSize={26} />
@@ -203,7 +207,12 @@ export function StateAnalysisView() {
         </CardContent>
       </Card>
 
-      <ProjectRegisterSection filterQuery={filterQuery} />
+      <ProjectRegisterSection
+        filterQuery={filterQuery}
+        label="Projects behind these states"
+        description="Every disclosed project inside the current geographic scope. Click a state on the map or a row in the tables above to narrow it."
+        scopeSpend={summary.data?.kpis.totalSpend}
+      />
     </PageFrame>
   );
 }

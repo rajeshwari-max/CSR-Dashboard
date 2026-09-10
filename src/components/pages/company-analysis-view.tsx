@@ -20,7 +20,7 @@ import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useFilterStore } from "@/store/filters";
-import type { ComparisonResponse, SummaryResponse } from "@/types";
+import type { CompanyDetail, ComparisonResponse, SummaryResponse } from "@/types";
 
 const REPORT_KEYS = [
   ["csrReportUrl", "CSR report"],
@@ -34,7 +34,10 @@ export function CompanyAnalysisView() {
   const setValues = useFilterStore((state) => state.setValues);
   const meta = useMeta();
 
-  const [term, setTerm] = React.useState("");
+  // The company list is driven by the filter bar's search box — the page has no
+  // search field of its own, so there is exactly one place to type a company
+  // name and it filters the list, the charts and the register together.
+  const term = filters.search;
   const [compare, setCompare] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -103,16 +106,12 @@ export function CompanyAnalysisView() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="relative mb-3">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={term}
-                onChange={(event) => setTerm(event.target.value)}
-                placeholder="Search company or sector…"
-                aria-label="Search companies"
-                className="h-9 w-full rounded-lg border border-input bg-card pl-9 pr-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
+            <p className="mb-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <Search className="size-3 shrink-0" />
+              {term
+                ? `Filtered by “${term}” from the search box above.`
+                : "Use the search box in the filter bar above to narrow this list."}
+            </p>
             {meta.isLoading ? (
               <div className="space-y-2">
                 {Array.from({ length: 8 }).map((_, index) => (
@@ -188,6 +187,8 @@ export function CompanyAnalysisView() {
         </Card>
       </div>
 
+      {compare.length === 1 ? <CompanyProfile companyId={compare[0]} filterQuery={filterQuery} /> : null}
+
       <SectionLabel>Company comparison</SectionLabel>
       {compare.length === 0 ? (
         <Card className="border-dashed">
@@ -210,7 +211,7 @@ export function CompanyAnalysisView() {
                 </button>
               </span>
             ))}
-            <Button variant="ghost" size="xs" onClick={() => setCompare([])}>
+            <Button variant="ghost" size="xs" onClick={() => setValues("companies", [])}>
               Clear all
             </Button>
           </div>
@@ -336,7 +337,12 @@ export function CompanyAnalysisView() {
         </Card>
       </div>
 
-      <ProjectRegisterSection filterQuery={filterQuery} />
+      <ProjectRegisterSection
+        filterQuery={filterQuery}
+        label="Projects for the selected companies"
+        description="Every disclosed project inside the current scope. Tick a company on the left to narrow it."
+        scopeSpend={summary.data?.kpis.totalSpend}
+      />
     </PageFrame>
   );
 }
@@ -395,5 +401,228 @@ function CompanyLinks({ companyId, name, value }: { companyId: string; name: str
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Everything the tab was missing: when exactly one company is selected, this
+ * renders that company's own analysis — headline numbers, its spend trajectory,
+ * where the money went by Schedule VII category and by state, how it sits
+ * against sector peers, and its biggest projects.
+ *
+ * It reads /api/companies/:id, which scopes to the company but deliberately
+ * drops the sector facet (a company has one sector; filtering by another would
+ * empty the page) and keeps year/state/theme so the profile still respects the
+ * filter bar.
+ */
+function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQuery: string }) {
+  const detail = useApi<CompanyDetail>(
+    `/api/companies/${encodeURIComponent(companyId)}?${filterQuery}`,
+  );
+  const data = detail.data;
+
+  const trendData = React.useMemo(
+    () => (data?.trend ?? []).map((point) => ({ year: point.year, spend: point.spend, projects: point.projects })),
+    [data?.trend],
+  );
+
+  if (detail.isLoading && !data) {
+    return (
+      <>
+        <SectionLabel>Company profile</SectionLabel>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton key={index} className="h-24 w-full" />
+          ))}
+        </div>
+        <Skeleton className="h-80 w-full" />
+      </>
+    );
+  }
+
+  if (!data) return null;
+  // Narrowed after the guard, so every field below is non-optional.
+  const kpis = data.kpis;
+
+  return (
+    <>
+      <SectionLabel>Company profile — {data.company.name}</SectionLabel>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-6">
+        <ProfileStat label="Total CSR spend" value={formatCrore(kpis.totalSpend)} sub="All years in view" />
+        <ProfileStat
+          label="Latest FY spend"
+          value={formatCrore(kpis.latestYearSpend)}
+          sub={
+            kpis.yoyGrowthPct === null
+              ? "No prior year to compare"
+              : `${formatSignedPercent(kpis.yoyGrowthPct)} vs. prior year`
+          }
+        />
+        <ProfileStat
+          label="Obligation use"
+          value={kpis.utilisationPct === null ? "—" : formatPercent(kpis.utilisationPct)}
+          sub={
+            kpis.obligation
+              ? `Against ${formatCrore(kpis.obligation)} disclosed`
+              : "No obligation disclosed"
+          }
+        />
+        <ProfileStat
+          label="National rank"
+          value={kpis.nationalRank ? `#${kpis.nationalRank}` : "—"}
+          sub={`${formatShare(kpis.nationalShare)} of all CSR spend`}
+        />
+        <ProfileStat
+          label="Projects"
+          value={formatNumber(kpis.projectCount)}
+          sub={`${kpis.themeCount} Schedule VII categories`}
+        />
+        <ProfileStat
+          label="Geographic reach"
+          value={formatNumber(kpis.stateCount)}
+          sub={
+            kpis.sectorRank
+              ? `#${kpis.sectorRank} in ${data.company.sector}`
+              : "States and UTs with spend"
+          }
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+        <ChartCard
+          title="Spend trajectory"
+          description="This company's disclosed spend per financial year"
+          className="xl:col-span-3"
+          height={300}
+          isLoading={detail.isLoading}
+          error={detail.error}
+          isEmpty={trendData.length === 0}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={trendData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="year" {...AXIS_PROPS} />
+              <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} />
+              <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
+              <Bar dataKey="spend" name="Amount spent" fill={colorAt(0)} radius={[5, 5, 0, 0]} maxBarSize={48} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+
+        <Card className="xl:col-span-2">
+          <CardHeader>
+            <div>
+              <CardTitle>Where the money goes</CardTitle>
+              <CardDescription>Schedule VII categories, largest first</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="px-0">
+            <BreakdownTable
+              rows={data.byTheme}
+              label="Category"
+              limit={10}
+              showBars
+              columns={["value", "share", "count"]}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <div>
+              <CardTitle>States reached</CardTitle>
+              <CardDescription>Spend placed by state, largest first</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="px-0">
+            <BreakdownTable
+              rows={data.byState}
+              label="State"
+              limit={12}
+              showBars
+              columns={["value", "share", "count"]}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div>
+              <CardTitle>Sector peers</CardTitle>
+              <CardDescription>
+                Other {data.company.sector} filers, ranked on national total spend
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="px-0">
+            <BreakdownTable
+              rows={data.peers}
+              label="Company"
+              limit={8}
+              showBars
+              selected={[data.company.name]}
+              columns={["value", "count", "yoy"]}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle>Largest projects</CardTitle>
+            <CardDescription>Top 25 by amount spent, within the current filters</CardDescription>
+          </div>
+          <Badge variant="outline" className="shrink-0">
+            {formatNumber(data.topProjects.length)} shown
+          </Badge>
+        </CardHeader>
+        <CardContent className="px-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="min-w-64">Project</TableHead>
+                <TableHead>FY</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>State</TableHead>
+                <TableHead className="text-right">Spent</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.topProjects.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={5} className="py-10 text-center text-sm text-muted-foreground">
+                    No projects match the current filters.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                data.topProjects.slice(0, 25).map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="text-[13px]">{row.project ?? "—"}</TableCell>
+                    <TableCell className="text-[12px] text-muted-foreground">{row.year}</TableCell>
+                    <TableCell className="text-[12px] text-muted-foreground">{row.theme}</TableCell>
+                    <TableCell className="text-[12px] text-muted-foreground">{row.state}</TableCell>
+                    <TableCell className="numeric text-right text-[13px]">{formatCrore(row.spent)}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
+function ProfileStat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <Card className="p-4">
+      <p className="kpi-label">{label}</p>
+      <p className="kpi-value mt-2 text-xl">{value}</p>
+      <p className="mt-1 line-clamp-2 text-[11px] text-muted-foreground">{sub}</p>
+    </Card>
   );
 }

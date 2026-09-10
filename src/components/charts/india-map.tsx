@@ -19,7 +19,7 @@ import type { NamedValue } from "@/types";
  * dataset that is a material share of total spend.
  */
 
-const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified"]);
+const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified", "District Not Classified Elsewhere"]);
 
 /** Single-hue sequential ramp — the convention for a quantity choropleth. */
 const HEAT_STOPS: [number, number, number][] = [

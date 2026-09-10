@@ -105,6 +105,7 @@ export const STATE_ALIASES: Record<string, string> = {
   "pan india (other centralised funds)": "Pan India",
   "pan india (other centralized funds)": "Pan India",
   "pan-india": "Pan India", "all india": "Pan India",
+  "district not classified elsewhere": "Not Specified",
 };
 
 export const MODE_ALIASES: Record<string, string> = {
@@ -177,6 +178,14 @@ export function normaliseState(value: unknown): string {
   if (STATE_ALIASES[key]) return STATE_ALIASES[key];
   if (key.startsWith("pan india")) return "Pan India";
   return titleCase(text) ?? NOT_SPECIFIED;
+}
+
+export function normaliseDistrict(value: unknown): string | null {
+  const text = cleanText(value);
+  if (text === null) return null;
+  if (/^[-+]?\d+(?:\.\d+)?$/.test(text)) return null;
+  if (text.toLowerCase() === "district not classified elsewhere") return null;
+  return titleCase(text);
 }
 
 export function normaliseSector(value: unknown): string | null {

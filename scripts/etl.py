@@ -189,6 +189,7 @@ STATE_ALIASES = {
     "pan india (other centralised funds)": "Pan India",
     "pan india (other centralized funds)": "Pan India",
     "pan-india": "Pan India", "all india": "Pan India",
+    "district not classified elsewhere": "Not Specified",
 }
 
 MODE_ALIASES = {
@@ -267,6 +268,19 @@ def normalise_state(value) -> str:
     if key.startswith("pan india"):
         return "Pan India"
     return title_case(text) or NOT_SPECIFIED
+
+
+def normalise_district(value) -> str | None:
+    text = clean_text(value)
+    if text is None:
+        return None
+    # A handful of malformed source rows put monetary values in the District
+    # column. They are not geographic labels and must not become filter options.
+    if re.fullmatch(r"[-+]?\d+(?:\.\d+)?", text):
+        return None
+    if text.lower() == "district not classified elsewhere":
+        return None
+    return title_case(text)
 
 
 def normalise_sector(value) -> str | None:
@@ -675,7 +689,7 @@ def main() -> int:
                             entry[field] = value
 
                 state = normalise_state(cell(record, "state"))
-                district = title_case(clean_text(cell(record, "district")))
+                district = normalise_district(cell(record, "district"))
                 theme = normalise_theme(cell(record, "theme"))
                 mode = normalise_mode(cell(record, "mode"))
 

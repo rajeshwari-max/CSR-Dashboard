@@ -7,9 +7,7 @@ import {
   Building2,
   ExternalLink,
   FileText,
-  Mail,
   MapPin,
-  Phone,
   Target,
 } from "lucide-react";
 
@@ -104,7 +102,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {(
             [
-              { label: "Total CSR Spend", value: formatCrore(kpis?.totalSpend), sub: `${formatNumber(kpis?.projectCount ?? 0)} projects` },
+              { label: "Total CSR Amount Spent", value: formatCrore(kpis?.totalSpend), sub: `${formatNumber(kpis?.projectCount ?? 0)} projects reported` },
               {
                 label: "National Rank",
                 value: kpis?.nationalRank ? `#${kpis.nationalRank}` : "—",
@@ -153,7 +151,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
             <CardHeader>
               <div>
                 <CardTitle>Company Profile</CardTitle>
-                <CardDescription>Disclosed contacts and source documents</CardDescription>
+                <CardDescription>Company classification and source documents</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
@@ -167,13 +165,6 @@ export function CompanyView({ companyId }: { companyId: string }) {
                     label="Avg net profit"
                     value={company?.averageNetProfit ? formatCrore(company.averageNetProfit) : "Not disclosed"}
                   />
-                  <ProfileRow icon={Mail} label="CSR contact" value={company?.contactName ?? "Not disclosed"} />
-                  {company?.contactEmail ? (
-                    <ProfileRow icon={Mail} label="Email" value={company.contactEmail} />
-                  ) : null}
-                  {company?.contactPhone ? (
-                    <ProfileRow icon={Phone} label="Phone" value={company.contactPhone.replace("tel:", "")} />
-                  ) : null}
 
                   <div className="flex flex-wrap gap-2 pt-1">
                     {REPORT_LINKS.map(({ key, label }) => {
