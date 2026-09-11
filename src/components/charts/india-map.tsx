@@ -162,7 +162,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
       <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Spend intensity</p>
-          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#eff6ff,#bfdbfe,#60a5fa,#2563eb,#1e3a8a)" }} />
+          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#f4edf7,#ddc8e4,#b882c7,#82419a,#542566)" }} />
           <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
             <span>₹0</span>
             <span>{formatCrore(max)}</span>

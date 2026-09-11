@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
 
 type AuthMode = "signin" | "register";
@@ -59,7 +60,7 @@ export default function LoginPage() {
     <main className="login-page">
       <section className="login-panel" aria-labelledby="login-title">
         <div className="login-brand">
-          <span className="brand-mark">CMS</span>
+          <Image className="brand-mark brand-logo" src="/cms-logo.svg" alt="CMS logo" width={82} height={32} priority />
           <div>
             <strong>CMS</strong>
             <span>CSR Intelligence Platform</span>
