@@ -126,10 +126,11 @@ The company profile shown on Company Analysis when one filer is selected comes f
 | Sector donut | Sector | Sector spend share | Sectors ranked by spend; percentages use total sector spend in view |
 | Company bars/ranks | Company | Sum of spend | Companies sorted descending by spend |
 | India choropleth | State shape | State spend | `Pan India` and `Not Specified` cannot be mapped; colour intensity uses square-root scaling to reduce domination by very large states |
-| Annual CSR spend across leading states | State | Spend in INR crore | Grouped bars for the top eight mapped states; one colour per financial year |
+| Leading states funding profile | Top eight mapped states | Latest and previous FY spend in INR crore | Two-series radar profile; each spoke is a state and the overlapping shapes compare the latest two years |
 | Sector trajectories | Financial year | Sector spend | Lines for the six highest-spending sectors in the current view |
 | Sector YoY growth | Sector | YoY percentage | Prior-year base must be at least ₹5 Cr; positive and negative bars use different semantic colours |
-| Funding flow | Schedule VII category | Spend and share | Categories ranked by spend; bar width is category spend divided by total category spend |
+| Funding flow | Schedule VII category | Spend and share | Treemap tiles are sized by category spend; larger areas represent a larger share of the current filtered total |
+| Growth rate area | Financial year | Year-on-year percentage | A zero-centred gradient area connects annual growth rates, preserving direction while making the time pattern easier to see |
 | Project size distribution | Spend band | Count of disclosed project rows | Six non-overlapping bands from below ₹10 lakh through above ₹25 crore; clicking a bar applies the amount range globally |
 | Sparklines | Financial year | KPI value | Compact trend without axes, using the same filtered yearly aggregation |
 | Company spend trajectory | Financial year | Company spend | Shown on Company Analysis when exactly one filer is selected; bars are that company's disclosed spend per year within the current filters |

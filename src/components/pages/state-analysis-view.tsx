@@ -14,14 +14,14 @@ import { formatCrore, formatNumber, formatShare, formatSignedPercent } from "@/l
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
   Legend,
   ResponsiveContainer,
   Tooltip,
-  XAxis,
-  YAxis,
 } from "recharts";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
 import { ChartTip } from "@/components/charts2/chart-tooltip";
@@ -47,14 +47,16 @@ export function StateAnalysisView() {
     [summary.data],
   );
 
-  // Grouped bars: top 8 mapped states × every financial year in view.
+  // Radar profile: latest two financial years across the top eight mapped states.
   const comparison = React.useMemo(() => {
     const byName = new Map((stateSeries.data?.series ?? []).map((item) => [item.name, item.values]));
     return mapped.slice(0, 8).map((row) => {
       const values = byName.get(row.name) ?? {};
-      const entry: Record<string, string | number> = { name: row.name };
-      for (const year of years) entry[year] = values[year] ?? 0;
-      return entry;
+      return {
+        name: row.name,
+        previous: values[years.at(-2) ?? ""] ?? 0,
+        latest: values[years.at(-1) ?? ""] ?? 0,
+      };
     });
   }, [mapped, stateSeries.data, years]);
 
@@ -146,27 +148,43 @@ export function StateAnalysisView() {
 
       <SectionLabel>State comparison</SectionLabel>
       <ChartCard
-        title="Annual CSR amount spent across leading states"
-        description="Top 8 mapped state and UT entries; values are amount spent in ₹ crore"
-        height={340}
+        title="Leading states funding profile"
+        description={`${years.at(-2) ?? "Previous FY"} vs ${years.at(-1) ?? "Latest FY"} · amount spent in ₹ crore`}
+        height={390}
         isLoading={summary.isLoading}
         error={summary.error}
         isEmpty={comparison.length === 0}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={comparison} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" {...AXIS_PROPS} interval={0} angle={-18} textAnchor="end" height={60} />
-            <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} />
-            {/* Custom tip: the default Recharts tooltip prints each series in its
-                own series colour, which is unreadable for the lighter hues. This
-                one keeps a colour dot and prints the text in the body colour. */}
+          <RadarChart data={comparison} outerRadius="72%" margin={{ top: 20, right: 42, bottom: 20, left: 42 }}>
+            <defs>
+              <linearGradient id="stateLatestFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={colorAt(0)} stopOpacity={0.42} />
+                <stop offset="100%" stopColor={colorAt(0)} stopOpacity={0.08} />
+              </linearGradient>
+            </defs>
+            <PolarGrid stroke="var(--border)" />
+            <PolarAngleAxis dataKey="name" {...AXIS_PROPS} tick={{ fontSize: 10.5, fill: "var(--text-muted)" }} />
+            <PolarRadiusAxis tick={false} axisLine={false} />
             <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
             <Legend iconType="circle" iconSize={8} />
-            {years.map((year, index) => (
-              <Bar key={year} dataKey={year} name={year} fill={colorAt(index)} radius={[5, 5, 0, 0]} maxBarSize={26} />
-            ))}
-          </BarChart>
+            <Radar
+              dataKey="previous"
+              name={years.at(-2) ?? "Previous FY"}
+              stroke={colorAt(2)}
+              fill={colorAt(2)}
+              fillOpacity={0.08}
+              strokeWidth={2}
+            />
+            <Radar
+              dataKey="latest"
+              name={years.at(-1) ?? "Latest FY"}
+              stroke={colorAt(0)}
+              fill="url(#stateLatestFill)"
+              fillOpacity={1}
+              strokeWidth={2.5}
+            />
+          </RadarChart>
         </ResponsiveContainer>
       </ChartCard>
 

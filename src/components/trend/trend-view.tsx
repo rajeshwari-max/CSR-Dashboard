@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import {
-  Bar,
-  BarChart,
+  Area,
+  AreaChart,
   CartesianGrid,
-  Cell,
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -162,20 +162,30 @@ export function TrendView() {
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={growth} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
+                <AreaChart data={growth} margin={{ top: 10, right: 8, bottom: 0, left: -18 }}>
+                  <defs>
+                    <linearGradient id="growthArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--blue)" stopOpacity={0.42} />
+                      <stop offset="100%" stopColor="var(--blue)" stopOpacity={0.04} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="year" {...AXIS} />
                   <YAxis {...AXIS} tickFormatter={(value: number) => `${value}%`} />
                   <Tooltip content={<ChartTip money={false} />} />
-                  <Bar dataKey="growth" name="YoY growth" radius={[5, 5, 0, 0]} maxBarSize={44}>
-                    {growth.map((point) => (
-                      <Cell
-                        key={point.year}
-                        fill={(point.growth ?? 0) >= 0 ? "var(--success)" : "var(--danger)"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
+                  <ReferenceLine y={0} stroke="var(--border-strong)" strokeWidth={1.5} />
+                  <Area
+                    type="monotone"
+                    dataKey="growth"
+                    name="YoY growth"
+                    stroke="var(--blue)"
+                    strokeWidth={2.5}
+                    fill="url(#growthArea)"
+                    connectNulls={false}
+                    dot={{ r: 4, fill: "var(--surface)", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             )}
           </div>

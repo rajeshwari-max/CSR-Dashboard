@@ -10,6 +10,7 @@ import {
   Line,
   LineChart,
   ResponsiveContainer,
+  Treemap,
   Tooltip,
   XAxis,
   YAxis,
@@ -26,8 +27,7 @@ import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCrore, formatShare, formatSignedPercent, truncate } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { formatCrore, formatSignedPercent, truncate } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 
@@ -174,7 +174,7 @@ export function SectorAnalysisView() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
             <div>
               <CardTitle>Funding flow</CardTitle>
@@ -182,34 +182,22 @@ export function SectorAnalysisView() {
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>
-          <CardContent className="space-y-2.5">
-            {flow.map((row, index) => (
-              <button
-                key={row.name}
-                type="button"
-                onClick={() => toggleValue("themes", row.name)}
-                className={cn(
-                  "w-full rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-accent/60",
-                  filters.themes.includes(row.name) && "bg-accent/60",
-                )}
+          <CardContent className="h-[310px] pb-5">
+            <ResponsiveContainer width="100%" height="100%">
+              <Treemap
+                data={flow}
+                dataKey="value"
+                nameKey="name"
+                stroke="var(--surface)"
+                content={<FundingTreemapNode selected={filters.themes} />}
+                onClick={(node: { name?: string }) => node?.name && toggleValue("themes", node.name)}
               >
-                <div className="flex items-baseline justify-between gap-3 text-[13px]">
-                  <span className="truncate font-medium">{row.name}</span>
-                  <span className="numeric shrink-0 font-semibold">{formatCrore(row.value)}</span>
-                </div>
-                <div className="mt-1 flex items-center gap-2">
-                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                    <span
-                      className="block h-full rounded-full"
-                      style={{ width: `${Math.max(2, row.share * 100)}%`, background: colorAt(index) }}
-                    />
-                  </span>
-                  <span className="numeric w-20 shrink-0 text-right text-[11px] text-muted-foreground">
-                    {formatShare(row.share)}
-                  </span>
-                </div>
-              </button>
-            ))}
+                <Tooltip
+                  {...TOOLTIP_STYLES}
+                  formatter={(value: number, name: string) => [formatCrore(value), name]}
+                />
+              </Treemap>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
@@ -236,5 +224,61 @@ export function SectorAnalysisView() {
         scopeSpend={summary.data?.kpis.totalSpend}
       />
     </PageFrame>
+  );
+}
+
+interface FundingNodeProps {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  index?: number;
+  name?: string;
+  value?: number;
+  share?: number;
+  depth?: number;
+  selected: string[];
+}
+
+function FundingTreemapNode({
+  x = 0,
+  y = 0,
+  width = 0,
+  height = 0,
+  index = 0,
+  name = "",
+  value = 0,
+  share = 0,
+  depth = 1,
+  selected,
+}: FundingNodeProps) {
+  if (depth !== 1) return null;
+  const active = selected.length === 0 || selected.includes(name);
+  const showLabel = width > 90 && height > 45;
+  const showValue = width > 120 && height > 68;
+  return (
+    <g className="cursor-pointer">
+      <rect
+        x={x}
+        y={y}
+        width={Math.max(0, width - 2)}
+        height={Math.max(0, height - 2)}
+        rx={8}
+        fill={colorAt(index)}
+        fillOpacity={active ? 0.88 : 0.32}
+        stroke={active && selected.includes(name) ? "var(--text)" : "var(--surface)"}
+        strokeWidth={active && selected.includes(name) ? 2.5 : 2}
+      />
+      {showLabel ? (
+        <text x={x + 10} y={y + 20} fill="white" fontSize={11} fontWeight={700}>
+          {truncate(name, Math.max(12, Math.floor(width / 8)))}
+        </text>
+      ) : null}
+      {showValue ? (
+        <text x={x + 10} y={y + 39} fill="white" fontSize={10} opacity={0.9}>
+          {formatCrore(value)} · {(share * 100).toFixed(1)}%
+        </text>
+      ) : null}
+    </g>
   );
 }
