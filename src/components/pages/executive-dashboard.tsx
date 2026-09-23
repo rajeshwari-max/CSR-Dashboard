@@ -46,6 +46,7 @@ export function ExecutiveDashboard() {
   return (
     <PageFrame
       title="Executive Dashboard"
+      subtitle="CMS CSR Intelligence provides an overview of CSR spending and projects reported by India’s top 1,000 companies from FY 2020–21 to FY 2024–25. It shows how much was spent, which companies contributed, and where funds were directed across sectors, states, districts and Schedule VII categories. All amounts are shown in ₹ crore, and coverage will be expanded to additional companies in future updates."
       meta={meta.data}
       filters={filters}
       onRefresh={refresh}
