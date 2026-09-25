@@ -157,12 +157,19 @@ export function TrendView() {
             <div className="skeleton" style={{ height: "100%" }} />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={sectorSeries} margin={{ top: 6, right: 18, bottom: 24, left: 20 }}>
+              <LineChart data={sectorSeries} margin={{ top: 8, right: 18, bottom: 28, left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="year" {...AXIS} label={{ value: "Financial year", position: "insideBottom", offset: -14 }} />
                 <YAxis {...AXIS} tickFormatter={(value: number) => formatCompact(value)} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -4 }} />
                 <Tooltip content={<ChartTip />} />
-                <Legend iconType="circle" iconSize={7} />
+                <Legend
+                  iconType="circle"
+                  iconSize={7}
+                  verticalAlign="top"
+                  align="right"
+                  height={34}
+                  wrapperStyle={{ fontSize: 11, paddingLeft: 48 }}
+                />
                 {topSectors.map((sector, index) => (
                   <Line
                     key={sector.name}
