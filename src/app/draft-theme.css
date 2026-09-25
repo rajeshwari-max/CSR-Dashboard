@@ -27,7 +27,7 @@
   --danger:#dc2626;
   --danger-bg:#fef2f2;
 
-  --bg:#fbf9fc;
+  --bg:#fbf8fc;
   --surface:var(--white);
   --surface-2:var(--slate-100);
   --text:var(--slate-900);
@@ -71,7 +71,10 @@
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
-  margin:0;background:var(--bg);color:var(--text);
+  margin:0;background:
+    radial-gradient(circle at 84% 8%,rgba(0,182,152,.055),transparent 28%),
+    radial-gradient(circle at 18% 88%,rgba(130,65,154,.055),transparent 30%),
+    var(--bg);color:var(--text);
   font-family:var(--font-body);font-size:13.5px;line-height:1.55;
   -webkit-font-smoothing:antialiased;
   font-variant-numeric:tabular-nums;
@@ -93,7 +96,7 @@ h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-0.015em;color:var(--text);}
 .sidebar.collapsed{width:var(--sidebar-w-collapsed);}
 .sidebar-top{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid var(--border);height:var(--topbar-h);}
 .brand-mark{width:28px;height:28px;border-radius:8px;background:var(--accent-grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;}
-.brand-mark.brand-logo{width:72px;height:28px;border-radius:0;background:transparent;box-shadow:none;object-fit:contain;object-position:left center;}
+.brand-mark.brand-logo{width:86px;height:31px;border-radius:0;background:transparent;box-shadow:none;object-fit:contain;object-position:left center;}
 .brand-name{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;}
 .brand-name small{display:block;font-size:10px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;}
 .sidebar.collapsed .brand-name,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-group-title,.sidebar.collapsed .sidebar-foot span{display:none;}
@@ -164,6 +167,13 @@ h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-0.015em;color:var(--text);}
 
 /* ---------- Content ---------- */
 .content{flex:1;min-width:0;padding:24px 28px 80px;max-width:1680px;}
+.content{position:relative;isolation:isolate;}
+.content::before{
+  content:"";position:absolute;z-index:0;right:5%;top:165px;width:min(520px,42vw);aspect-ratio:150/54;
+  background:url('/cms-logo.svg') center/contain no-repeat;opacity:.032;pointer-events:none;
+}
+.content>*{position:relative;z-index:1;}
+[data-theme="dark"] .content::before{opacity:.045;filter:saturate(.75) brightness(1.25);}
 .page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
 .page-head h1{font-size:22px;}
 .page-head p{color:var(--text-soft);font-size:13px;margin-top:5px;max-width:600px;}

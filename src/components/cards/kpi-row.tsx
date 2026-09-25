@@ -68,18 +68,21 @@ export function KpiRow({
       sub: `${kpis.latestYear ?? "—"} latest · cumulative view`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
+      tip: "Cumulative CSR amount spent across all projects and financial years in the current filter selection.",
     },
     {
       label: "Companies Reporting",
       value: formatNumber(kpis.companyCount),
       sub: `${kpis.sectorCount} sectors`,
       icon: Building2,
+      tip: "Distinct companies with at least one CSR project reported in the current selection.",
     },
     {
       label: "Projects Reported",
       value: formatNumber(kpis.projectCount),
       sub: "Across India",
       icon: FolderKanban,
+      tip: "Total project records reported by the selected companies, years and locations.",
     },
     beneficiaries
       ? {
@@ -87,6 +90,7 @@ export function KpiRow({
           value: formatNumber(kpis.beneficiaries ?? 0),
           sub: "Across all reported projects",
           icon: Users,
+          tip: "Total beneficiaries disclosed for projects in the current selection.",
         }
       : {
           // No beneficiary column in the dataset, so this slot shows geographic
@@ -96,6 +100,7 @@ export function KpiRow({
           value: formatNumber(kpis.districtCount),
           sub: "States and UTs across India",
           icon: MapPinned,
+          tip: "Distinct districts reached by projects that include a recorded district location.",
         },
   ];
 

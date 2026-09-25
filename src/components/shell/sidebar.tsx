@@ -35,7 +35,6 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
       <div className="sidebar-top">
         <Image className="brand-mark brand-logo" src="/cms-logo.svg" alt="CMS logo" width={82} height={32} priority />
         <div className="brand-name">
-          CMS
           <small>CSR Intelligence</small>
         </div>
       </div>
