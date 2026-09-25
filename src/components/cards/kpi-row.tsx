@@ -9,12 +9,10 @@ import {
   IndianRupee,
   Minus,
   MapPinned,
-  ShieldCheck,
   Users,
-  Wallet,
 } from "lucide-react";
 
-import { formatCrore, formatNumber, formatPercent, formatSignedPercent } from "@/lib/format";
+import { formatCrore, formatNumber, formatSignedPercent } from "@/lib/format";
 import type { Kpis, Meta } from "@/types";
 
 /**
@@ -51,7 +49,7 @@ export function KpiRow({
   if (isLoading || !kpis) {
     return (
       <div className="kpi-row">
-        {Array.from({ length: 6 }).map((_, index) => (
+        {Array.from({ length: 4 }).map((_, index) => (
           <div className="kpi-card" key={index}>
             <div className="skeleton" style={{ height: 11, width: "60%", marginBottom: 10 }} />
             <div className="skeleton" style={{ height: 20, width: "75%", marginBottom: 8 }} />
@@ -99,24 +97,6 @@ export function KpiRow({
           sub: "States and UTs across India",
           icon: MapPinned,
         },
-    {
-      // Computed: share of companies whose latest-year spend reached at least
-      // 95% of their disclosed 2%-of-net-profit obligation.
-      label: "Compliance Rate",
-      value: kpis.complianceRate === null ? "—" : formatPercent(kpis.complianceRate, 0),
-      sub:
-        kpis.complianceBase > 0
-          ? `${formatNumber(kpis.complianceMet)} of ${formatNumber(kpis.complianceBase)} disclosing filers`
-          : "No obligation disclosed in view",
-      icon: ShieldCheck,
-      tip: "Share of companies in view that spent at least 95% of their disclosed CSR obligation in the latest year. Measured on each company's national total (an obligation is a whole-company figure), and filers that disclose no obligation are excluded from both sides.",
-    },
-    {
-      label: "Avg. Spend / Company",
-      value: formatCrore(kpis.avgSpendPerCompany),
-      sub: `Median ${formatCrore(kpis.medianSpendPerCompany)}`,
-      icon: Wallet,
-    },
   ];
 
   return (

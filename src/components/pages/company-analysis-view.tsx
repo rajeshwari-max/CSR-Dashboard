@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, ExternalLink, FileText, Search, X } from "lucide-react";
+import { ExternalLink, FileText, X } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
@@ -18,7 +18,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPercent } from "@/lib/format";
-import { cn } from "@/lib/utils";
 import { useFilterStore } from "@/store/filters";
 import type { CompanyDetail, ComparisonResponse, SummaryResponse } from "@/types";
 
@@ -37,7 +36,6 @@ export function CompanyAnalysisView() {
   // The company list is driven by the filter bar's search box — the page has no
   // search field of its own, so there is exactly one place to type a company
   // name and it filters the list, the charts and the register together.
-  const term = filters.search;
   const [compare, setCompare] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -48,15 +46,6 @@ export function CompanyAnalysisView() {
   const comparison = useApi<ComparisonResponse>(
     compare.length ? `/api/compare?companies=${compare.map(encodeURIComponent).join("|")}&${filterQuery}` : null,
   );
-
-  const matches = React.useMemo(() => {
-    const needle = term.trim().toLowerCase();
-    const list = meta.data?.companies ?? [];
-    if (!needle) return list.slice(0, 40);
-    return list
-      .filter((c) => c.name.toLowerCase().includes(needle) || c.sector.toLowerCase().includes(needle))
-      .slice(0, 40);
-  }, [meta.data, term]);
 
   const toggleCompare = (id: string) => {
     const next = compare.includes(id)
@@ -86,7 +75,6 @@ export function CompanyAnalysisView() {
       filters={filters}
       filterQuery={filterQuery}
       resultCount={summary.data?.filteredRows}
-      hideFacets={["companies"]}
       error={summary.error ?? meta.error}
       onRefresh={() => {
         summary.refetch();
@@ -95,79 +83,12 @@ export function CompanyAnalysisView() {
       isRefreshing={summary.isValidating}
     >
       <SectionLabel>Company search and analysis</SectionLabel>
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div>
-              <CardTitle>Find a company</CardTitle>
-              <CardDescription>
-                {formatNumber(meta.data?.companyCount ?? 0)} filers · tick up to 4 to compare
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <Search className="size-3 shrink-0" />
-              {term
-                ? `Filtered by “${term}” from the search box above.`
-                : "Use the search box in the filter bar above to narrow this list."}
-            </p>
-            {meta.isLoading ? (
-              <div className="space-y-2">
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <Skeleton key={index} className="h-9 w-full" />
-                ))}
-              </div>
-            ) : (
-              <div className="max-h-[26rem] space-y-1 overflow-y-auto pr-1">
-                {matches.map((company) => {
-                  const checked = compare.includes(company.id);
-                  return (
-                    <div
-                      key={company.id}
-                      className={cn(
-                        "flex items-center gap-2 rounded-lg border border-transparent px-2 py-1.5 text-sm transition-colors hover:border-border hover:bg-accent/40",
-                        checked && "border-primary/40 bg-accent/50",
-                      )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => toggleCompare(company.id)}
-                        aria-label={`Compare ${company.name}`}
-                        className={cn(
-                          "grid size-4 shrink-0 place-items-center rounded border border-input text-[10px]",
-                          checked && "border-primary bg-primary text-primary-foreground",
-                        )}
-                      >
-                        {checked ? "✓" : ""}
-                      </button>
-                      <span className="min-w-0 flex-1 truncate">{company.name}</span>
-                      <Badge variant="muted" className="shrink-0 max-w-28 truncate">
-                        {company.sector}
-                      </Badge>
-                      <Link
-                        href={`/companies/${encodeURIComponent(company.id)}`}
-                        className="shrink-0 text-muted-foreground hover:text-primary"
-                        aria-label={`Open ${company.name}`}
-                      >
-                        <ArrowUpRight className="size-4" />
-                      </Link>
-                    </div>
-                  );
-                })}
-                {matches.length === 0 ? (
-                  <p className="py-10 text-center text-sm text-muted-foreground">No companies match “{term}”.</p>
-                ) : null}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3">
+      <div>
+        <Card>
           <CardHeader>
             <div>
               <CardTitle>Top filers in this view</CardTitle>
-              <CardDescription>Click a row to filter the dashboard to that company</CardDescription>
+              <CardDescription>Use the common search above, then click a row to analyse that company</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -193,7 +114,7 @@ export function CompanyAnalysisView() {
       {compare.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            Tick up to four companies on the left to benchmark them side by side.
+            Select companies from the Company filter above to benchmark them side by side.
           </CardContent>
         </Card>
       ) : (
@@ -218,7 +139,7 @@ export function CompanyAnalysisView() {
 
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
             <ChartCard
-              title="Spend by financial year"
+              title="Amount spent by financial year"
               description="Selected companies"
               className="xl:col-span-2"
               height={320}
@@ -229,8 +150,8 @@ export function CompanyAnalysisView() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="year" {...AXIS_PROPS} />
-                  <YAxis {...AXIS_PROPS} />
+                  <XAxis dataKey="year" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -2 }} />
+                  <YAxis {...AXIS_PROPS} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft" }} />
                   <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
                   <Legend iconType="circle" iconSize={8} />
                   {(comparison.data?.companies ?? []).map((company, index) => (
@@ -307,7 +228,7 @@ export function CompanyAnalysisView() {
           <CardHeader>
             <div>
               <CardTitle>Companies by sector</CardTitle>
-              <CardDescription>Filers and spend per BRSR sector in this view</CardDescription>
+              <CardDescription>Filers and amount spent per BRSR sector in this view</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -340,7 +261,7 @@ export function CompanyAnalysisView() {
       <ProjectRegisterSection
         filterQuery={filterQuery}
         label="Projects for the selected companies"
-        description="Every disclosed project inside the current scope. Tick a company on the left to narrow it."
+        description="Every disclosed project inside the current scope. Use the Company filter above to narrow it."
         scopeSpend={summary.data?.kpis.totalSpend}
       />
     </PageFrame>
@@ -448,30 +369,16 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
     <>
       <SectionLabel>Company profile — {data.company.name}</SectionLabel>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-6">
-        <ProfileStat label="Total CSR spend" value={formatCrore(kpis.totalSpend)} sub="All years in view" />
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <ProfileStat label="Total CSR amount spent" value={formatCrore(kpis.totalSpend)} sub="All years in view" />
         <ProfileStat
-          label="Latest FY spend"
+          label="Latest FY amount spent"
           value={formatCrore(kpis.latestYearSpend)}
           sub={
             kpis.yoyGrowthPct === null
               ? "No prior year to compare"
               : `${formatSignedPercent(kpis.yoyGrowthPct)} vs. prior year`
           }
-        />
-        <ProfileStat
-          label="Obligation use"
-          value={kpis.utilisationPct === null ? "—" : formatPercent(kpis.utilisationPct)}
-          sub={
-            kpis.obligation
-              ? `Against ${formatCrore(kpis.obligation)} disclosed`
-              : "No obligation disclosed"
-          }
-        />
-        <ProfileStat
-          label="National rank"
-          value={kpis.nationalRank ? `#${kpis.nationalRank}` : "—"}
-          sub={`${formatShare(kpis.nationalShare)} of all CSR spend`}
         />
         <ProfileStat
           label="Projects"
@@ -484,15 +391,15 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           sub={
             kpis.sectorRank
               ? `#${kpis.sectorRank} in ${data.company.sector}`
-              : "States and UTs with spend"
+              : "States and UTs receiving funds"
           }
         />
       </div>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
         <ChartCard
-          title="Spend trajectory"
-          description="This company's disclosed spend per financial year"
+          title="Amount spent trajectory"
+          description="This company's disclosed amount spent per financial year"
           className="xl:col-span-3"
           height={300}
           isLoading={detail.isLoading}
@@ -500,10 +407,10 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           isEmpty={trendData.length === 0}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={trendData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+            <BarChart data={trendData} margin={{ top: 8, right: 12, bottom: 22, left: 18 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="year" {...AXIS_PROPS} />
-              <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} />
+              <XAxis dataKey="year" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -12 }} />
+              <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }} />
               <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
               <Bar dataKey="spend" name="Amount spent" fill={colorAt(0)} radius={[5, 5, 0, 0]} maxBarSize={48} />
             </BarChart>
@@ -534,7 +441,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           <CardHeader>
             <div>
               <CardTitle>States reached</CardTitle>
-              <CardDescription>Spend placed by state, largest first</CardDescription>
+              <CardDescription>Amount spent by state, largest first</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -553,7 +460,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
             <div>
               <CardTitle>Sector peers</CardTitle>
               <CardDescription>
-                Other {data.company.sector} filers, ranked on national total spend
+                Other {data.company.sector} filers, ranked on national amount spent
               </CardDescription>
             </div>
           </CardHeader>

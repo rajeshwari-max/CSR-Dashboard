@@ -182,7 +182,7 @@ export function FilterBar({
             onChange={(event) => setMinText(event.target.value)}
             onBlur={() => setRange(minText === "" ? null : Number(minText), filters.maxSpend)}
             placeholder="min"
-            aria-label="Minimum project spend in crore"
+            aria-label="Minimum project amount spent in crore"
             className="numeric h-9 w-16 rounded-lg border border-input bg-card px-2 text-center text-xs shadow-sm outline-none focus:ring-2 focus:ring-ring"
           />
           <span className="text-muted-foreground">–</span>
@@ -192,7 +192,7 @@ export function FilterBar({
             onChange={(event) => setMaxText(event.target.value)}
             onBlur={() => setRange(filters.minSpend, maxText === "" ? null : Number(maxText))}
             placeholder="max"
-            aria-label="Maximum project spend in crore"
+            aria-label="Maximum project amount spent in crore"
             className="numeric h-9 w-16 rounded-lg border border-input bg-card px-2 text-center text-xs shadow-sm outline-none focus:ring-2 focus:ring-ring"
           />
           <span className="text-[11px] text-muted-foreground">Cr</span>

@@ -67,6 +67,8 @@ export interface Meta {
   themes: string[];
   modes: string[];
   districts: string[];
+  /** District options grouped by their source state for hierarchical filtering. */
+  districtsByState: Record<string, string[]>;
   /** District labels attached to rows flagged as aspirational in the source data. */
   aspirationalDistricts: string[];
   ngos: string[];

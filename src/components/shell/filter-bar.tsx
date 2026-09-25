@@ -24,8 +24,6 @@ interface ChipSpec {
 
 const CHIPS: ChipSpec[] = [
   { key: "years", label: "Year", options: (meta) => meta.years },
-  { key: "states", label: "State", options: (meta) => meta.states },
-  { key: "districts", label: "District", options: (meta) => meta.districts },
   { key: "sectors", label: "Sector", options: (meta) => meta.sectors },
   {
     key: "companies",
@@ -35,7 +33,7 @@ const CHIPS: ChipSpec[] = [
       meta.companies.map((company) => ({ value: company.id, label: company.name, hint: company.sector })),
     valueLabel: (meta, value) => meta.companies.find((company) => company.id === value)?.name ?? value,
   },
-  { key: "themes", label: "Schedule VII Category", options: (meta) => meta.themes },
+  { key: "themes", label: "Domain", options: (meta) => meta.themes },
   { key: "modes", label: "Implementation", options: (meta) => meta.modes },
 ];
 
@@ -102,6 +100,38 @@ export function FilterBar({
         Filters
       </span>
 
+      {!hide.includes("states") && !hide.includes("districts") ? (
+        <div className="pos-rel">
+          <button
+            type="button"
+            className={`select-chip${filters.states.length || filters.districts.length ? " active" : ""}`}
+            onClick={() => setOpenChip(openChip === "location" ? null : "location")}
+            disabled={!meta}
+          >
+            <span className="truncate1" style={{ maxWidth: 180 }}>
+              {filters.districts[0] ?? filters.states[0] ?? "State & District"}
+            </span>
+            <ChevronDown width={12} height={12} />
+          </button>
+          {openChip === "location" && meta ? (
+            <LocationPopover
+              meta={meta}
+              state={filters.states[0] ?? null}
+              district={filters.districts[0] ?? null}
+              onState={(state) => {
+                setValues("states", state ? [state] : []);
+                setValues("districts", []);
+              }}
+              onDistrict={(district) => {
+                setValues("districts", district ? [district] : []);
+                setOpenChip(null);
+              }}
+              onClose={() => setOpenChip(null)}
+            />
+          ) : null}
+        </div>
+      ) : null}
+
       {CHIPS.filter((chip) => !hide.includes(chip.key) && (!meta || chip.options(meta).length > 0)).map((chip) => {
         const selected = filters[chip.key];
         const options =
@@ -122,6 +152,7 @@ export function FilterBar({
               className={`select-chip${selected.length ? " active" : ""}`}
               onClick={() => setOpenChip(openChip === chip.key ? null : chip.key)}
               disabled={!meta}
+              data-tip={chip.key === "themes" ? "Schedule VII Category" : undefined}
             >
               <span className="truncate1" style={{ maxWidth: 160 }}>
                 {summary}
@@ -157,7 +188,7 @@ export function FilterBar({
             style={{ top: 34, left: 0, right: "auto", width: 220, padding: 8 }}
           >
             <div className="mini-label no-rule" style={{ margin: "2px 4px 8px" }}>
-              Spend per project (INR Cr)
+              Amount spent per project (₹ Cr)
             </div>
             {AMOUNT_BANDS.map((band) => {
               const active =
@@ -207,8 +238,8 @@ export function FilterBar({
         <input
           value={term}
           onChange={(event) => setTerm(event.target.value)}
-          placeholder="Search projects…"
-          aria-label="Search projects and companies"
+          placeholder="Search companies, projects, states, districts…"
+          aria-label="Search across companies, projects, states, districts and domains"
         />
       </label>
 
@@ -257,6 +288,89 @@ export function FilterBar({
         <RotateCcw width={13} height={13} />
         Reset{count ? ` (${count})` : ""}
       </button>
+    </div>
+  );
+}
+
+function LocationPopover({
+  meta,
+  state,
+  district,
+  onState,
+  onDistrict,
+  onClose,
+}: {
+  meta: Meta;
+  state: string | null;
+  district: string | null;
+  onState: (state: string | null) => void;
+  onDistrict: (district: string | null) => void;
+  onClose: () => void;
+}) {
+  const [term, setTerm] = React.useState("");
+  const options = state ? (meta.districtsByState[state] ?? []) : meta.states;
+  const filtered = options.filter((option) => option.toLowerCase().includes(term.trim().toLowerCase()));
+
+  return (
+    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
+      <div className="cmdk-input-row" style={{ padding: "9px 12px" }}>
+        {state ? (
+          <button type="button" className="fb-text" onClick={() => { onState(null); setTerm(""); }}>
+            ← States
+          </button>
+        ) : null}
+        <input
+          autoFocus
+          value={term}
+          placeholder={state ? `Search districts in ${state}…` : "Search states…"}
+          onChange={(event) => setTerm(event.target.value)}
+          style={{ fontSize: 12.5 }}
+        />
+      </div>
+      <div style={{ maxHeight: 300, overflowY: "auto", padding: 6 }}>
+        {!state ? (
+          <button
+            type="button"
+            className="cmdk-result"
+            style={{ width: "100%", border: "none" }}
+            onClick={() => { onState(null); onDistrict(null); onClose(); }}
+          >
+            <strong>All India</strong>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="cmdk-result"
+            style={{ width: "100%", border: "none", background: !district ? "var(--blue-light)" : "transparent" }}
+            onClick={() => { onDistrict(null); onClose(); }}
+          >
+            <strong>All districts in {state}</strong>
+          </button>
+        )}
+        {filtered.map((option) => {
+          const active = state ? district === option : false;
+          return (
+            <button
+              key={option}
+              type="button"
+              className="cmdk-result"
+              style={{ width: "100%", border: "none", background: active ? "var(--blue-light)" : "transparent" }}
+              onClick={() => {
+                if (state) onDistrict(option);
+                else { onState(option); setTerm(""); }
+              }}
+            >
+              <span>{option}</span>
+              {!state ? <span style={{ marginLeft: "auto" }}>›</span> : null}
+            </button>
+          );
+        })}
+        {filtered.length === 0 ? <div className="empty-state"><p>No matches</p></div> : null}
+      </div>
+      <div className="cmdk-foot">
+        <span>{state ? `${filtered.length} districts` : `${filtered.length} states`}</span>
+        <button type="button" className="fb-text" style={{ marginLeft: "auto" }} onClick={onClose}>Done</button>
+      </div>
     </div>
   );
 }

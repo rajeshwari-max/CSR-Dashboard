@@ -93,7 +93,7 @@ export function ProjectAnalyticsView() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
           title="Project size distribution"
-          description="All projects with disclosed spend in view · click a bar to filter by amount"
+          description="All projects with a disclosed amount spent · click a bar to filter by amount"
           className="xl:col-span-2"
           height={320}
           isLoading={summary.isLoading}
@@ -108,7 +108,7 @@ export function ProjectAnalyticsView() {
               <Tooltip
                 {...TOOLTIP_STYLES}
                 formatter={(value: number, name: string) =>
-                  name === "projects" ? [formatNumber(value), "Projects"] : [formatCrore(value), "Spend"]
+                  name === "projects" ? [formatNumber(value), "Projects"] : [formatCrore(value), "Amount spent"]
                 }
               />
               <Bar
@@ -131,7 +131,7 @@ export function ProjectAnalyticsView() {
 
         <ChartCard
           title="Project locations"
-          description="Districts with the most recorded spend"
+          description="Districts with the highest recorded amount spent"
           height={320}
           isLoading={summary.isLoading}
           error={summary.error}

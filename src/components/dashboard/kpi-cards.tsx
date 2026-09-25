@@ -39,7 +39,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
   const cards: KpiDefinition[] = [
     {
       key: "spend",
-      label: "Total CSR Spend",
+      label: "Total CSR Amount Spent",
       value: formatCrore(kpis.totalSpend),
       sub: `${formatNumber(kpis.projectCount)} projects · across India`,
       icon: IndianRupee,
@@ -58,7 +58,7 @@ export function KpiCards({ kpis, isLoading }: { kpis: Kpis | null; isLoading: bo
     },
     {
       key: "average",
-      label: "Avg Spend / Company",
+      label: "Average Amount Spent / Company",
       value: formatCrore(kpis.avgSpendPerCompany),
       sub: `Median ${formatCrore(kpis.medianSpendPerCompany)}`,
       icon: Wallet,

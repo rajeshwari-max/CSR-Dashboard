@@ -70,14 +70,14 @@ export function ProjectRegisterSection({
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <MiniStat label="Projects" value={formatNumber(total)} />
-        <MiniStat label="Spend in view" value={formatCrore(spend)} />
+        <MiniStat label="Amount spent in view" value={formatCrore(spend)} />
         <MiniStat label="Average project" value={formatCrore(average)} />
         <MiniStat
           label="Share of scope"
           value={
             scopeSpend && scopeSpend > 0 ? formatShare(spend / scopeSpend) : formatNumber(pageSize)
           }
-          hint={scopeSpend && scopeSpend > 0 ? "of spend shown above" : "rows per page"}
+          hint={scopeSpend && scopeSpend > 0 ? "of amount spent shown above" : "rows per page"}
         />
       </div>
 

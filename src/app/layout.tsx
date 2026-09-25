@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "CMS · CSR Intelligence Platform",
   description:
-    "Executive dashboard over project-level Corporate Social Responsibility spend disclosures by Indian companies.",
+    "Executive dashboard over project-level Corporate Social Responsibility amounts spent by Indian companies.",
   applicationName: "CMS CSR Intelligence",
 };
 

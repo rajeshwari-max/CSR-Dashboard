@@ -28,7 +28,7 @@ export function CompanyBarChart({ data }: { data: NamedValue[] }) {
           {...TOOLTIP_STYLES}
           formatter={(value: number, _name: string, item: { payload?: NamedValue }) => [
             `${formatCrore(value)} · ${formatShare(item?.payload?.share)} of view`,
-            "CSR spend",
+            "CSR amount spent",
           ]}
         />
         <Bar

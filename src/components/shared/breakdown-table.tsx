@@ -24,7 +24,7 @@ interface BreakdownTableProps {
 }
 
 const HEADERS: Record<Column, string> = {
-  value: "Spend",
+  value: "Amount spent",
   // Shares are computed within the dimension: only 44.7% of spend carries a
   // district, so a district's share is of district-attributed spend, not of
   // the grand total. Naming it "Share of shown" keeps that honest.

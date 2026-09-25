@@ -55,7 +55,7 @@ export function NgoAnalysisView() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
           title="Mode of implementation"
-          description="Share of spend by delivery channel"
+          description="Share of amount spent by delivery channel"
           height={320}
           isLoading={summary.isLoading}
           error={summary.error}

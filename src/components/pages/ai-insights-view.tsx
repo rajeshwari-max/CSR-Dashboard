@@ -56,10 +56,10 @@ const SEVERITY_ICON: Record<InsightSeverity, React.ElementType> = {
 };
 
 const SUGGESTED = [
-  "Which state gained the most CSR spend in the latest year?",
+  "Which state received the highest CSR amount in the latest year?",
   "Is education spending growing faster than healthcare?",
-  "Which companies dropped their CSR spend the most?",
-  "How concentrated is CSR spend across companies?",
+  "Which companies reduced their CSR amount spent the most?",
+  "How concentrated is the CSR amount spent across companies?",
 ];
 
 export function AiInsightsView() {
@@ -169,7 +169,7 @@ export function AiInsightsView() {
       <SectionLabel>Key trends &amp; predictions</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Spend trajectory and projection"
+          title="Amount spent trajectory and projection"
           description={data?.forecast.method}
           className="xl:col-span-2"
           height={320}

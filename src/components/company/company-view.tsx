@@ -194,7 +194,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <ChartCard
             title="Thematic Mix"
-            description="Spend by CSR category"
+            description="Amount spent by CSR category"
             height={320}
             isLoading={isLoading}
             error={error && !notFound ? error : null}

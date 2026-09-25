@@ -94,7 +94,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Sector overview</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Spend share by sector"
+          title="Share of amount spent by sector"
           description="Top sectors, remainder grouped"
           height={340}
           isLoading={summary.isLoading}
@@ -144,7 +144,7 @@ export function SectorAnalysisView() {
           isLoading={summary.isLoading}
           error={summary.error}
           isEmpty={!growth.length}
-          emptyMessage="Needs two financial years with comparable spend."
+          emptyMessage="Needs two financial years with comparable amounts spent."
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -178,7 +178,7 @@ export function SectorAnalysisView() {
           <CardHeader>
             <div>
               <CardTitle>Funding flow</CardTitle>
-              <CardDescription>Which Schedule VII categories absorb the spend in this view</CardDescription>
+              <CardDescription>Which Schedule VII categories receive the amount spent in this view</CardDescription>
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>

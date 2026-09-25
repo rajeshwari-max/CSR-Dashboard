@@ -1,20 +1,8 @@
 "use client";
 
 import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { ArrowDownRight, ArrowUpRight, Info } from "lucide-react";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { ChartTip } from "@/components/charts2/chart-tooltip";
 import { SpendTrend } from "@/components/charts2/spend-trend";
@@ -25,7 +13,7 @@ import { formatCompact, formatCrore, formatNumber, formatSignedPercent, truncate
 import type { BreakdownResponse, InsightsResponse, SummaryResponse } from "@/types";
 
 const AXIS = { tickLine: false, axisLine: false, tick: { fontSize: 10.5 } } as const;
-const PALETTE = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--c4)", "var(--c5)", "var(--c6)"];
+const PALETTE = ["#7e3fa1", "#00a88f", "#e07a24", "#2468b4", "#d64562", "#6f7d2c"];
 
 /**
  * Trend Analysis — deliberately separate from AI Insights. This page is about
@@ -104,7 +92,7 @@ export function TrendView() {
       <MiniLabel>Growth summary</MiniLabel>
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
         <Metric
-          label="Latest FY spend"
+          label="Latest FY amount spent"
           value={formatCrore(summary.data?.kpis.latestYearSpend ?? 0)}
           sub={summary.data?.kpis.latestYear ?? "—"}
           delta={summary.data?.kpis.yoyGrowthPct ?? null}
@@ -126,16 +114,16 @@ export function TrendView() {
               ? formatCrore(insights.data.forecast.nextYearSpend)
               : "—"
           }
-          sub={`Linear fit · R² ${insights.data?.forecast.r2?.toFixed(2) ?? "—"}`}
+          sub="Estimated from the historical trend"
         />
       </div>
 
       <MiniLabel>Historical trend</MiniLabel>
-      <div className="grid chart-row" style={{ marginBottom: 32 }}>
+      <div className="grid" style={{ marginBottom: 32, gridTemplateColumns: "1fr" }}>
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <h3>CSR spend by financial year</h3>
+            <h3>CSR amount spent by financial year</h3>
               <div className="muted">Actuals with projection band</div>
             </div>
           </div>
@@ -148,79 +136,9 @@ export function TrendView() {
           </div>
         </div>
 
-        <div className="card hoverable">
-          <div className="card-head">
-            <h3>Growth rate</h3>
-          </div>
-          <div className="chart-wrap h-260">
-            {summary.isLoading ? (
-              <div className="skeleton" style={{ height: "100%" }} />
-            ) : growth.filter((point) => point.growth !== null).length === 0 ? (
-              <div className="empty-state">
-                <h4>Needs two years</h4>
-                <p>Only one financial year is in view.</p>
-              </div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={growth} margin={{ top: 10, right: 8, bottom: 0, left: -18 }}>
-                  <defs>
-                    <linearGradient id="growthArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--blue)" stopOpacity={0.42} />
-                      <stop offset="100%" stopColor="var(--blue)" stopOpacity={0.04} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="year" {...AXIS} />
-                  <YAxis {...AXIS} tickFormatter={(value: number) => `${value}%`} />
-                  <Tooltip content={<ChartTip money={false} />} />
-                  <ReferenceLine y={0} stroke="var(--border-strong)" strokeWidth={1.5} />
-                  <Area
-                    type="monotone"
-                    dataKey="growth"
-                    name="YoY growth"
-                    stroke="var(--blue)"
-                    strokeWidth={2.5}
-                    fill="url(#growthArea)"
-                    connectNulls={false}
-                    dot={{ r: 4, fill: "var(--surface)", strokeWidth: 2 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        <div className="card hoverable">
-          <div className="card-head">
-            <h3>Reporting volume</h3>
-            <span className="card-badge amber">Coverage</span>
-          </div>
-          <div className="chart-wrap h-260">
-            {summary.isLoading ? (
-              <div className="skeleton" style={{ height: "100%" }} />
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={growth} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="year" {...AXIS} />
-                  <YAxis {...AXIS} tickFormatter={(value: number) => formatCompact(value)} />
-                  <Tooltip content={<ChartTip money={false} />} />
-                  <Legend iconType="circle" iconSize={7} />
-                  <Line dataKey="projects" name="Projects" stroke="var(--blue)" strokeWidth={2} dot={{ r: 2.5 }} />
-                  <Line dataKey="companies" name="Companies" stroke="var(--purple)" strokeWidth={2} dot={{ r: 2.5 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-          <p className="unavailable-note mt-8">
-            <Info width={10} height={10} style={{ display: "inline", marginRight: 4 }} />
-            Coverage changes between years, so totals are not strictly like-for-like.
-          </p>
-        </div>
       </div>
 
-      <MiniLabel>Growing vs. declining sectors</MiniLabel>
+      <MiniLabel>Growing vs. declining sectors · {years.at(-2) ?? "prior FY"} to {years.at(-1) ?? "latest FY"}</MiniLabel>
       <div className="grid cols-2" style={{ marginBottom: 32 }}>
         <MoverCard title="Growing sectors" rows={movers.growing} direction="up" loading={sectors.isLoading} />
         <MoverCard title="Declining sectors" rows={movers.declining} direction="down" loading={sectors.isLoading} />
@@ -239,10 +157,10 @@ export function TrendView() {
             <div className="skeleton" style={{ height: "100%" }} />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={sectorSeries} margin={{ top: 6, right: 6, bottom: 0, left: -10 }}>
+              <LineChart data={sectorSeries} margin={{ top: 6, right: 18, bottom: 24, left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="year" {...AXIS} />
-                <YAxis {...AXIS} tickFormatter={(value: number) => formatCompact(value)} />
+                <XAxis dataKey="year" {...AXIS} label={{ value: "Financial year", position: "insideBottom", offset: -14 }} />
+                <YAxis {...AXIS} tickFormatter={(value: number) => formatCompact(value)} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -4 }} />
                 <Tooltip content={<ChartTip />} />
                 <Legend iconType="circle" iconSize={7} />
                 {topSectors.map((sector, index) => (
@@ -267,7 +185,7 @@ export function TrendView() {
           <thead>
             <tr>
               <th>Financial year</th>
-              <th style={{ textAlign: "right" }}>Spend</th>
+              <th style={{ textAlign: "right" }}>Amount spent (₹ Cr)</th>
               <th style={{ textAlign: "right" }}>YoY</th>
               <th style={{ textAlign: "right" }}>Projects</th>
               <th style={{ textAlign: "right" }}>Companies</th>

@@ -83,7 +83,7 @@ export function StateAnalysisView() {
       <SectionLabel>India map &amp; heatmap</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="State-wise CSR Spend"
+          title="State-wise CSR Amount Spent"
           description="Click a state to filter · sqrt colour scale"
           className="xl:col-span-2"
           height={520}
@@ -99,13 +99,13 @@ export function StateAnalysisView() {
             <CardHeader>
               <div>
                 <CardTitle>Coverage</CardTitle>
-                <CardDescription>How much spend can be placed geographically</CardDescription>
+                <CardDescription>How much of the amount spent can be placed geographically</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <Row label="Geographic coverage" value="Across India" />
-              <Row label="Districts with spend" value={formatNumber(summary.data?.kpis.districtCount ?? 0)} />
-              <Row label="State-attributed spend" value={formatCrore(totalMapped)} />
+              <Row label="Districts receiving funds" value={formatNumber(summary.data?.kpis.districtCount ?? 0)} />
+              <Row label="State-attributed amount spent" value={formatCrore(totalMapped)} />
               {unmapped.map((row) => (
                 <Row
                   key={row.name}
@@ -207,7 +207,7 @@ export function StateAnalysisView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Districts by CSR spend</CardTitle>
+            <CardTitle>Districts by CSR amount spent</CardTitle>
             <CardDescription>
               {formatNumber(districts.data?.rows.length ?? 0)} districts recorded · click to filter
             </CardDescription>

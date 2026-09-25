@@ -46,7 +46,7 @@ export function ExecutiveDashboard() {
   return (
     <PageFrame
       title="Executive Dashboard"
-      subtitle="CMS CSR Intelligence provides an overview of CSR spending and projects reported by India’s top 1,000 companies from FY 2020–21 to FY 2024–25. It shows how much was spent, which companies contributed, and where funds were directed across sectors, states, districts and Schedule VII categories. All amounts are shown in ₹ crore, and coverage will be expanded to additional companies in future updates."
+      subtitle="CSR activity reported by India’s top 1,000 companies, FY 2020–21 to FY 2024–25; amounts are in ₹ crore, with broader company coverage planned."
       meta={meta.data}
       filters={filters}
       onRefresh={refresh}
@@ -150,7 +150,7 @@ export function ExecutiveDashboard() {
           <div className="row" style={{ justifyContent: "space-between", marginTop: 12, gap: 8 }}>
             <MiniStat label="Mapped" value={formatCrore(mappedStates.reduce((sum, row) => sum + row.value, 0))} />
             <MiniStat label="Districts" value={formatNumber(kpis?.districtCount ?? 0)} />
-            <MiniStat label="Aspirational spend" value={formatShare(kpis?.aspirationalShare ?? 0)} />
+            <MiniStat label="Aspirational share" value={formatShare(kpis?.aspirationalShare ?? 0)} />
           </div>
         </div>
 

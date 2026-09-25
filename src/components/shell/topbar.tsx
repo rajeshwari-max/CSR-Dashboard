@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, Menu, RefreshCw } from "lucide-react";
 
 import { BREADCRUMB } from "@/components/shell/nav";
 
@@ -15,8 +15,8 @@ interface TopbarProps {
   datasetLabel?: string;
 }
 
-/** Topbar: menu, breadcrumbs, ⌘K trigger, notifications, avatar — as drafted. */
-export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
+/** Topbar: menu, breadcrumbs, refresh and account controls. */
+export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
   const pathname = usePathname();
   const [avatarOpen, setAvatarOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
@@ -44,12 +44,6 @@ export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, dataset
         <span className="sep">›</span>
         <span className="current">{current}</span>
       </nav>
-
-      <button type="button" className="cmdk-trigger" onClick={onOpenPalette}>
-        <Search className="icon" width={14} height={14} />
-        <span>Search or jump to…</span>
-        <span className="kbd">⌘K</span>
-      </button>
 
       <div className="topbar-actions">
         {onRefresh ? (

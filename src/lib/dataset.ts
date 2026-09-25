@@ -207,7 +207,9 @@ export function getDataset(): Dataset {
     dataset.aspirational[i] = row[14] ? 1 : 0;
     dataset.searchBlob[i] =
       `${d.companies[row[0]]?.name ?? ""} ${row[9] ?? ""} ${d.themes[row[4]] ?? ""} ` +
-      `${d.states[row[3]] ?? ""} ${row[6] >= 0 ? d.districts[row[6]] : ""}`.toLowerCase();
+      `${d.states[row[3]] ?? ""} ${row[6] >= 0 ? d.districts[row[6]] : ""} ` +
+      `${d.sectors[row[2]] ?? ""} ${d.modes[row[5]] ?? ""} ${d.years[row[1]] ?? ""} ` +
+      `${row[10] >= 0 ? d.ngos[row[10]] : ""}`.toLowerCase();
   }
 
   dataset.yearOrder = [...d.years.keys()]
@@ -229,6 +231,7 @@ export function getMeta(): Meta {
     );
     const companies = new Set<number>();
     const aspirationalDistricts = new Set<string>();
+    const districtsByState = new Map<string, Set<string>>();
     const spendByYear: Record<string, number> = {};
     let rowCount = 0;
     let totalSpend = 0;
@@ -239,6 +242,14 @@ export function getMeta(): Meta {
       companies.add(data.companyIdx[i]);
       if (data.aspirational[i] && data.districtIdx[i] >= 0) {
         aspirationalDistricts.add(data.districts[data.districtIdx[i]]);
+      }
+      if (data.stateIdx[i] >= 0 && data.districtIdx[i] >= 0) {
+        const state = data.states[data.stateIdx[i]];
+        const district = data.districts[data.districtIdx[i]];
+        if (state && district) {
+          if (!districtsByState.has(state)) districtsByState.set(state, new Set());
+          districtsByState.get(state)?.add(district);
+        }
       }
       const spent = data.spent[i];
       if (!Number.isNaN(spent)) {
@@ -255,6 +266,12 @@ export function getMeta(): Meta {
       totalSpend: round(totalSpend),
       years: [...reportingYears].sort((a, b) => a.localeCompare(b)),
       aspirationalDistricts: [...aspirationalDistricts].sort((a, b) => a.localeCompare(b)),
+      districtsByState: Object.fromEntries(
+        [...districtsByState.entries()].map(([state, districts]) => [
+          state,
+          [...districts].sort((a, b) => a.localeCompare(b)),
+        ]),
+      ),
       spendByYear: Object.fromEntries(
         Object.entries(spendByYear).map(([year, value]) => [year, round(value)]),
       ),

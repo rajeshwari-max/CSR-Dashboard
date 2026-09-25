@@ -156,7 +156,7 @@ export function UploadView() {
           <div className="row" style={{ gap: 28, flexWrap: "wrap" }}>
             <Figure label="Rows" value={formatNumber(meta.data.rowCount)} />
             <Figure label="Companies" value={formatNumber(meta.data.companyCount)} />
-            <Figure label="Total spend" value={formatCrore(meta.data.totalSpend)} />
+            <Figure label="Total amount spent" value={formatCrore(meta.data.totalSpend)} />
             <Figure label="Years" value={meta.data.years.join(", ") || "—"} />
             <Figure label="States" value={String(meta.data.states.length)} />
             <Figure label="Built" value={formatDateTime(meta.data.generatedAt)} />
@@ -330,7 +330,7 @@ export function UploadView() {
                 <div className="row" style={{ gap: 20, flexWrap: "wrap", marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
                   <Figure label="Rows" value={formatNumber(result.summary.rows)} />
                   <Figure label="Companies" value={formatNumber(result.summary.companies)} />
-                  <Figure label="Spend" value={formatCrore(result.summary.totalSpend)} />
+                  <Figure label="Amount spent" value={formatCrore(result.summary.totalSpend)} />
                   <Figure label="Years" value={result.summary.years.join(", ") || "—"} />
                 </div>
               ) : null}

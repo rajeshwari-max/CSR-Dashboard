@@ -99,7 +99,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
         <svg
           viewBox={indiaMap.viewBox}
           role="img"
-          aria-label="CSR spend by Indian state"
+          aria-label="CSR amount spent by Indian state"
           className="size-full"
           preserveAspectRatio="xMidYMid meet"
           onMouseLeave={() => setHover(null)}
@@ -161,7 +161,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
 
       <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Spend intensity</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Amount spent intensity</p>
           <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#f4edf7,#ddc8e4,#b882c7,#82419a,#542566)" }} />
           <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
             <span>₹0</span>

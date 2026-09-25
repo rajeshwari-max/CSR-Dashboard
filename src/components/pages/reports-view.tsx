@@ -115,7 +115,7 @@ export function ReportsView() {
         <CardContent className="grid grid-cols-2 gap-4 py-5 lg:grid-cols-5">
           <Figure label="Scope" value={scope || "All data"} wide />
           <Figure label="Projects" value={formatNumber(summary.data?.filteredRows ?? 0)} />
-          <Figure label="Total spend" value={formatCrore(kpis?.totalSpend ?? 0)} />
+          <Figure label="Total amount spent" value={formatCrore(kpis?.totalSpend ?? 0)} />
           <Figure label="Companies" value={formatNumber(kpis?.companyCount ?? 0)} />
           <Figure label="Years" value={meta.data?.years.join(", ") ?? "—"} />
         </CardContent>

@@ -98,7 +98,7 @@ export function DashboardView() {
         <ChartCard
           id="sectors"
           title="Top Sectors"
-          description="Share of spend by BRSR sector"
+          description="Share of amount spent by BRSR sector"
           height={320}
           isLoading={isLoading}
           error={summary.error}
@@ -110,7 +110,7 @@ export function DashboardView() {
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Top Companies by CSR Spend"
+          title="Top Companies by CSR Amount Spent"
           description="Click a bar to open the company drill-down"
           badge="Top 12"
           className="xl:col-span-2"
@@ -138,7 +138,7 @@ export function DashboardView() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
           id="geography"
-          title="State-wise CSR Spend"
+          title="State-wise CSR Amount Spent"
           description="Click a state to filter the whole dashboard"
           className="xl:col-span-2"
           height={460}
