@@ -169,11 +169,11 @@ h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-0.015em;color:var(--text);}
 .content{flex:1;min-width:0;padding:24px 28px 80px;max-width:1680px;}
 .content{position:relative;isolation:isolate;}
 .content::before{
-  content:"";position:absolute;z-index:0;right:5%;top:165px;width:min(520px,42vw);aspect-ratio:150/54;
-  background:url('/cms-logo.svg') center/contain no-repeat;opacity:.032;pointer-events:none;
+  content:"";position:absolute;z-index:0;right:7%;top:18px;width:min(460px,38vw);aspect-ratio:150/54;
+  background:url('/cms-logo.svg') center/contain no-repeat;opacity:.075;pointer-events:none;
 }
 .content>*{position:relative;z-index:1;}
-[data-theme="dark"] .content::before{opacity:.045;filter:saturate(.75) brightness(1.25);}
+[data-theme="dark"] .content::before{opacity:.09;filter:saturate(.8) brightness(1.25);}
 .page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
 .page-head h1{font-size:22px;}
 .page-head p{color:var(--text-soft);font-size:13px;margin-top:5px;max-width:600px;}
