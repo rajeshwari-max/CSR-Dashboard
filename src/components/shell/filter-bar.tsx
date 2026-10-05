@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Filter, RotateCcw, Search, Target, X } from "lucide-react";
+import { ChevronDown, Filter, RotateCcw, Target, X } from "lucide-react";
 
 import { activeFilterCount } from "@/lib/query";
 import { useFilterStore, type ListKey } from "@/store/filters";
@@ -20,14 +20,6 @@ interface ChipSpec {
   /** Company chip stores ids but shows names. */
   valueLabel?: (meta: Meta, value: string) => string;
   optionValue?: (meta: Meta) => { value: string; label: string; hint?: string }[];
-}
-
-interface SearchSuggestion {
-  type: string;
-  key: ListKey;
-  value: string;
-  label: string;
-  hint?: string;
 }
 
 const CHIPS: ChipSpec[] = [
@@ -75,66 +67,21 @@ export function FilterBar({
   resultCount?: number;
 }) {
   const [openChip, setOpenChip] = React.useState<string | null>(null);
-  const [searchOpen, setSearchOpen] = React.useState(false);
   const setValues = useFilterStore((state) => state.setValues);
-  const setSearch = useFilterStore((state) => state.setSearch);
   const setRange = useFilterStore((state) => state.setRange);
   const setAspirationalOnly = useFilterStore((state) => state.setAspirationalOnly);
   const clearAll = useFilterStore((state) => state.clearAll);
   const barRef = React.useRef<HTMLDivElement>(null);
-  const [term, setTerm] = React.useState(filters.search);
-
-  React.useEffect(() => setTerm(filters.search), [filters.search]);
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (term !== filters.search) setSearch(term);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [filters.search, setSearch, term]);
 
   React.useEffect(() => {
     const close = (event: MouseEvent) => {
-      if (!barRef.current?.contains(event.target as Node)) {
-        setOpenChip(null);
-        setSearchOpen(false);
-      }
+      if (!barRef.current?.contains(event.target as Node)) setOpenChip(null);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
 
   const count = activeFilterCount(filters);
-  const searchSuggestions = React.useMemo<SearchSuggestion[]>(() => {
-    const needle = term.trim().toLowerCase();
-    if (!meta || needle.length < 2) return [];
-
-    const suggestions: SearchSuggestion[] = [];
-    const add = (suggestion: SearchSuggestion) => {
-      if (suggestion.label.toLowerCase().includes(needle)) suggestions.push(suggestion);
-    };
-
-    meta.companies.forEach((company) => add({
-      type: "Company",
-      key: "companies",
-      value: company.id,
-      label: company.name,
-      hint: company.sector,
-    }));
-    meta.states.forEach((value) => add({ type: "State", key: "states", value, label: value }));
-    meta.districts.forEach((value) => add({ type: "District", key: "districts", value, label: value }));
-    meta.sectors.forEach((value) => add({ type: "Sector", key: "sectors", value, label: value }));
-    meta.themes.forEach((value) => add({ type: "Domain", key: "themes", value, label: value }));
-    meta.modes.forEach((value) => add({ type: "Implementation", key: "modes", value, label: value }));
-    meta.years.forEach((value) => add({ type: "Year", key: "years", value, label: value }));
-
-    return suggestions
-      .sort((a, b) => {
-        const aStarts = a.label.toLowerCase().startsWith(needle) ? 0 : 1;
-        const bStarts = b.label.toLowerCase().startsWith(needle) ? 0 : 1;
-        return aStarts - bStarts || a.label.localeCompare(b.label);
-      })
-      .slice(0, 10);
-  }, [meta, term]);
 
   return (
     <div className="filterbar" ref={barRef}>
@@ -271,66 +218,6 @@ export function FilterBar({
               >
                 Any amount
               </button>
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="filter-search-wrap pos-rel">
-        <label className="filter-search">
-          <Search width={13} height={13} />
-          <input
-            value={term}
-            onFocus={() => setSearchOpen(true)}
-            onChange={(event) => {
-              setTerm(event.target.value);
-              setSearchOpen(true);
-            }}
-            placeholder="Search companies, projects, states, districts…"
-            aria-label="Search across companies, projects, states, districts and domains"
-            aria-autocomplete="list"
-            aria-expanded={searchOpen && searchSuggestions.length > 0}
-          />
-          {term ? (
-            <button
-              type="button"
-              className="search-clear"
-              aria-label="Clear search"
-              onClick={() => {
-                setTerm("");
-                setSearch("");
-                setSearchOpen(false);
-              }}
-            >
-              <X width={13} height={13} />
-            </button>
-          ) : null}
-        </label>
-        {searchOpen && searchSuggestions.length > 0 ? (
-          <div className="search-suggestions" role="listbox" aria-label="Search suggestions">
-            {searchSuggestions.map((suggestion) => (
-              <button
-                key={`${suggestion.key}:${suggestion.value}`}
-                type="button"
-                className="search-suggestion"
-                role="option"
-                aria-selected="false"
-                onClick={() => {
-                  setValues(suggestion.key, [suggestion.value]);
-                  setTerm("");
-                  setSearch("");
-                  setSearchOpen(false);
-                }}
-              >
-                <span className="search-suggestion-type">{suggestion.type}</span>
-                <span className="search-suggestion-main">
-                  <strong>{suggestion.label}</strong>
-                  {suggestion.hint ? <small>{suggestion.hint}</small> : null}
-                </span>
-              </button>
-            ))}
-            <div className="search-suggestions-foot">
-              Keep typing to search project names and all record text
             </div>
           </div>
         ) : null}
