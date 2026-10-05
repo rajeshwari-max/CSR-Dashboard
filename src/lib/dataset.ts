@@ -205,11 +205,12 @@ export function getDataset(): Dataset {
     dataset.beneficiaries[i] = row[11] ?? Number.NaN;
     dataset.statusIdx[i] = row[12] ?? -1;
     dataset.aspirational[i] = row[14] ? 1 : 0;
-    dataset.searchBlob[i] =
+    dataset.searchBlob[i] = (
       `${d.companies[row[0]]?.name ?? ""} ${row[9] ?? ""} ${d.themes[row[4]] ?? ""} ` +
       `${d.states[row[3]] ?? ""} ${row[6] >= 0 ? d.districts[row[6]] : ""} ` +
       `${d.sectors[row[2]] ?? ""} ${d.modes[row[5]] ?? ""} ${d.years[row[1]] ?? ""} ` +
-      `${row[10] >= 0 ? d.ngos[row[10]] : ""}`.toLowerCase();
+      `${row[10] >= 0 ? d.ngos[row[10]] : ""}`
+    ).toLowerCase();
   }
 
   dataset.yearOrder = [...d.years.keys()]
