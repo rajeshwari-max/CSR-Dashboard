@@ -53,13 +53,16 @@ too if you'd rather not keep the source workbook in the repo.
 | Variable | Value | Purpose |
 | --- | --- | --- |
 | `APP_PASSWORD` | pick something strong | The shared password. **Required** — leaving it blank disables the gate entirely. |
+| `RESEND_API_KEY` | secret API key | Sends one-time sign-in codes. Required for registered-user login. |
+| `OTP_FROM_EMAIL` | `CMS CSR <access@your-domain>` | Sender address on a verified domain. |
+| `ADMIN_EMAIL` | administrator email | Receives new registration approval notices. |
 | `LLM_API_KEY` | *(optional)* | Enables AI narration + the chat box. Everything else works without it. |
 | `LLM_PROVIDER` | `anthropic` or `openai` | Only if you set a key. |
 
 4. **Create** → first build takes 5–10 minutes.
 
 You'll get a URL like `https://cms-csr.onrender.com`. The browser will prompt for
-credentials: leave the username blank (or type anything) and enter `APP_PASSWORD`.
+credentials: select **Administrator access** and enter `APP_PASSWORD`. New users register first, wait for administrator approval, then verify a six-digit email code at every sign-in. Administrators manage requests at `/admin/access`.
 
 ---
 

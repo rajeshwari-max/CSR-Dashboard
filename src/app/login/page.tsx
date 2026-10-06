@@ -15,17 +15,24 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [message, setMessage] = React.useState<string | null>(null);
+  const [administrator, setAdministrator] = React.useState(false);
+  const [otpRequired, setOtpRequired] = React.useState(false);
+  const [otp, setOtp] = React.useState("");
 
   const switchMode = (nextMode: AuthMode) => {
     setMode(nextMode);
     setError(null);
+    setMessage(null);
+    setOtpRequired(false);
+    setAdministrator(false);
     setPassword("");
     setConfirmPassword("");
   };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!password || busy) return;
+    if (busy || (!otpRequired && !password)) return;
     if (mode === "register" && password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -34,20 +41,23 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      const response = await fetch(`/api/auth/${mode === "signin" ? "login" : "register"}`, {
+      const endpoint = otpRequired ? "/api/auth/verify-otp" : `/api/auth/${mode === "signin" ? "login" : "register"}`;
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(
-          mode === "signin"
-            ? { email, password }
+          otpRequired ? { email, code: otp } : mode === "signin"
+            ? { email, password, administrator }
             : { name, email, password },
         ),
       });
-      const body = (await response.json()) as { error?: string };
+      const body = (await response.json()) as { error?: string; message?: string; requiresOtp?: boolean; pendingApproval?: boolean };
       if (!response.ok) {
         throw new Error(body.error ?? (mode === "signin" ? "Sign-in failed." : "Registration failed."));
       }
-      const destination = new URLSearchParams(window.location.search).get("next") || "/";
+      if (body.requiresOtp) { setOtpRequired(true); setPassword(""); setMessage("A six-digit code was sent to your email. It expires in 10 minutes."); return; }
+      if (body.pendingApproval) { setMessage(body.message ?? "Registration submitted for administrator approval."); setMode("signin"); setPassword(""); setConfirmPassword(""); return; }
+      const destination = administrator ? "/admin/access" : new URLSearchParams(window.location.search).get("next") || "/";
       window.location.assign(destination.startsWith("/") ? destination : "/");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Authentication failed.");
@@ -68,14 +78,14 @@ export default function LoginPage() {
 
         <div className="login-icon"><LockKeyhole width={22} height={22} /></div>
         <p className="login-eyebrow">Secure dashboard access</p>
-        <h1 id="login-title">{mode === "signin" ? "Welcome back" : "Create an account"}</h1>
+        <h1 id="login-title">{otpRequired ? "Verify your email" : mode === "signin" ? "Welcome back" : "Request access"}</h1>
         <p className="login-copy">
-          {mode === "signin"
-            ? "Sign in with a registered account, or leave email blank to use the administrator password."
-            : "Create an account using your email address and a password of your choice."}
+          {otpRequired ? "Enter the one-time code sent to your approved email address." : mode === "signin"
+            ? "Approved users sign in with email and password, then verify a one-time email code."
+            : "Register an account. An administrator must approve it before your first sign-in."}
         </p>
 
-        <div className="login-tabs" role="tablist" aria-label="Authentication options">
+        {!otpRequired ? <div className="login-tabs" role="tablist" aria-label="Authentication options">
           <button
             type="button"
             role="tab"
@@ -94,10 +104,10 @@ export default function LoginPage() {
           >
             Register
           </button>
-        </div>
+        </div> : null}
 
         <form onSubmit={submit} className="login-form">
-          {mode === "register" ? (
+          {otpRequired ? <><label htmlFor="otp-code">Six-digit code</label><div className="login-input-wrap"><input id="otp-code" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))} autoComplete="one-time-code" autoFocus required /></div></> : mode === "register" ? (
             <>
               <label htmlFor="register-name">Full name</label>
               <div className="login-input-wrap">
@@ -114,8 +124,8 @@ export default function LoginPage() {
             </>
           ) : null}
 
-          <label htmlFor="account-email">
-            Email {mode === "signin" ? <span>(optional for administrator)</span> : null}
+          {!otpRequired ? <><label htmlFor="account-email">
+            Email
           </label>
           <div className="login-input-wrap">
             <input
@@ -125,11 +135,12 @@ export default function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
               autoFocus={mode === "signin"}
-              required={mode === "register"}
+              required={!administrator}
+              disabled={administrator}
             />
-          </div>
+          </div></> : null}
 
-          <label htmlFor="dashboard-password">Password</label>
+          {!otpRequired ? <><label htmlFor="dashboard-password">Password</label>
           <div className="login-input-wrap">
             <input
               id="dashboard-password"
@@ -147,9 +158,11 @@ export default function LoginPage() {
             >
               {showPassword ? <EyeOff width={16} height={16} /> : <Eye width={16} height={16} />}
             </button>
-          </div>
+          </div></> : null}
 
-          {mode === "register" ? (
+          {mode === "signin" && !otpRequired ? <label style={{ display: "flex", alignItems: "center", gap: 8, margin: "4px 0" }}><input type="checkbox" checked={administrator} onChange={(event) => { setAdministrator(event.target.checked); setEmail(""); setError(null); }} /> Administrator access</label> : null}
+
+          {mode === "register" && !otpRequired ? (
             <>
               <label htmlFor="confirm-password">Confirm password</label>
               <div className="login-input-wrap">
@@ -166,15 +179,16 @@ export default function LoginPage() {
             </>
           ) : null}
 
+          {message ? <p className="login-help" role="status">{message}</p> : null}
           {error ? <p className="login-error" role="alert">{error}</p> : null}
           <button
             type="submit"
             className="login-submit"
-            disabled={busy || !password || (mode === "register" && (!name || !email || !confirmPassword))}
+            disabled={busy || (otpRequired ? otp.length !== 6 : !password || (mode === "signin" && !administrator && !email) || (mode === "register" && (!name || !email || !confirmPassword)))}
           >
             {busy
-              ? (mode === "signin" ? "Signing in…" : "Creating account…")
-              : (mode === "signin" ? "Sign in" : "Register")}
+              ? (otpRequired ? "Verifying…" : mode === "signin" ? "Signing in…" : "Submitting…")
+              : (otpRequired ? "Verify and sign in" : mode === "signin" ? "Sign in" : "Request access")}
             {!busy ? <ArrowRight width={16} height={16} /> : null}
           </button>
         </form>

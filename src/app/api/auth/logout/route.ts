@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE } from "@/lib/auth-session";
+import { ADMIN_SESSION_COOKIE, SESSION_COOKIE } from "@/lib/auth-session";
 
 export async function POST() {
   // A relative Location header keeps the public hostname supplied by the
@@ -8,5 +8,6 @@ export async function POST() {
   // localhost:10000 service address.
   const response = new NextResponse(null, { status: 303, headers: { location: "/login" } });
   response.cookies.set(SESSION_COOKIE, "", { httpOnly: true, path: "/", maxAge: 0, sameSite: "lax" });
+  response.cookies.set(ADMIN_SESSION_COOKIE, "", { httpOnly: true, path: "/", maxAge: 0, sameSite: "lax" });
   return response;
 }

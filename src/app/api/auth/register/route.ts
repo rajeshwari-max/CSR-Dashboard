@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE, sessionToken } from "@/lib/auth-session";
+import { notifyAdminOfRegistration } from "@/lib/auth-email";
 import { registerUser } from "@/lib/auth-store";
 
 export async function POST(request: Request) {
@@ -21,7 +21,8 @@ export async function POST(request: Request) {
   const password = typeof body.password === "string" ? body.password : "";
 
   try {
-    await registerUser({ name, email, password });
+    const user = await registerUser({ name, email, password });
+    notifyAdminOfRegistration(user.name, user.email).catch((noticeError) => console.error("Admin registration notice failed", noticeError));
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Registration failed." },
@@ -29,13 +30,5 @@ export async function POST(request: Request) {
     );
   }
 
-  const response = NextResponse.json({ ok: true });
-  response.cookies.set(SESSION_COOKIE, await sessionToken(configured), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 12,
-  });
-  return response;
+  return NextResponse.json({ ok: true, pendingApproval: true, message: "Registration submitted. An administrator must approve your account before you can sign in." });
 }

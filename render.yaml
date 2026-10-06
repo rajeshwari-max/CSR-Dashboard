@@ -19,6 +19,12 @@ services:
         value: production
       - key: APP_PASSWORD
         sync: false          # set this in the Render dashboard, not in git
+      - key: RESEND_API_KEY
+        sync: false          # required for user OTP emails
+      - key: OTP_FROM_EMAIL
+        sync: false          # sender on a verified email domain
+      - key: ADMIN_EMAIL
+        sync: false          # receives new registration notices
       - key: LLM_API_KEY
         sync: false          # optional — enables AI narration and chat
       - key: LLM_PROVIDER
