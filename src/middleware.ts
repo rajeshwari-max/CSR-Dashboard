@@ -9,7 +9,11 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const publicRoute =
-    pathname === "/login" || pathname === "/api/auth/login" || pathname === "/api/auth/register";
+    pathname === "/login" ||
+    pathname === "/api/auth/login" ||
+    pathname === "/api/auth/register" ||
+    pathname === "/cms-logo.svg" ||
+    pathname === "/cms-watermark.svg";
   const expected = await sessionToken(password);
   const supplied = request.cookies.get(SESSION_COOKIE)?.value ?? "";
   const authenticated = timingSafeEqual(supplied, expected);

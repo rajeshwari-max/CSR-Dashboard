@@ -62,8 +62,7 @@ export default function LoginPage() {
         <div className="login-brand">
           <Image className="brand-mark brand-logo" src="/cms-logo.svg" alt="CMS logo" width={82} height={32} priority />
           <div>
-            <strong>CMS</strong>
-            <span>CSR Intelligence Platform</span>
+            <span>CSR Intelligence</span>
           </div>
         </div>
 
