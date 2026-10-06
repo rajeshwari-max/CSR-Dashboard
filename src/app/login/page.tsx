@@ -19,6 +19,8 @@ export default function LoginPage() {
   const [administrator, setAdministrator] = React.useState(false);
   const [otpRequired, setOtpRequired] = React.useState(false);
   const [otp, setOtp] = React.useState("");
+  const [recovery, setRecovery] = React.useState(false);
+  const [resetCodeSent, setResetCodeSent] = React.useState(false);
 
   const switchMode = (nextMode: AuthMode) => {
     setMode(nextMode);
@@ -26,13 +28,16 @@ export default function LoginPage() {
     setMessage(null);
     setOtpRequired(false);
     setAdministrator(false);
+    setRecovery(false);
+    setResetCodeSent(false);
     setPassword("");
     setConfirmPassword("");
   };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (busy || (!otpRequired && !password)) return;
+    if (busy || (!otpRequired && !recovery && !password)) return;
+    if (recovery && resetCodeSent && password !== confirmPassword) { setError("Passwords do not match."); return; }
     if (mode === "register" && password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -41,20 +46,22 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      const endpoint = otpRequired ? "/api/auth/verify-otp" : `/api/auth/${mode === "signin" ? "login" : "register"}`;
+      const endpoint = recovery ? "/api/auth/reset-password" : otpRequired ? "/api/auth/verify-otp" : `/api/auth/${mode === "signin" ? "login" : "register"}`;
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(
-          otpRequired ? { email, code: otp } : mode === "signin"
+          recovery ? (resetCodeSent ? { email, code: otp, password } : { email }) : otpRequired ? { email, code: otp } : mode === "signin"
             ? { email, password, administrator }
             : { name, email, password },
         ),
       });
-      const body = (await response.json()) as { error?: string; message?: string; requiresOtp?: boolean; pendingApproval?: boolean };
+      const body = (await response.json()) as { error?: string; message?: string; requiresOtp?: boolean; pendingApproval?: boolean; passwordReset?: boolean };
       if (!response.ok) {
         throw new Error(body.error ?? (mode === "signin" ? "Sign-in failed." : "Registration failed."));
       }
+      if (recovery && body.requiresOtp) { setResetCodeSent(true); setMessage("A six-digit password-reset code was sent to your email."); return; }
+      if (body.passwordReset) { setRecovery(false); setResetCodeSent(false); setOtp(""); setPassword(""); setConfirmPassword(""); setMessage("Password changed. You can now sign in with your new password."); return; }
       if (body.requiresOtp) { setOtpRequired(true); setPassword(""); setMessage("A six-digit code was sent to your email. It expires in 10 minutes."); return; }
       if (body.pendingApproval) { setMessage(body.message ?? "Registration submitted for administrator approval."); setMode("signin"); setPassword(""); setConfirmPassword(""); return; }
       const destination = administrator ? "/admin/access" : new URLSearchParams(window.location.search).get("next") || "/";
@@ -78,14 +85,14 @@ export default function LoginPage() {
 
         <div className="login-icon"><LockKeyhole width={22} height={22} /></div>
         <p className="login-eyebrow">Secure dashboard access</p>
-        <h1 id="login-title">{otpRequired ? "Verify your email" : mode === "signin" ? "Welcome back" : "Request access"}</h1>
+        <h1 id="login-title">{recovery ? "Reset your password" : otpRequired ? "Verify your email" : mode === "signin" ? "Welcome back" : "Request access"}</h1>
         <p className="login-copy">
-          {otpRequired ? "Enter the one-time code sent to your approved email address." : mode === "signin"
+          {recovery ? (resetCodeSent ? "Enter the code from your email and choose a new password." : "Enter the email address of your approved account.") : otpRequired ? "Enter the one-time code sent to your approved email address." : mode === "signin"
             ? "Approved users sign in with email and password, then verify a one-time email code."
             : "Register an account. An administrator must approve it before your first sign-in."}
         </p>
 
-        {!otpRequired ? <div className="login-tabs" role="tablist" aria-label="Authentication options">
+        {!otpRequired && !recovery ? <div className="login-tabs" role="tablist" aria-label="Authentication options">
           <button
             type="button"
             role="tab"
@@ -107,7 +114,7 @@ export default function LoginPage() {
         </div> : null}
 
         <form onSubmit={submit} className="login-form">
-          {otpRequired ? <><label htmlFor="otp-code">Six-digit code</label><div className="login-input-wrap"><input id="otp-code" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))} autoComplete="one-time-code" autoFocus required /></div></> : mode === "register" ? (
+          {otpRequired || (recovery && resetCodeSent) ? <><label htmlFor="otp-code">Six-digit code</label><div className="login-input-wrap"><input id="otp-code" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))} autoComplete="one-time-code" autoFocus required /></div></> : mode === "register" ? (
             <>
               <label htmlFor="register-name">Full name</label>
               <div className="login-input-wrap">
@@ -124,7 +131,7 @@ export default function LoginPage() {
             </>
           ) : null}
 
-          {!otpRequired ? <><label htmlFor="account-email">
+          {!otpRequired && (!recovery || !resetCodeSent) ? <><label htmlFor="account-email">
             Email
           </label>
           <div className="login-input-wrap">
@@ -140,15 +147,15 @@ export default function LoginPage() {
             />
           </div></> : null}
 
-          {!otpRequired ? <><label htmlFor="dashboard-password">Password</label>
+          {!otpRequired && (!recovery || resetCodeSent) ? <><label htmlFor="dashboard-password">{recovery ? "New password" : "Password"}</label>
           <div className="login-input-wrap">
             <input
               id="dashboard-password"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
-              minLength={mode === "register" ? 10 : undefined}
+              autoComplete={recovery || mode === "register" ? "new-password" : "current-password"}
+              minLength={recovery || mode === "register" ? 10 : undefined}
               required
             />
             <button
@@ -160,11 +167,11 @@ export default function LoginPage() {
             </button>
           </div></> : null}
 
-          {mode === "signin" && !otpRequired ? <label style={{ display: "flex", alignItems: "center", gap: 8, margin: "4px 0" }}><input type="checkbox" checked={administrator} onChange={(event) => { setAdministrator(event.target.checked); setEmail(""); setError(null); }} /> Administrator access</label> : null}
+          {mode === "signin" && !otpRequired && !recovery ? <><label style={{ display: "flex", alignItems: "center", gap: 8, margin: "4px 0" }}><input type="checkbox" checked={administrator} onChange={(event) => { setAdministrator(event.target.checked); setEmail(""); setError(null); }} /> Administrator access</label>{!administrator ? <button type="button" onClick={() => { setRecovery(true); setError(null); setMessage(null); setPassword(""); }} style={{ border: 0, background: "transparent", color: "var(--accent-2)", textAlign: "left", padding: 0, cursor: "pointer", fontWeight: 650 }}>Forgot password?</button> : null}</> : null}
 
-          {mode === "register" && !otpRequired ? (
+          {(mode === "register" && !otpRequired) || (recovery && resetCodeSent) ? (
             <>
-              <label htmlFor="confirm-password">Confirm password</label>
+              <label htmlFor="confirm-password">{recovery ? "Confirm new password" : "Confirm password"}</label>
               <div className="login-input-wrap">
                 <input
                   id="confirm-password"
@@ -184,14 +191,16 @@ export default function LoginPage() {
           <button
             type="submit"
             className="login-submit"
-            disabled={busy || (otpRequired ? otp.length !== 6 : !password || (mode === "signin" && !administrator && !email) || (mode === "register" && (!name || !email || !confirmPassword)))}
+            disabled={busy || (recovery ? (!email || (resetCodeSent && (otp.length !== 6 || !password || !confirmPassword))) : otpRequired ? otp.length !== 6 : !password || (mode === "signin" && !administrator && !email) || (mode === "register" && (!name || !email || !confirmPassword)))}
           >
             {busy
-              ? (otpRequired ? "Verifying…" : mode === "signin" ? "Signing in…" : "Submitting…")
-              : (otpRequired ? "Verify and sign in" : mode === "signin" ? "Sign in" : "Request access")}
+              ? (recovery ? "Resetting…" : otpRequired ? "Verifying…" : mode === "signin" ? "Signing in…" : "Submitting…")
+              : (recovery ? (resetCodeSent ? "Reset password" : "Send reset code") : otpRequired ? "Verify and sign in" : mode === "signin" ? "Sign in" : "Request access")}
             {!busy ? <ArrowRight width={16} height={16} /> : null}
           </button>
         </form>
+
+        {recovery ? <button type="button" onClick={() => { setRecovery(false); setResetCodeSent(false); setOtp(""); setPassword(""); setConfirmPassword(""); setError(null); setMessage(null); }} style={{ display: "block", margin: "12px auto 0", border: 0, background: "transparent", color: "var(--text-soft)", cursor: "pointer" }}>Back to sign in</button> : null}
 
         <p className="login-security"><ShieldCheck width={14} height={14} /> Secure, HTTP-only 12-hour session</p>
       </section>

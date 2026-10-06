@@ -58,3 +58,15 @@ export async function verifyLoginOtp(email: string, code: string, secret: string
   user.otpAttempts = (user.otpAttempts ?? 0) + 1; const valid = cryptoTimingSafeEqual(Buffer.from(hashOtp(user, code, secret)), Buffer.from(user.otpHash));
   if (valid) { delete user.otpHash; delete user.otpExpiresAt; delete user.otpAttempts; } await writeUsers(users); return valid ? publicUser(user) : null;
 }
+
+
+export async function resetUserPassword(email: string, code: string, newPassword: string, secret: string): Promise<AuthUser | null> {
+  if (newPassword.length < 10 || newPassword.length > 128) throw new Error("Password must contain 10 to 128 characters.");
+  const users = await readUsers(); const user = users.find((candidate) => candidate.email === email.trim().toLowerCase());
+  if (!user || statusOf(user) !== "approved" || !user.otpHash || !user.otpExpiresAt || Date.now() > Date.parse(user.otpExpiresAt) || (user.otpAttempts ?? 0) >= 5) return null;
+  user.otpAttempts = (user.otpAttempts ?? 0) + 1;
+  const valid = cryptoTimingSafeEqual(Buffer.from(hashOtp(user, code, secret)), Buffer.from(user.otpHash));
+  if (!valid) { await writeUsers(users); return null; }
+  const salt = randomBytes(16).toString("hex"); user.salt = salt; user.passwordHash = (await passwordHash(newPassword, salt)).toString("hex");
+  delete user.otpHash; delete user.otpExpiresAt; delete user.otpAttempts; await writeUsers(users); return publicUser(user);
+}
