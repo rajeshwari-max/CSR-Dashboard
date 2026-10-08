@@ -10,7 +10,6 @@
  * a serverless host.
  */
 
-import type { PDFDocument as PDFDocumentType, PDFFont, PDFPage } from "pdf-lib";
 import type ExcelJSType from "exceljs";
 
 
@@ -24,6 +23,7 @@ import {
   selectSortedRows,
 } from "@/lib/dataset";
 import { buildInsights } from "@/lib/insights";
+import { displayCompanyName, renderPdfReport } from "@/lib/reports/pdf-report";
 import type { Filters, NamedValue } from "@/types";
 
 const INR = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
@@ -47,7 +47,14 @@ function share(value: number | null | undefined): string {
 export function describeScope(filters: Filters): string {
   const parts: string[] = [];
   if (filters.years.length) parts.push(filters.years.join(", "));
-  if (filters.companies.length) parts.push(`${filters.companies.length} companies`);
+  if (filters.companies.length) {
+    const data = getDataset();
+    const names = filters.companies
+      .map((id) => data.companyIdToIndex.get(id))
+      .filter((index): index is number => index !== undefined)
+      .map((index) => displayCompanyName(data.companies[index].name));
+    parts.push(names.length && names.length <= 3 ? names.join(", ") : `${filters.companies.length} companies`);
+  }
   if (filters.sectors.length) parts.push(filters.sectors.join(", "));
   if (filters.states.length) parts.push(filters.states.join(", "));
   if (filters.districts.length) parts.push(`${filters.districts.length} districts`);
@@ -109,367 +116,12 @@ async function loadPptxGen() {
 }
 
 // ---------------------------------------------------------------------------
-// PDF
+// PDF — the branded layout lives in ./pdf-report
 // ---------------------------------------------------------------------------
 
-/**
- * pdf-lib's standard fonts are WinAnsi-encoded, which cannot represent the
- * rupee sign or typographic dashes/quotes. Everything drawn into the PDF goes
- * through here first so a stray ₹ can't 500 the whole report.
- */
-const PDF_REPLACEMENTS: [RegExp, string][] = [
-  [/₹\s?/g, "Rs "],
-  [/[–—]/g, "-"],
-  [/[’‘]/g, "'"],
-  [/[“”]/g, '"'],
-  [/…/g, "..."],
-  [/→/g, "->"],
-  [/×/g, "x"],
-  [/≥/g, ">="],
-  [/≤/g, "<="],
-  [/∞/g, "inf"],
-  [/²/g, "2"],
-  [/·/g, "-"],
-];
-
-function safe(text: string): string {
-  let output = text;
-  for (const [pattern, replacement] of PDF_REPLACEMENTS) output = output.replace(pattern, replacement);
-  // Anything still outside Latin-1 would throw at draw time.
-  return output.replace(/[^\x20-\xFF]/g, "");
-}
-
-const PAGE = { width: 595.28, height: 841.89 }; // A4 portrait
-const MARGIN = 48;
-
-/** RGB tuples; converted with pdf-lib's `rgb()` once the module is loaded. */
-const COLORS = {
-  ink: [0.09, 0.13, 0.24],
-  muted: [0.42, 0.47, 0.56],
-  accent: [0.31, 0.35, 0.85],
-  rule: [0.85, 0.88, 0.93],
-  white: [1, 1, 1],
-  coverSub: [0.78, 0.82, 0.92],
-  coverMeta: [0.65, 0.7, 0.85],
-} as const;
-
-type Rgb = ReturnType<typeof import("pdf-lib").rgb>;
-let INK: Rgb;
-let MUTED: Rgb;
-let ACCENT: Rgb;
-let RULE: Rgb;
-
-interface PdfContext {
-  doc: PDFDocumentType;
-  page: PDFPage;
-  y: number;
-  regular: PDFFont;
-  bold: PDFFont;
-  pageNumber: number;
-}
-
-function newPage(ctx: PdfContext) {
-  ctx.page = ctx.doc.addPage([PAGE.width, PAGE.height]);
-  ctx.pageNumber += 1;
-  ctx.y = PAGE.height - MARGIN;
-  ctx.page.drawText(safe(`CMS CSR Intelligence · page ${ctx.pageNumber}`), {
-    x: MARGIN,
-    y: 24,
-    size: 8,
-    font: ctx.regular,
-    color: MUTED,
-  });
-}
-
-function ensure(ctx: PdfContext, needed: number) {
-  if (ctx.y - needed < MARGIN + 24) newPage(ctx);
-}
-
-/** Naive width-aware wrap — pdf-lib has no layout engine. */
-function wrap(rawText: string, font: PDFFont, size: number, maxWidth: number): string[] {
-  const words = safe(rawText).split(/\s+/);
-  const lines: string[] = [];
-  let current = "";
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, size) > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
-}
-
-function heading(ctx: PdfContext, text: string) {
-  ensure(ctx, 40);
-  ctx.y -= 10;
-  ctx.page.drawText(safe(text).toUpperCase(), {
-    x: MARGIN,
-    y: ctx.y,
-    size: 9,
-    font: ctx.bold,
-    color: ACCENT,
-  });
-  ctx.y -= 6;
-  ctx.page.drawLine({
-    start: { x: MARGIN, y: ctx.y },
-    end: { x: PAGE.width - MARGIN, y: ctx.y },
-    thickness: 0.7,
-    color: RULE,
-  });
-  ctx.y -= 14;
-}
-
-function paragraph(ctx: PdfContext, text: string, size = 9.5, color?: Rgb) {
-  const fill = color ?? INK;
-  const lines = wrap(text, ctx.regular, size, PAGE.width - MARGIN * 2);
-  for (const line of lines) {
-    ensure(ctx, size + 5);
-    ctx.page.drawText(line, { x: MARGIN, y: ctx.y, size, font: ctx.regular, color: fill });
-    ctx.y -= size + 4;
-  }
-  ctx.y -= 4;
-}
-
-function table(
-  ctx: PdfContext,
-  columns: { label: string; width: number; align?: "left" | "right" }[],
-  rows: string[][],
-) {
-  const size = 8.5;
-  ensure(ctx, 30);
-  let x = MARGIN;
-  for (const column of columns) {
-    const label = safe(column.label);
-    const width = ctx.bold.widthOfTextAtSize(label, size);
-    ctx.page.drawText(label, {
-      x: column.align === "right" ? x + column.width - width : x,
-      y: ctx.y,
-      size,
-      font: ctx.bold,
-      color: MUTED,
-    });
-    x += column.width;
-  }
-  ctx.y -= 5;
-  ctx.page.drawLine({
-    start: { x: MARGIN, y: ctx.y },
-    end: { x: PAGE.width - MARGIN, y: ctx.y },
-    thickness: 0.5,
-    color: RULE,
-  });
-  ctx.y -= 12;
-
-  for (const row of rows) {
-    ensure(ctx, 16);
-    x = MARGIN;
-    row.forEach((cell, index) => {
-      const column = columns[index];
-      const clean = safe(cell);
-      const maxChars = Math.floor(column.width / (size * 0.5));
-      const text = clean.length > maxChars ? `${clean.slice(0, maxChars - 1)}...` : clean;
-      const width = ctx.regular.widthOfTextAtSize(text, size);
-      ctx.page.drawText(text, {
-        x: column.align === "right" ? x + column.width - width : x,
-        y: ctx.y,
-        size,
-        font: ctx.regular,
-        color: INK,
-      });
-      x += column.width;
-    });
-    ctx.y -= 13;
-  }
-  ctx.y -= 6;
-}
-
-/** Horizontal bar chart drawn as vector rectangles. */
-function barChart(ctx: PdfContext, rows: NamedValue[], valueLabel: (row: NamedValue) => string) {
-  const size = 8.5;
-  const labelWidth = 150;
-  const barMax = PAGE.width - MARGIN * 2 - labelWidth - 90;
-  const peak = rows.reduce((max, row) => Math.max(max, row.value), 0) || 1;
-
-  for (const row of rows) {
-    ensure(ctx, 18);
-    const cleanName = safe(row.name);
-    const label = cleanName.length > 30 ? `${cleanName.slice(0, 29)}...` : cleanName;
-    ctx.page.drawText(label, { x: MARGIN, y: ctx.y, size, font: ctx.regular, color: INK });
-    const width = Math.max(1.5, (row.value / peak) * barMax);
-    ctx.page.drawRectangle({
-      x: MARGIN + labelWidth,
-      y: ctx.y - 2,
-      width,
-      height: 8,
-      color: ACCENT,
-      opacity: 0.85,
-    });
-    const value = safe(valueLabel(row));
-    ctx.page.drawText(value, {
-      x: PAGE.width - MARGIN - ctx.regular.widthOfTextAtSize(value, size),
-      y: ctx.y,
-      size,
-      font: ctx.regular,
-      color: MUTED,
-    });
-    ctx.y -= 15;
-  }
-  ctx.y -= 6;
-}
-
 export async function buildPdfReport(filters: Filters): Promise<Uint8Array> {
-  const { PDFDocument, StandardFonts, rgb } = await loadPdfLib();
-  INK = rgb(...COLORS.ink);
-  MUTED = rgb(...COLORS.muted);
-  ACCENT = rgb(...COLORS.accent);
-  RULE = rgb(...COLORS.rule);
-
-  const data = getDataset();
-  const summary = buildSummary(filters, 15);
-  const scope = describeScope(filters);
-  const insights = buildInsights(filters, scope);
-
-  const doc = await PDFDocument.create();
-  const ctx: PdfContext = {
-    doc,
-    page: doc.addPage([PAGE.width, PAGE.height]),
-    y: PAGE.height - MARGIN,
-    regular: await doc.embedFont(StandardFonts.Helvetica),
-    bold: await doc.embedFont(StandardFonts.HelveticaBold),
-    pageNumber: 1,
-  };
-  doc.setTitle("CSR Intelligence Report");
-  doc.setAuthor("CMS CSR Intelligence");
-  doc.setSubject(scope);
-
-  ctx.page.drawText(safe("CMS CSR Intelligence · page 1"), {
-    x: MARGIN, y: 24, size: 8, font: ctx.regular, color: MUTED,
-  });
-
-  // ---- cover block
-  ctx.page.drawRectangle({
-    x: 0, y: PAGE.height - 132, width: PAGE.width, height: 132, color: INK,
-  });
-  ctx.page.drawText("CSR Intelligence Report", {
-    x: MARGIN, y: PAGE.height - 66, size: 22, font: ctx.bold, color: rgb(1, 1, 1),
-  });
-  ctx.page.drawText(safe(scope).slice(0, 95), {
-    x: MARGIN, y: PAGE.height - 88, size: 10, font: ctx.regular, color: rgb(...COLORS.coverSub),
-  });
-  ctx.page.drawText(
-    safe(`Generated ${new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })} · dataset built ${data.generatedAt.slice(0, 10)}`),
-    { x: MARGIN, y: PAGE.height - 106, size: 8.5, font: ctx.regular, color: rgb(...COLORS.coverMeta) },
-  );
-  ctx.y = PAGE.height - 160;
-
-  // ---- KPIs
-  heading(ctx, "Key performance indicators");
-  const k = summary.kpis;
-  const kpiRows: [string, string][] = [
-    ["Total CSR spend", crore(k.totalSpend)],
-    ["Companies reporting", INR0.format(k.companyCount)],
-    ["Projects", INR0.format(k.projectCount)],
-    ["Average spend / company", crore(k.avgSpendPerCompany)],
-    ["Median spend / company", crore(k.medianSpendPerCompany)],
-    ["Year-on-year growth", pct(k.yoyGrowthPct)],
-    ["States covered", String(k.stateCount)],
-    ["Districts covered", INR0.format(k.districtCount)],
-    ["Top-10 concentration", share(k.top10Share)],
-    ["Aspirational-district spend", `${crore(k.aspirationalSpend)} (${share(k.aspirationalShare)})`],
-  ];
-  const half = Math.ceil(kpiRows.length / 2);
-  for (let i = 0; i < half; i += 1) {
-    ensure(ctx, 16);
-    const left = kpiRows[i];
-    const right = kpiRows[i + half];
-    ctx.page.drawText(safe(left[0]), { x: MARGIN, y: ctx.y, size: 9, font: ctx.regular, color: MUTED });
-    ctx.page.drawText(safe(left[1]), { x: MARGIN + 150, y: ctx.y, size: 9, font: ctx.bold, color: INK });
-    if (right) {
-      ctx.page.drawText(safe(right[0]), { x: MARGIN + 270, y: ctx.y, size: 9, font: ctx.regular, color: MUTED });
-      ctx.page.drawText(safe(right[1]), { x: MARGIN + 420, y: ctx.y, size: 9, font: ctx.bold, color: INK });
-    }
-    ctx.y -= 15;
-  }
-  ctx.y -= 6;
-
-  // ---- narrative
-  heading(ctx, "Executive summary");
-  for (const line of insights.summary) paragraph(ctx, line);
-
-  // ---- trend
-  heading(ctx, "Year-wise trend");
-  table(
-    ctx,
-    [
-      { label: "Financial year", width: 120 },
-      { label: "Spend", width: 110, align: "right" },
-      { label: "Projects", width: 90, align: "right" },
-      { label: "Companies", width: 90, align: "right" },
-      { label: "YoY", width: 79, align: "right" },
-    ],
-    summary.trend.map((point, index) => {
-      const previous = index > 0 ? summary.trend[index - 1].spend : null;
-      const growth = previous && previous > 0 ? ((point.spend - previous) / previous) * 100 : null;
-      return [
-        point.year,
-        crore(point.spend),
-        INR0.format(point.projects),
-        INR0.format(point.companies),
-        growth === null ? "—" : pct(growth),
-      ];
-    }),
-  );
-
-  // ---- charts
-  heading(ctx, "Top companies by CSR spend");
-  barChart(ctx, summary.topCompanies.slice(0, 12), (row) => `${crore(row.value)}  ${share(row.share)}`);
-
-  heading(ctx, "Spend by state");
-  barChart(ctx, summary.byState.slice(0, 12), (row) => `${crore(row.value)}  ${share(row.share)}`);
-
-  heading(ctx, "Spend by sector");
-  barChart(ctx, summary.bySector.slice(0, 10), (row) => `${crore(row.value)}  ${share(row.share)}`);
-
-  heading(ctx, "Spend by Schedule VII category");
-  barChart(ctx, summary.byTheme.slice(0, 10), (row) => `${crore(row.value)}  ${share(row.share)}`);
-
-  // ---- insights
-  heading(ctx, "Analysis");
-  for (const insight of insights.insights.slice(0, 8)) {
-    ensure(ctx, 44);
-    ctx.page.drawText(safe(insight.title), { x: MARGIN, y: ctx.y, size: 9.5, font: ctx.bold, color: INK });
-    ctx.y -= 13;
-    paragraph(ctx, insight.detail, 8.5, MUTED);
-  }
-
-  if (insights.anomalies.length) {
-    heading(ctx, "Anomalies (z-score >= 2 on year-on-year change)");
-    table(
-      ctx,
-      [
-        { label: "Entity", width: 190 },
-        { label: "Year", width: 80 },
-        { label: "From", width: 90, align: "right" },
-        { label: "To", width: 90, align: "right" },
-        { label: "z", width: 39, align: "right" },
-      ],
-      insights.anomalies.map((row) => [
-        row.name,
-        row.year,
-        crore(row.expected),
-        crore(row.value),
-        row.zScore.toFixed(1),
-      ]),
-    );
-  }
-
-  heading(ctx, "Data quality notes");
-  for (const note of insights.dataQuality) paragraph(ctx, `${note.label}: ${note.value}`, 8.5, MUTED);
-
-  return doc.save();
+  await loadPdfLib(); // surfaces a missing install as ReportDependencyError
+  return renderPdfReport(filters, describeScope(filters));
 }
 
 // ---------------------------------------------------------------------------

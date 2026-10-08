@@ -190,7 +190,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       detail:
         `Reported spend moved from ${CRORE(trend[trend.length - 2].spend)} in ${kpis.previousYear} to ` +
         `${CRORE(trend[trend.length - 1].spend)} in ${kpis.latestYear}, across ` +
-        `${trend[trend.length - 1].companies.toLocaleString("en-IN")} reporting companies.`,
+        `${trend[trend.length - 1].companies.toLocaleString("en-IN")} reporting ${trend[trend.length - 1].companies === 1 ? "company" : "companies"}.`,
       evidence: [
         { label: kpis.previousYear ?? "prev", value: CRORE(trend[trend.length - 2].spend) },
         { label: kpis.latestYear ?? "latest", value: CRORE(trend[trend.length - 1].spend) },
@@ -479,11 +479,13 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
   }
 
   const summaryLines = [
-    `${scopeLabel}: ${CRORE(kpis.totalSpend)} of CSR spend across ${kpis.projectCount.toLocaleString("en-IN")} projects and ${kpis.companyCount.toLocaleString("en-IN")} companies.`,
+    `${scopeLabel}: ${CRORE(kpis.totalSpend)} of CSR spend across ${kpis.projectCount.toLocaleString("en-IN")} ${kpis.projectCount === 1 ? "project" : "projects"} and ${kpis.companyCount.toLocaleString("en-IN")} ${kpis.companyCount === 1 ? "company" : "companies"}.`,
     kpis.yoyGrowthPct !== null
       ? `Spend ${kpis.yoyGrowthPct >= 0 ? "grew" : "contracted"} ${PCT(kpis.yoyGrowthPct)} in ${kpis.latestYear}, with ${CRORE(kpis.latestYearSpend)} reported.`
       : `Only one financial year is in view, so no growth rate is available.`,
-    `Spend is concentrated: the top 10 companies hold ${SHARE(kpis.top10Share)}, and ${summary.byTheme[0]?.name ?? "the leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix.`,
+    kpis.companyCount > 10
+      ? `Spend is concentrated: the top 10 companies hold ${SHARE(kpis.top10Share)}, and ${summary.byTheme[0]?.name ?? "the leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix.`
+      : `${summary.byTheme[0]?.name ?? "The leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix, across ${summary.byTheme.length} Schedule VII categories.`,
     forecast.nextYear && forecast.nextYearSpend !== null
       ? `A linear projection puts ${forecast.nextYear} at ${CRORE(forecast.nextYearSpend)} (R² ${forecast.r2?.toFixed(2) ?? "—"}); treat it as directional.`
       : `Not enough history for a projection.`,
