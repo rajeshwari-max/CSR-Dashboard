@@ -10,7 +10,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/dashboard-calculations.test.mjs",
+    "test": "node --test tests/dashboard-calculations.test.mjs && npm run test:auth && npm run test:report",
+    "test:auth": "node --experimental-strip-types --no-warnings --import ./tests/helpers/register-ts.mjs --test tests/auth-workflow.test.mjs",
+    "test:report": "node --experimental-strip-types --no-warnings --import ./tests/helpers/register-ts.mjs --test tests/report-pdf.test.mjs",
     "validate": "node scripts/validate-dashboard.mjs"
   },
   "dependencies": {

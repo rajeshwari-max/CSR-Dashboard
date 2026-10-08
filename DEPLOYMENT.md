@@ -56,6 +56,8 @@ too if you'd rather not keep the source workbook in the repo.
 | `RESEND_API_KEY` | secret API key | Sends one-time sign-in codes. Required for registered-user login. |
 | `OTP_FROM_EMAIL` | `CMS CSR <access@your-domain>` | Sender address on a verified domain. |
 | `ADMIN_EMAIL` | administrator email | Receives new registration approval notices. |
+| `AUTH_EMAIL_OTP` | `required` (default) or `off` | `off` lets approved users sign in with email + password only. |
+| `APP_BASE_URL` | *(optional)* `https://your-domain` | Link in approval emails. Defaults to Render's automatic `RENDER_EXTERNAL_URL`. |
 | `LLM_API_KEY` | *(optional)* | Enables AI narration + the chat box. Everything else works without it. |
 | `LLM_PROVIDER` | `anthropic` or `openai` | Only if you set a key. |
 
@@ -63,6 +65,19 @@ too if you'd rather not keep the source workbook in the repo.
 
 You'll get a URL like `https://cms-csr.onrender.com`. The browser will prompt for
 credentials: select **Administrator access** and enter `APP_PASSWORD`. New users register first, wait for administrator approval, then verify a six-digit email code at every sign-in. Administrators manage requests at `/admin/access`.
+
+### Email delivery (Resend) — must be set up for approvals and sign-in
+
+Approval notices and sign-in codes are sent through Resend. `OTP_FROM_EMAIL` must use a
+domain you have **verified in Resend** (Resend → Domains). With the default
+`onboarding@resend.dev` sender, or an unverified domain, Resend only delivers to the
+Resend account owner's own address: the administrator notice arrives, but approval
+emails and sign-in codes to every other user are rejected (HTTP 403), so approved users
+cannot finish signing in. Delivery failures are logged in Render → Logs as
+`[auth-email] delivery rejected by Resend` with Resend's reason.
+
+The **Access approvals** page (`/admin/access`) shows a warning if email delivery is not
+configured or if account storage is not on the persistent disk.
 
 ---
 
@@ -85,6 +100,10 @@ credentials: select **Administrator access** and enter `APP_PASSWORD`. New users
   redeploy never overwrites data you uploaded.
 - **Backups** (`/var/data/backup/`) live on the same disk, so rollback survives
   redeploys too.
+- **Registered accounts** (`/var/data/users.json`) live on the same disk, so registrations
+  and approvals survive restarts and redeploys. Without a disk (for example on the free
+  plan), the file is wiped whenever the service restarts or spins down, and approved
+  users get "Incorrect email or password".
 
 This is exactly why Render was the right call over Vercel: Vercel's filesystem is
 read-only, so the upload, merge and rollback features could not work there without

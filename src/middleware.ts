@@ -14,7 +14,6 @@ export async function middleware(request: NextRequest) {
     pathname === "/api/auth/register" ||
     pathname === "/api/auth/verify-otp" ||
     pathname === "/api/auth/reset-password" ||
-    pathname === "/api/auth/verify-otp" ||
     pathname === "/cms-logo.svg" ||
     pathname === "/cms-watermark.svg";
   const expected = await sessionToken(password);
