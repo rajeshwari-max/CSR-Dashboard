@@ -87,7 +87,7 @@ export function CompanyAnalysisView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Top filers in this view</CardTitle>
+              <CardTitle>Companies Ranked by Total CSR Spend in This View</CardTitle>
               <CardDescription>Use the common search above, then click a row to analyse that company</CardDescription>
             </div>
           </CardHeader>
@@ -139,7 +139,7 @@ export function CompanyAnalysisView() {
 
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
             <ChartCard
-              title="Amount spent by financial year"
+              title="CSR Amount Spent by Company and Financial Year"
               description="Selected companies"
               className="xl:col-span-2"
               height={320}
@@ -170,7 +170,7 @@ export function CompanyAnalysisView() {
             <Card className="xl:col-span-3">
               <CardHeader>
                 <div>
-                  <CardTitle>Benchmark</CardTitle>
+                  <CardTitle>Company Benchmark by Total CSR Spend</CardTitle>
                   <CardDescription>Compliance uses the disclosed 2%-of-net-profit obligation</CardDescription>
                 </div>
               </CardHeader>
@@ -227,7 +227,7 @@ export function CompanyAnalysisView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Companies by sector</CardTitle>
+              <CardTitle>Companies by BRSR Sector</CardTitle>
               <CardDescription>Filers and amount spent per BRSR sector in this view</CardDescription>
             </div>
           </CardHeader>
@@ -398,7 +398,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
         <ChartCard
-          title="Amount spent trajectory"
+              title="Amount Spent Trajectory"
           description="This company's disclosed amount spent per financial year"
           className="xl:col-span-3"
           height={300}
@@ -420,7 +420,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card className="xl:col-span-2">
           <CardHeader>
             <div>
-              <CardTitle>Where the money goes</CardTitle>
+              <CardTitle>CSR Spend by Schedule VII Thematic Area</CardTitle>
               <CardDescription>Schedule VII categories, largest first</CardDescription>
             </div>
           </CardHeader>
@@ -440,7 +440,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>States reached</CardTitle>
+              <CardTitle>States Reached by Reported CSR Projects</CardTitle>
               <CardDescription>Amount spent by state, largest first</CardDescription>
             </div>
           </CardHeader>
@@ -458,7 +458,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Sector peers</CardTitle>
+              <CardTitle>Sector Peers</CardTitle>
               <CardDescription>
                 Other {data.company.sector} filers, ranked on national amount spent
               </CardDescription>
@@ -480,7 +480,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Largest projects</CardTitle>
+            <CardTitle>Largest CSR Projects by Amount Spent</CardTitle>
             <CardDescription>Top 25 by amount spent, within the current filters</CardDescription>
           </div>
           <Badge variant="outline" className="shrink-0">

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { MetricInfo } from "@/components/shared/metric-info";
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -21,9 +22,10 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("text-[15px] font-semibold tracking-tight", className)} {...props} />
-  ),
+  ({ className, children, ...props }, ref) => {
+    const title = typeof children === "string" ? children : null;
+    return <h3 ref={ref} className={cn("metric-title text-[15px] font-semibold tracking-tight", className)} {...props}><span>{children}</span>{title ? <MetricInfo title={title} /> : null}</h3>;
+  },
 );
 CardTitle.displayName = "CardTitle";
 

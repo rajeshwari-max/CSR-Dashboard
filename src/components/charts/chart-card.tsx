@@ -6,6 +6,8 @@ import { AlertTriangle, Inbox } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MetricInfo } from "@/components/shared/metric-info";
+import type { DashboardMetricMeta } from "@/lib/dashboard-metadata";
 import { cn } from "@/lib/utils";
 
 interface ChartCardProps {
@@ -22,6 +24,7 @@ interface ChartCardProps {
   className?: string;
   id?: string;
   children: React.ReactNode;
+  info?: DashboardMetricMeta;
 }
 
 export function ChartCard({
@@ -37,12 +40,13 @@ export function ChartCard({
   className,
   id,
   children,
+  info,
 }: ChartCardProps) {
   return (
     <Card id={id} className={cn("flex flex-col scroll-mt-24", className)}>
       <CardHeader>
         <div className="min-w-0">
-          <CardTitle>{title}</CardTitle>
+          <CardTitle><span>{title}</span><MetricInfo title={title} meta={info} /></CardTitle>
           {description ? <CardDescription>{description}</CardDescription> : null}
         </div>
         <div className="flex shrink-0 items-center gap-2">

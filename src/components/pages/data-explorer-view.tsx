@@ -211,7 +211,7 @@ export function DataExplorerView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Project register</CardTitle>
+            <CardTitle>Filtered Project Register</CardTitle>
             <CardDescription>
               {formatNumber(projects.data?.total ?? 0)} rows · {formatCrore(projects.data?.totalSpendInView ?? 0)} in
               view

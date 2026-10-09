@@ -14,6 +14,7 @@ import {
 
 import { formatCrore, formatNumber, formatSignedPercent } from "@/lib/format";
 import type { Kpis, Meta } from "@/types";
+import { MetricInfo } from "@/components/shared/metric-info";
 
 /**
  * The draft's 6-up KPI row, in the drafted order:
@@ -63,7 +64,7 @@ export function KpiRow({
   const beneficiaries = meta?.capabilities.beneficiaries ?? false;
   const cards: KpiSpec[] = [
     {
-      label: "Total CSR Amount Spent",
+      label: "Total CSR Amount Spent for the Selected Period",
       value: formatCrore(kpis.totalSpend),
       sub: `${kpis.latestYear ?? "—"} latest · cumulative view`,
       delta: kpis.yoyGrowthPct,
@@ -71,14 +72,14 @@ export function KpiRow({
       tip: "Cumulative CSR amount spent across all projects and financial years in the current filter selection.",
     },
     {
-      label: "Companies Reporting",
+      label: "Companies Reporting in the Selected Period",
       value: formatNumber(kpis.companyCount),
       sub: `${kpis.sectorCount} sectors`,
       icon: Building2,
       tip: "Distinct companies with at least one CSR project reported in the current selection.",
     },
     {
-      label: "Projects Reported",
+      label: "CSR Projects Reported in the Selected Period",
       value: formatNumber(kpis.projectCount),
       sub: "Across India",
       icon: FolderKanban,
@@ -86,7 +87,7 @@ export function KpiRow({
     },
     beneficiaries
       ? {
-          label: "Beneficiaries Reached",
+          label: "Beneficiaries Reached by Reported CSR Projects",
           value: formatNumber(kpis.beneficiaries ?? 0),
           sub: "Across all reported projects",
           icon: Users,
@@ -96,7 +97,7 @@ export function KpiRow({
           // No beneficiary column in the dataset, so this slot shows geographic
           // depth instead of a dash. It switches back automatically the moment
           // a "Beneficiaries Reached" column is uploaded.
-          label: "Districts Reached",
+          label: "Districts Reached by Reported CSR Projects",
           value: formatNumber(kpis.districtCount),
           sub: "States and UTs across India",
           icon: MapPinned,
@@ -127,7 +128,7 @@ export function KpiRow({
             <span className="kpi-icon">
               <Icon width={15} height={15} />
             </span>
-            <div className="kpi-label">{card.label}</div>
+            <div className="kpi-label metric-title"><span>{card.label}</span><MetricInfo title={card.label} /></div>
             <div
               className="kpi-value"
               title={card.value}

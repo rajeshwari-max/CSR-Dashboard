@@ -54,7 +54,7 @@ export function NgoAnalysisView() {
       <SectionLabel>Delivery channel</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Mode of implementation"
+          title="Implementation Channels by Total CSR Spend"
           description="Share of amount spent by delivery channel"
           height={320}
           isLoading={summary.isLoading}
@@ -90,7 +90,7 @@ export function NgoAnalysisView() {
         <Card className="xl:col-span-2">
           <CardHeader>
             <div>
-              <CardTitle>Channel summary</CardTitle>
+              <CardTitle>Implementation Channels Summary</CardTitle>
               <CardDescription>
                 {formatShare(throughAgencies / total)} of spend in this view is routed through an external agency,
                 trust or Section 8 company rather than executed directly
@@ -113,7 +113,7 @@ export function NgoAnalysisView() {
       <SectionLabel>Where agency-delivered money goes</SectionLabel>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
-          title="State presence"
+          title="Implementation Channel Presence by State"
           description="States reached by projects in this view"
           height={360}
           isLoading={summary.isLoading}
@@ -128,7 +128,7 @@ export function NgoAnalysisView() {
         </ChartCard>
 
         <ChartCard
-          title="Focus areas"
+          title="Schedule VII Focus Areas by Implementation Channel"
           description="Schedule VII categories delivered in this view"
           height={360}
           isLoading={summary.isLoading}

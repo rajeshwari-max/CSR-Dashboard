@@ -16,6 +16,7 @@ import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { InsightsResponse, SummaryResponse } from "@/types";
+import { ExplainedTitle } from "@/components/shared/metric-info";
 
 /**
  * Executive Dashboard — structure taken verbatim from the draft:
@@ -74,7 +75,7 @@ export function ExecutiveDashboard() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <h3>CSR Amount Spent Trend</h3>
+              <ExplainedTitle title="CSR Spend and Project Count by Financial Year" />
               <div className="muted">
                 {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · amount spent (₹ Cr) and projects reported
               </div>
@@ -92,7 +93,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <h3>Top States</h3>
+            <ExplainedTitle title="States Ranked by Total CSR Spend" />
             <Link href={`/state-analysis?${filterQuery}`} className="card-badge">
               View all
             </Link>
@@ -111,7 +112,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <h3>Top Sectors</h3>
+            <ExplainedTitle title="Sectors Ranked by Total CSR Spend" />
             <Link href={`/sector-analysis?${filterQuery}`} className="card-badge">
               View all
             </Link>
@@ -135,7 +136,7 @@ export function ExecutiveDashboard() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <h3>State-wise Distribution</h3>
+              <ExplainedTitle title="Geographic Distribution of Total CSR Spend by State" />
               <div className="muted">Click a state to filter</div>
             </div>
             <span className="card-badge">Across India</span>
@@ -156,7 +157,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <h3>Top 5 Companies</h3>
+            <ExplainedTitle title="Companies Ranked by Total CSR Spend" />
             <Link href={`/company-analysis?${filterQuery}`} className="card-badge">
               Compare
             </Link>

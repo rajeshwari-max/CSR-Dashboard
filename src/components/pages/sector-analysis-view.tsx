@@ -94,7 +94,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Sector overview</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Share of amount spent by sector"
+          title="CSR Spend Share by BRSR Sector"
           description="Top sectors, remainder grouped"
           height={340}
           isLoading={summary.isLoading}
@@ -105,7 +105,7 @@ export function SectorAnalysisView() {
         </ChartCard>
 
         <ChartCard
-          title="Sector trajectories"
+          title="Total CSR Spend by Sector and Financial Year"
           description="Top 6 sectors across financial years"
           className="xl:col-span-2"
           height={340}
@@ -138,7 +138,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Growth rate</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <ChartCard
-          title="Year-on-year growth by sector"
+          title="Year-over-Year Change in CSR Spend by Sector"
           description="Sectors with at least ₹5 Cr in the prior year"
           height={380}
           isLoading={summary.isLoading}
@@ -177,8 +177,8 @@ export function SectorAnalysisView() {
         <Card className="overflow-hidden">
           <CardHeader>
             <div>
-              <CardTitle>Funding flow</CardTitle>
-              <CardDescription>Which Schedule VII categories receive the amount spent in this view</CardDescription>
+              <CardTitle>Schedule VII Thematic Areas by Total CSR Spend</CardTitle>
+              <CardDescription>Area size represents total spend; hover for ₹ crore and use the labels for spend share. Active filters apply.</CardDescription>
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>
@@ -236,6 +236,7 @@ interface FundingNodeProps {
   name?: string;
   value?: number;
   share?: number;
+  count?: number;
   depth?: number;
   selected: string[];
 }
@@ -249,6 +250,7 @@ function FundingTreemapNode({
   name = "",
   value = 0,
   share = 0,
+  count = 0,
   depth = 1,
   selected,
 }: FundingNodeProps) {
@@ -276,7 +278,7 @@ function FundingTreemapNode({
       ) : null}
       {showValue ? (
         <text x={x + 10} y={y + 39} fill="white" fontSize={10} opacity={0.9}>
-          {formatCrore(value)} · {(share * 100).toFixed(1)}%
+          {formatCrore(value)} · {(share * 100).toFixed(1)}% · {count.toLocaleString("en-IN")} projects
         </text>
       ) : null}
     </g>

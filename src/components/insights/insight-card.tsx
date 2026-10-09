@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Maximize2, Sparkles } from "lucide-react";
 
 import { InsightDrawer } from "@/components/insights/insight-drawer";
+import { ExplainedTitle } from "@/components/shared/metric-info";
 import type { Insight, InsightsResponse } from "@/types";
 
 const DOT_CLASS = ["teal", "amber", "blue", "purple"] as const;
@@ -48,7 +49,7 @@ export function AiInsightCard({
       <div className="card hoverable stack" style={{ height: "100%" }}>
         <div className="card-head">
           <div>
-            <h3>Automated data insights</h3>
+            <ExplainedTitle title="Automated Data Insights" />
             <div className="muted">Formula-driven · current selection</div>
           </div>
           <span className="card-badge purple">

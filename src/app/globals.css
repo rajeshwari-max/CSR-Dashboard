@@ -23,3 +23,15 @@
     color: var(--text);
   }
 }
+
+@layer components {
+  .metric-title { display: flex; align-items: flex-start; gap: .4rem; min-width: 0; }
+  .metric-info { position: relative; display: inline-flex; flex: 0 0 auto; z-index: 30; }
+  .metric-info-trigger { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-top: -.08rem; border: 0; border-radius: 999px; background: transparent; color: var(--text-soft); cursor: help; }
+  .metric-info-trigger:hover,.metric-info-trigger:focus-visible { color: var(--accent-2); background: var(--blue-light); outline: 2px solid transparent; }
+  .metric-info-trigger svg { width: .9rem; height: .9rem; }
+  .metric-info-popover { position: absolute; top: calc(100% + .45rem); left: 0; width: min(21rem, calc(100vw - 2rem)); display: grid; gap: .35rem; padding: .75rem .85rem; border: 1px solid var(--border); border-radius: .65rem; background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg); font-size: .72rem; font-weight: 400; line-height: 1.45; text-align: left; text-transform: none; letter-spacing: normal; white-space: normal; z-index: 80; }
+  .metric-info-popover strong { font-size: .76rem; }
+  .metric-info-popover b { color: var(--text-soft); font-weight: 650; }
+  @media (max-width: 640px) { .metric-info-popover { position: fixed; left: 1rem; right: 1rem; top: auto; bottom: 1rem; width: auto; } }
+}

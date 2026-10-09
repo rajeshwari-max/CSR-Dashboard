@@ -15,6 +15,7 @@ import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { ProjectsResponse, SortDirection, SortField, SummaryResponse } from "@/types";
+import { MetricInfo } from "@/components/shared/metric-info";
 
 export function ProjectAnalyticsView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
@@ -62,15 +63,15 @@ export function ProjectAnalyticsView() {
     >
       <SectionLabel>Project profile</SectionLabel>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat label="Projects in view" value={formatNumber(kpis?.projectCount ?? 0)} sub={`${formatNumber(kpis?.companyCount ?? 0)} companies`} />
-        <Stat label="Average project size" value={formatCrore(kpis?.avgProjectSize ?? 0)} sub="Mean disclosed amount" />
+        <Stat label="Total CSR Projects in the Selected Period" value={formatNumber(kpis?.projectCount ?? 0)} sub={`${formatNumber(kpis?.companyCount ?? 0)} companies`} />
+        <Stat label="Average CSR Spend per Project" value={formatCrore(kpis?.avgProjectSize ?? 0)} sub="Mean disclosed amount" />
         <Stat
-          label="Aspirational districts"
+          label="CSR Spend in Aspirational Districts"
           value={formatCrore(kpis?.aspirationalSpend ?? 0)}
           sub={`${formatShare(kpis?.aspirationalShare ?? 0)} of spend in view`}
         />
         <Stat
-          label="Districts reached"
+          label="Districts Reached by Reported CSR Projects"
           value={formatNumber(kpis?.districtCount ?? 0)}
           sub="Across India"
         />
@@ -92,7 +93,7 @@ export function ProjectAnalyticsView() {
       <SectionLabel>Distribution &amp; impact</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Project size distribution"
+          title="Project Count by Disclosed CSR Spend Range"
           description="All projects with a disclosed amount spent · click a bar to filter by amount"
           className="xl:col-span-2"
           height={320}
@@ -130,7 +131,7 @@ export function ProjectAnalyticsView() {
         </ChartCard>
 
         <ChartCard
-          title="Project locations"
+          title="Districts Ranked by Project-Level CSR Spend"
           description="Districts with the highest recorded amount spent"
           height={320}
           isLoading={summary.isLoading}
@@ -173,7 +174,7 @@ export function ProjectAnalyticsView() {
 function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <Card className="p-5">
-      <p className="kpi-label">{label}</p>
+      <p className="kpi-label metric-title"><span>{label}</span><MetricInfo title={label} /></p>
       <p className="kpi-value mt-3">{value}</p>
       <p className="mt-2 text-xs text-muted-foreground">{sub}</p>
     </Card>

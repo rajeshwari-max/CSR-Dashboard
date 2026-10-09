@@ -11,6 +11,7 @@ import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-
 import { useApi } from "@/lib/api";
 import { formatCompact, formatCrore, formatNumber, formatSignedPercent, truncate } from "@/lib/format";
 import type { BreakdownResponse, InsightsResponse, SummaryResponse } from "@/types";
+import { ExplainedTitle, MetricInfo } from "@/components/shared/metric-info";
 
 const AXIS = { tickLine: false, axisLine: false, tick: { fontSize: 10.5 } } as const;
 const PALETTE = ["#7e3fa1", "#00a88f", "#e07a24", "#2468b4", "#d64562", "#6f7d2c"];
@@ -92,23 +93,23 @@ export function TrendView() {
       <MiniLabel>Growth summary</MiniLabel>
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
         <Metric
-          label="Latest FY amount spent"
+          label="Latest Financial-Year CSR Spend"
           value={formatCrore(summary.data?.kpis.latestYearSpend ?? 0)}
           sub={summary.data?.kpis.latestYear ?? "—"}
           delta={summary.data?.kpis.yoyGrowthPct ?? null}
         />
         <Metric
-          label="Year-on-year growth"
+          label="Year-over-Year Change in CSR Spend"
           value={formatSignedPercent(summary.data?.kpis.yoyGrowthPct ?? null)}
           sub={`${summary.data?.kpis.previousYear ?? "—"} → ${summary.data?.kpis.latestYear ?? "—"}`}
         />
         <Metric
-          label="Compound growth (CAGR)"
+          label="Compound Annual Growth Rate in CSR Spend"
           value={cagr === null ? "—" : formatSignedPercent(cagr)}
           sub={years.length ? `${years[0]} → ${years[years.length - 1]}` : "Needs 2+ years"}
         />
         <Metric
-          label={`Projected ${insights.data?.forecast.nextYear ?? "next FY"}`}
+          label="Projected CSR Spend for the Next Financial Year"
           value={
             insights.data?.forecast.nextYearSpend !== null && insights.data?.forecast.nextYearSpend !== undefined
               ? formatCrore(insights.data.forecast.nextYearSpend)
@@ -123,7 +124,7 @@ export function TrendView() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-            <h3>CSR amount spent by financial year</h3>
+            <ExplainedTitle title="CSR Spend by Financial Year with Projection" />
               <div className="muted">Actuals with projection band</div>
             </div>
           </div>
@@ -140,15 +141,15 @@ export function TrendView() {
 
       <MiniLabel>Growing vs. declining sectors · {years.at(-2) ?? "prior FY"} to {years.at(-1) ?? "latest FY"}</MiniLabel>
       <div className="grid cols-2" style={{ marginBottom: 32 }}>
-        <MoverCard title="Growing sectors" rows={movers.growing} direction="up" loading={sectors.isLoading} />
-        <MoverCard title="Declining sectors" rows={movers.declining} direction="down" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with the Highest Year-over-Year CSR Spend Growth" rows={movers.growing} direction="up" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with the Largest Year-over-Year CSR Spend Decline" rows={movers.declining} direction="down" loading={sectors.isLoading} />
       </div>
 
       <MiniLabel>Sector trajectories</MiniLabel>
       <div className="card hoverable" style={{ marginBottom: 32 }}>
         <div className="card-head">
           <div>
-            <h3>Top sectors over time</h3>
+            <ExplainedTitle title="Top Sectors by Total CSR Spend Across Financial Years" />
             <div className="muted">Six largest sectors in the current selection</div>
           </div>
         </div>
@@ -187,6 +188,7 @@ export function TrendView() {
       </div>
 
       <MiniLabel>Historical comparison</MiniLabel>
+      <ExplainedTitle title="Historical CSR Spend, Projects and Companies by Financial Year" />
       <div className="table-wrap">
         <table>
           <thead>
@@ -241,7 +243,7 @@ function Metric({
 }) {
   return (
     <div className="kpi-card" style={{ cursor: "default" }}>
-      <div className="kpi-label">{label}</div>
+      <div className="kpi-label metric-title"><span>{label}</span><MetricInfo title={label} /></div>
       <div className="kpi-value">{value}</div>
       <div className="kpi-sub">
         {delta !== undefined && delta !== null ? (
@@ -270,7 +272,7 @@ function MoverCard({
   return (
     <div className="card hoverable">
       <div className="card-head">
-        <h3>{title}</h3>
+        <ExplainedTitle title={title} />
         <span className={`card-badge ${direction === "up" ? "" : "rose"}`}>
           {direction === "up" ? "Risers" : "Fallers"}
         </span>

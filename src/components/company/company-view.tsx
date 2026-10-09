@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { MetricInfo } from "@/components/shared/metric-info";
 import { ApiRequestError, downloadCsv, useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPercent, truncate } from "@/lib/format";
 import type { CompanyDetail } from "@/types";
@@ -102,19 +103,19 @@ export function CompanyView({ companyId }: { companyId: string }) {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {(
             [
-              { label: "Total CSR Amount Spent", value: formatCrore(kpis?.totalSpend), sub: `${formatNumber(kpis?.projectCount ?? 0)} projects reported` },
+              { label: "Total CSR Amount Spent for the Selected Period", value: formatCrore(kpis?.totalSpend), sub: `${formatNumber(kpis?.projectCount ?? 0)} projects reported` },
               {
-                label: "National Rank",
+                label: "National Rank by Total CSR Spend",
                 value: kpis?.nationalRank ? `#${kpis.nationalRank}` : "—",
                 sub: `${formatShare(kpis?.nationalShare ?? 0)} of all CSR spend`,
               },
               {
-                label: "YoY Growth",
+                label: "Year-over-Year Change in CSR Spend",
                 value: formatSignedPercent(kpis?.yoyGrowthPct ?? null),
                 sub: "Latest vs. previous FY",
               },
               {
-                label: "Obligation Utilisation",
+                label: "Latest-Year CSR Spend as a Share of Disclosed Obligation",
                 value: formatPercent(kpis?.utilisationPct ?? null),
                 sub: kpis?.obligation
                   ? `Latest FY spend vs. ${formatCrore(kpis.obligation)} obligation`
@@ -123,7 +124,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
             ] as const
           ).map((card) => (
             <Card key={card.label} className="p-5">
-              <p className="kpi-label">{card.label}</p>
+              <p className="kpi-label metric-title"><span>{card.label}</span><MetricInfo title={card.label} /></p>
               {isLoading ? (
                 <Skeleton className="mt-3 h-7 w-24" />
               ) : (
@@ -136,7 +137,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
           <ChartCard
-            title="Spending Trend"
+            title="Company CSR Spend by Financial Year"
             description="Amount spent vs. outlay by financial year"
             className="xl:col-span-2"
             height={300}
@@ -193,7 +194,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <ChartCard
-            title="Thematic Mix"
+            title="CSR Spend by Schedule VII Thematic Area"
             description="Amount spent by CSR category"
             height={320}
             isLoading={isLoading}
@@ -204,7 +205,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
           </ChartCard>
 
           <ChartCard
-            title="State Coverage"
+            title="States Reached by Reported CSR Projects"
             description={`${kpis?.stateCount ?? 0} locations reached`}
             height={320}
             isLoading={isLoading}
@@ -245,7 +246,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Largest Projects</CardTitle>
+              <CardTitle>Largest CSR Projects by Amount Spent</CardTitle>
               <CardDescription>Top 25 disclosed projects by amount spent</CardDescription>
             </div>
             <Badge variant="outline">{formatNumber(kpis?.projectCount ?? 0)} total</Badge>

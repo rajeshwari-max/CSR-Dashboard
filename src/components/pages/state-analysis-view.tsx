@@ -83,7 +83,7 @@ export function StateAnalysisView() {
       <SectionLabel>India map &amp; heatmap</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="State-wise CSR Amount Spent"
+          title="State-wise Total CSR Spend"
           description="Click a state to filter · sqrt colour scale"
           className="xl:col-span-2"
           height={520}
@@ -98,7 +98,7 @@ export function StateAnalysisView() {
           <Card>
             <CardHeader>
               <div>
-                <CardTitle>Coverage</CardTitle>
+                <CardTitle>Geographic Coverage Summary</CardTitle>
                 <CardDescription>How much of the amount spent can be placed geographically</CardDescription>
               </div>
             </CardHeader>
@@ -124,7 +124,7 @@ export function StateAnalysisView() {
           <Card className="flex-1">
             <CardHeader>
               <div>
-                <CardTitle>Fastest growing states</CardTitle>
+                <CardTitle>Fastest-Growing States by CSR Spend</CardTitle>
                 <CardDescription>Latest FY vs. previous, minimum ₹10 Cr base</CardDescription>
               </div>
             </CardHeader>
@@ -148,7 +148,7 @@ export function StateAnalysisView() {
 
       <SectionLabel>State comparison</SectionLabel>
       <ChartCard
-        title="Leading states funding profile"
+        title="Leading States: CSR Funding Profile"
         description={`${years.at(-2) ?? "Previous FY"} vs ${years.at(-1) ?? "Latest FY"} · amount spent in ₹ crore`}
         height={390}
         isLoading={summary.isLoading}
@@ -207,7 +207,7 @@ export function StateAnalysisView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Districts by CSR amount spent</CardTitle>
+            <CardTitle>Districts Ranked by Total CSR Spend</CardTitle>
             <CardDescription>
               {formatNumber(districts.data?.rows.length ?? 0)} districts recorded · click to filter
             </CardDescription>

@@ -169,7 +169,7 @@ export function AiInsightsView() {
       <SectionLabel>Key trends &amp; predictions</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Amount spent trajectory and projection"
+          title="Amount Spent Trajectory and Projection"
           description={data?.forecast.method}
           className="xl:col-span-2"
           height={320}
@@ -220,7 +220,7 @@ export function AiInsightsView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Projection detail</CardTitle>
+              <CardTitle>Projection Detail</CardTitle>
               <CardDescription>Linear fit over annual totals</CardDescription>
             </div>
           </CardHeader>
@@ -298,7 +298,7 @@ export function AiInsightsView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Year-on-year outliers</CardTitle>
+            <CardTitle>Year-on-Year CSR Spend Outliers</CardTitle>
             <CardDescription>
               Entities whose change is at least 2 standard deviations from the typical move in this view
             </CardDescription>
@@ -350,7 +350,7 @@ export function AiInsightsView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Suggested actions</CardTitle>
+              <CardTitle>Suggested Actions</CardTitle>
               <CardDescription>Derived from the gaps detected above</CardDescription>
             </div>
           </CardHeader>
@@ -376,7 +376,7 @@ export function AiInsightsView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Data quality</CardTitle>
+              <CardTitle>Data Quality</CardTitle>
               <CardDescription>What to keep in mind when quoting these numbers</CardDescription>
             </div>
           </CardHeader>
@@ -403,7 +403,7 @@ export function AiInsightsView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Natural language search</CardTitle>
+            <CardTitle>Natural Language Search</CardTitle>
             <CardDescription>
               {data?.llm.available
                 ? `Verified queries use the built-in engine; broader questions use ${data.llm.model}`

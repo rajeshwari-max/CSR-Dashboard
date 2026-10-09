@@ -59,7 +59,7 @@ export function ProjectsTable({
     <Card id="projects" className="scroll-mt-24">
       <CardHeader>
         <div>
-          <CardTitle>Project Register</CardTitle>
+          <CardTitle>Filtered CSR Project Register</CardTitle>
           <CardDescription>
             Every disclosed CSR project in the current view. Click a company to drill down.
           </CardDescription>
