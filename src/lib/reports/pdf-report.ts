@@ -460,8 +460,8 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     ? ((lastYear.spend / firstYear.spend) ** (1 / (trend.length - 1)) - 1) * 100 : null;
   const topMappedState = summary.byState.find((row) => row.name !== "Pan India" && row.name !== "Not Specified");
   const tiles: { label: string; value: string; sub: string; tone?: Tuple }[] = [
-    { label: "Total CSR spend", value: crore(k.totalSpend), sub: `${trend.length} financial years` },
-    { label: `Spend in ${k.latestYear ?? "latest year"}`, value: crore(k.latestYearSpend), sub: k.yoyGrowthPct === null ? "No prior year in view" : `${signedPct(k.yoyGrowthPct)} vs ${k.previousYear}`, tone: k.yoyGrowthPct === null ? undefined : k.yoyGrowthPct >= 0 ? BRAND.up : BRAND.down },
+    { label: "Total CSR spent", value: crore(k.totalSpend), sub: `${trend.length} financial years` },
+    { label: `Amount spent in ${k.latestYear ?? "latest year"}`, value: crore(k.latestYearSpend), sub: k.yoyGrowthPct === null ? "No prior year in view" : `${signedPct(k.yoyGrowthPct)} vs ${k.previousYear}`, tone: k.yoyGrowthPct === null ? undefined : k.yoyGrowthPct >= 0 ? BRAND.up : BRAND.down },
     { label: "Annual growth (CAGR)", value: signedPct(cagr), sub: firstYear && lastYear ? `${firstYear.year.replace("FY ", "FY")} to ${lastYear.year.replace("FY ", "FY")}` : "-", tone: cagr === null ? undefined : cagr >= 0 ? BRAND.up : BRAND.down },
     single
       ? { label: "Thematic areas", value: INR0.format(k.themeCount), sub: "Schedule VII categories" }
@@ -469,7 +469,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     { label: "Project lines", value: INR0.format(k.projectCount), sub: `Avg ${crore(k.avgProjectSize)} each` },
     { label: "States covered", value: INR0.format(k.stateCount), sub: topMappedState ? `Largest: ${topMappedState.name}` : "-" },
     { label: "Districts named", value: INR0.format(k.districtCount), sub: "in project filings" },
-    { label: "Aspirational districts", value: crore(k.aspirationalSpend), sub: `${sharePct(k.aspirationalShare)} of spend` },
+    { label: "Aspirational districts", value: crore(k.aspirationalSpend), sub: `${sharePct(k.aspirationalShare)} of amount spent` },
   ];
   const tileW = (CW - 3 * 10) / 4;
   const tileH = 66;
@@ -501,8 +501,8 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
       .sort((a, b) => ((b.latest ?? 0) - (b.previous ?? 0)) - ((a.latest ?? 0) - (a.previous ?? 0)))[0]
     : undefined;
   const highlights = [
-    topTheme && { eyebrow: "Largest thematic area", title: topTheme.name, body: `${crore(topTheme.value)} - ${sharePct(topTheme.share)} of spend across ${topTheme.count ?? 0} project lines` },
-    topMappedState && { eyebrow: "Largest state", title: topMappedState.name, body: `${crore(topMappedState.value)} - ${sharePct(topMappedState.share)} of spend` },
+    topTheme && { eyebrow: "Largest thematic area", title: topTheme.name, body: `${crore(topTheme.value)} - ${sharePct(topTheme.share)} of amount spent across ${topTheme.count ?? 0} project lines` },
+    topMappedState && { eyebrow: "Largest state", title: topMappedState.name, body: `${crore(topMappedState.value)} - ${sharePct(topMappedState.share)} of amount spent` },
     risingTheme && { eyebrow: `Biggest increase in ${k.latestYear}`, title: risingTheme.name, body: `Up ${crore((risingTheme.latest ?? 0) - (risingTheme.previous ?? 0))}: ${crore(risingTheme.previous)} to ${crore(risingTheme.latest)}` },
   ].filter(Boolean) as { eyebrow: string; title: string; body: string }[];
   if (highlights.length) {
@@ -533,7 +533,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     if (forecast.nextYear && forecast.nextYearSpend !== null && trend.length >= 3) {
       columns.push({ label: forecast.nextYear.replace("FY ", "FY"), value: forecast.nextYearSpend, sub: "projection", delta: null, projection: true });
     }
-    section(ctx, "Trend", "Year-wise CSR spend",
+    section(ctx, "Trend", "Year-wise CSR spent",
       `${lastYear.year} closed at ${crore(lastYear.spend)}${k.yoyGrowthPct !== null ? `, ${signedPct(k.yoyGrowthPct)} on the year before` : ""}${cagr !== null ? `; ${signedPct(cagr)} a year on average since ${firstYear.year}` : ""}. The dashed column is a linear projection (R2 ${forecast.r2?.toFixed(2) ?? "-"}), directional only.`,
       150);
     columnChart(ctx, columns, 150);
@@ -550,7 +550,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
       200);
     donut(ctx, slices, k.totalSpend, "Rs crore, all years");
     if (years.length > 1) {
-      subhead(ctx, "Thematic spend by year", "Rs crore - darker cells = more spend", 22 + Math.min(themes.series.length, 12) * 19);
+      subhead(ctx, "Thematic amount spent by year", "Rs crore - darker cells = more amount spent", 22 + Math.min(themes.series.length, 12) * 19);
       heatmap(ctx, themes.series.slice(0, 12), years, BRAND.purple);
     }
   }
@@ -562,7 +562,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     const mappedTotal = mapped.reduce((s, row) => s + row.value, 0) || 1;
     const topFive = mapped.slice(0, 5).reduce((s, row) => s + row.value, 0) / mappedTotal;
     section(ctx, "Geography", "State-wise distribution",
-      `${topMappedState ? `${topMappedState.name} leads with ${sharePct(topMappedState.share)} of all spend; ` : ""}the top five states take ${sharePct(topFive)} of state-attributed spend. ${unmapped > 0 ? `${crore(unmapped)} is filed as Pan India or without a state.` : ""}`,
+      `${topMappedState ? `${topMappedState.name} leads with ${sharePct(topMappedState.share)} of all amount spent; ` : ""}the top five states take ${sharePct(topFive)} of state-attributed amount spent. ${unmapped > 0 ? `${crore(unmapped)} is filed as Pan India or without a state.` : ""}`,
       Math.min(summary.byState.length, 15) * 17);
     hbars(ctx, summary.byState.slice(0, 15).map((row, index) => ({
       label: row.name,
@@ -571,7 +571,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
       tone: row.name === "Pan India" || row.name === "Not Specified" ? "grey" : index === 0 || row === topMappedState ? "accent" : "muted",
     })));
     if (years.length > 1) {
-      subhead(ctx, "State spend by year", "Rs crore - darker cells = more spend", 22 + Math.min(states.series.length, 12) * 19);
+      subhead(ctx, "State amount spent by year", "Rs crore - darker cells = more amount spent", 22 + Math.min(states.series.length, 12) * 19);
       heatmap(ctx, states.series.slice(0, 12), years, BRAND.teal);
     }
   }
@@ -596,7 +596,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     const shown = districtRows.slice(0, 20);
     const topThree = districtRows.slice(0, 3).reduce((s, row) => s + row.value, 0);
     section(ctx, "Geography", "Top districts",
-      `${districtRows.length} districts are named in filings. The top three take ${sharePct(topThree / (k.totalSpend || 1))} of all spend; ${sharePct(1 - namedDistrictSpend / (k.totalSpend || 1))} carries no district. Teal markers flag aspirational districts.`,
+      `${districtRows.length} districts are named in filings. The top three take ${sharePct(topThree / (k.totalSpend || 1))} of all amount spent; ${sharePct(1 - namedDistrictSpend / (k.totalSpend || 1))} carries no district. Teal markers flag aspirational districts.`,
       Math.min(shown.length, 12) * 17);
     hbars(ctx, shown.map((row, index) => ({
       label: `${row.district}, ${row.state}`,
@@ -612,7 +612,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     const names = modes.rows.map((row) => row.name);
     const top = modes.rows[0];
     section(ctx, "Delivery", "How projects are implemented",
-      `${top.name} carries ${sharePct(top.share)} of spend across the period.`, 30 + years.length * 19);
+      `${top.name} carries ${sharePct(top.share)} of amount spent across the period.`, 30 + years.length * 19);
     stackedShares(ctx, [
       ...years.map((year) => ({ label: year.replace("FY ", "FY"), parts: modes.series.map((s) => ({ name: s.name, value: s.values[year] ?? 0 })) })),
       { label: "All years", parts: modes.rows.map((row) => ({ name: row.name, value: row.value })) },
@@ -623,7 +623,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
   if (buckets.length > 1) {
     const biggest = [...summary.projectSizeDistribution].sort((a, b) => b.spend - a.spend)[0];
     section(ctx, "Delivery", "Project size profile",
-      `Projects of ${safe(biggest.label)} account for ${sharePct(biggest.spend / (k.totalSpend || 1))} of spend.`, 150);
+      `Projects of ${safe(biggest.label)} account for ${sharePct(biggest.spend / (k.totalSpend || 1))} of amount spent.`, 150);
     columnChart(ctx, summary.projectSizeDistribution.map((bucket) => ({
       label: safe(bucket.label),
       value: bucket.spend,
@@ -634,13 +634,13 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
 
   // ---- Companies / sectors (multi-company views only) -------------------
   if (k.companyCount > 1) {
-    section(ctx, "Contributors", "Top companies by CSR spend", `The top 10 companies hold ${sharePct(k.top10Share)} of spend in this view.`, 12 * 17);
+    section(ctx, "Contributors", "Top companies by CSR spent", `The top 10 companies hold ${sharePct(k.top10Share)} of amount spent in this view.`, 12 * 17);
     hbars(ctx, summary.topCompanies.slice(0, 15).map((row, index) => ({
       label: displayCompanyName(row.name), value: row.value, right: `${crore(row.value)}  ${sharePct(row.share)}`, tone: index === 0 ? "accent" : "muted",
     })), { labelWidth: 190 });
   }
   if (summary.bySector.length > 1) {
-    section(ctx, "Contributors", "Spend by industry sector", null, Math.min(summary.bySector.length, 12) * 17);
+    section(ctx, "Contributors", "Amount spent by industry sector", null, Math.min(summary.bySector.length, 12) * 17);
     hbars(ctx, summary.bySector.slice(0, 12).map((row, index) => ({
       label: row.name, value: row.value, right: `${crore(row.value)}  ${sharePct(row.share)}`, tone: index === 0 ? "accent" : "muted",
     })));
@@ -687,7 +687,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
   const notes = [
     ...insights.dataQuality.map((note) => `${note.label}: ${note.value}`),
     "Each project line is filed against one state and district, so geography shows the filed location; multi-state programmes may run more widely than shown.",
-    "Spend is the amount reported against project lines. Company totals published in annual reports may also include administrative overheads and impact assessment.",
+    "Amount spent is the value reported against project lines. Company totals published in annual reports may also include administrative overheads and impact assessment.",
   ];
   const noteLines = notes.map((note) => wrapLines(ctx, note, 8, CW - 28));
   const notesH = noteLines.reduce((s, lines) => s + lines.length * 11 + 3, 0) + 22;

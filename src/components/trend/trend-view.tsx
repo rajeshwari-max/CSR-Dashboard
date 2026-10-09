@@ -93,23 +93,23 @@ export function TrendView() {
       <MiniLabel>Growth summary</MiniLabel>
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
         <Metric
-          label="Latest Financial-Year CSR Spend"
+          label="Latest Financial-Year CSR Spent"
           value={formatCrore(summary.data?.kpis.latestYearSpend ?? 0)}
           sub={summary.data?.kpis.latestYear ?? "—"}
           delta={summary.data?.kpis.yoyGrowthPct ?? null}
         />
         <Metric
-          label="Year-over-Year Change in CSR Spend"
+          label="Year-over-Year Change in CSR Spent"
           value={formatSignedPercent(summary.data?.kpis.yoyGrowthPct ?? null)}
           sub={`${summary.data?.kpis.previousYear ?? "—"} → ${summary.data?.kpis.latestYear ?? "—"}`}
         />
         <Metric
-          label="Compound Annual Growth Rate in CSR Spend"
+          label="Compound Annual Growth Rate in CSR Spent"
           value={cagr === null ? "—" : formatSignedPercent(cagr)}
           sub={years.length ? `${years[0]} → ${years[years.length - 1]}` : "Needs 2+ years"}
         />
         <Metric
-          label="Projected CSR Spend for the Next Financial Year"
+          label="Projected CSR Spent for the Next Financial Year"
           value={
             insights.data?.forecast.nextYearSpend !== null && insights.data?.forecast.nextYearSpend !== undefined
               ? formatCrore(insights.data.forecast.nextYearSpend)
@@ -124,7 +124,7 @@ export function TrendView() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-            <ExplainedTitle title="CSR Spend by Financial Year with Projection" />
+            <ExplainedTitle title="CSR Spent by Financial Year with Projection" />
               <div className="muted">Actuals with projection band</div>
             </div>
           </div>
@@ -141,15 +141,15 @@ export function TrendView() {
 
       <MiniLabel>Growing vs. declining sectors · {years.at(-2) ?? "prior FY"} to {years.at(-1) ?? "latest FY"}</MiniLabel>
       <div className="grid cols-2" style={{ marginBottom: 32 }}>
-        <MoverCard title="Sectors with the Highest Year-over-Year CSR Spend Growth" rows={movers.growing} direction="up" loading={sectors.isLoading} />
-        <MoverCard title="Sectors with the Largest Year-over-Year CSR Spend Decline" rows={movers.declining} direction="down" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with the Highest Year-over-Year CSR Spent Growth" rows={movers.growing} direction="up" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with the Largest Year-over-Year CSR Spent Decline" rows={movers.declining} direction="down" loading={sectors.isLoading} />
       </div>
 
       <MiniLabel>Sector trajectories</MiniLabel>
       <div className="card hoverable" style={{ marginBottom: 32 }}>
         <div className="card-head">
           <div>
-            <ExplainedTitle title="Top Sectors by Total CSR Spend Across Financial Years" />
+            <ExplainedTitle title="Top Sectors by Total CSR Spent Across Financial Years" />
             <div className="muted">Six largest sectors in the current selection</div>
           </div>
         </div>
@@ -188,7 +188,7 @@ export function TrendView() {
       </div>
 
       <MiniLabel>Historical comparison</MiniLabel>
-      <ExplainedTitle title="Historical CSR Spend, Projects and Companies by Financial Year" />
+      <ExplainedTitle title="Historical CSR Spent, Projects and Companies by Financial Year" />
       <div className="table-wrap">
         <table>
           <thead>

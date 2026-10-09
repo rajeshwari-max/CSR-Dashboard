@@ -105,20 +105,20 @@ export function CompanyView({ companyId }: { companyId: string }) {
             [
               { label: "Total CSR Amount Spent for the Selected Period", value: formatCrore(kpis?.totalSpend), sub: `${formatNumber(kpis?.projectCount ?? 0)} projects reported` },
               {
-                label: "National Rank by Total CSR Spend",
+                label: "National Rank by Total CSR Spent",
                 value: kpis?.nationalRank ? `#${kpis.nationalRank}` : "—",
-                sub: `${formatShare(kpis?.nationalShare ?? 0)} of all CSR spend`,
+                sub: `${formatShare(kpis?.nationalShare ?? 0)} of all CSR spent`,
               },
               {
-                label: "Year-over-Year Change in CSR Spend",
+                label: "Year-over-Year Change in CSR Spent",
                 value: formatSignedPercent(kpis?.yoyGrowthPct ?? null),
                 sub: "Latest vs. previous FY",
               },
               {
-                label: "Latest-Year CSR Spend as a Share of Disclosed Obligation",
+                label: "Latest-Year CSR Spent as a Share of Disclosed Obligation",
                 value: formatPercent(kpis?.utilisationPct ?? null),
                 sub: kpis?.obligation
-                  ? `Latest FY spend vs. ${formatCrore(kpis.obligation)} obligation`
+                  ? `Latest FY amount spent vs. ${formatCrore(kpis.obligation)} obligation`
                   : "Obligation not disclosed",
               },
             ] as const
@@ -137,7 +137,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
           <ChartCard
-            title="Company CSR Spend by Financial Year"
+            title="Company CSR Spent by Financial Year"
             description="Amount spent vs. outlay by financial year"
             className="xl:col-span-2"
             height={300}
@@ -194,7 +194,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <ChartCard
-            title="CSR Spend by Schedule VII Thematic Area"
+            title="CSR Spent by Schedule VII Thematic Area"
             description="Amount spent by CSR category"
             height={320}
             isLoading={isLoading}

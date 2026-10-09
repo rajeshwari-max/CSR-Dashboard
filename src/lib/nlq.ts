@@ -168,7 +168,7 @@ export function answerQuestion(question: string, filters: Filters): NlqAnswer {
     return {
       understood: true,
       answer:
-        `Spend is concentrated: the top 10 companies hold ${(k.top10Share * 100).toFixed(1)}% of the total. ` +
+        `Amount spent is concentrated: the top 10 companies hold ${(k.top10Share * 100).toFixed(1)}% of the total. ` +
         `${leader?.name} alone accounts for ${((leader?.share ?? 0) * 100).toFixed(1)}% (${crore(leader?.value ?? 0)}). ` +
         `The mean company spends ${crore(k.avgSpendPerCompany)} but the median is ${crore(k.medianSpendPerCompany)} — ` +
         `quote the median when describing a typical filer.`,
@@ -343,9 +343,9 @@ export function answerQuestion(question: string, filters: Filters): NlqAnswer {
     understood: false,
     answer:
       "I could not read that as a question about this dataset. I can answer things like: " +
-      "“which state has the highest CSR spend?”, “which sectors declined the most?”, " +
+      "“which state has the highest CSR spent?”, “which sectors declined the most?”, " +
       "“how much did Reliance Industries spend in FY 2022-23?”, “how many projects in Maharashtra?”, " +
-      "“what is the compliance rate?”, “how concentrated is spend?”, or “show the yearly trend”. " +
+      "“what is the compliance rate?”, “how concentrated is amount spent?”, or “show the yearly trend”. " +
       "Ask about a state, district, sector, company, Schedule VII category, or a financial year.",
     facts: {},
   };
@@ -368,10 +368,10 @@ export function nlqCapabilities() {
 }
 
 export const NLQ_SUGGESTIONS = [
-  "Which state has the highest CSR spend?",
+  "Which state has the highest CSR spent?",
   "Which sectors declined the most?",
   "What is the compliance rate?",
-  "How concentrated is CSR spend?",
+  "How concentrated is CSR spent?",
   "Show the yearly trend",
   "How many projects are in Maharashtra?",
 ];

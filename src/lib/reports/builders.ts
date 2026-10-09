@@ -62,7 +62,7 @@ export function describeScope(filters: Filters): string {
   if (filters.modes.length) parts.push(filters.modes.join(", "));
   if (filters.aspirationalOnly) parts.push("aspirational districts only");
   if (filters.minSpend !== null || filters.maxSpend !== null) {
-    parts.push(`spend ${filters.minSpend ?? 0}–${filters.maxSpend ?? "∞"} Cr`);
+    parts.push(`amount spent ${filters.minSpend ?? 0}–${filters.maxSpend ?? "∞"} Cr`);
   }
   if (filters.search.trim()) parts.push(`search "${filters.search.trim()}"`);
   return parts.length ? parts.join(" · ") : "All companies, all years, all states";
@@ -159,11 +159,11 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
   overview.addRow(["Key performance indicators"]).font = { bold: true, size: 12 };
   const k = summary.kpis;
   ([
-    ["Total CSR spend (INR Cr)", k.totalSpend],
+    ["Total CSR spent (INR Cr)", k.totalSpend],
     ["Companies reporting", k.companyCount],
     ["Projects", k.projectCount],
-    ["Average spend per company (INR Cr)", k.avgSpendPerCompany],
-    ["Median spend per company (INR Cr)", k.medianSpendPerCompany],
+    ["Average amount spent per company (INR Cr)", k.avgSpendPerCompany],
+    ["Median amount spent per company (INR Cr)", k.medianSpendPerCompany],
     ["Average project size (INR Cr)", k.avgProjectSize],
     ["Year-on-year growth (%)", k.yoyGrowthPct],
     ["Latest year", k.latestYear],
@@ -171,7 +171,7 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
     ["Districts covered", k.districtCount],
     ["Sectors covered", k.sectorCount],
     ["Top-10 company share (%)", Number((k.top10Share * 100).toFixed(2))],
-    ["Aspirational district spend (INR Cr)", k.aspirationalSpend],
+    ["Aspirational district amount spent (INR Cr)", k.aspirationalSpend],
   ] as [string, string | number | null][]).forEach((row) => overview.addRow(row));
   overview.addRow([]);
   overview.addRow(["Executive summary"]).font = { bold: true, size: 12 };
@@ -213,7 +213,7 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
     const sheet = workbook.addWorksheet(name);
     header(sheet, [
       { header: name === "Companies" ? "Company" : name.replace(/s$/, ""), key: "name", width: 42 },
-      { header: "Spend (INR Cr)", key: "value", width: 16 },
+      { header: "Amount spent (INR Cr)", key: "value", width: 16 },
       { header: "Share of view (%)", key: "share", width: 18 },
       { header: "Projects", key: "count", width: 12 },
       { header: "Companies", key: "companies", width: 12 },
@@ -319,9 +319,9 @@ export async function buildPptxReport(filters: Filters): Promise<Buffer> {
     x: 0.5, y: 0.35, w: 11, h: 0.5, fontSize: 24, bold: true, color: NAVY,
   });
   const cards: [string, string, string][] = [
-    ["Total CSR spend", crore(k.totalSpend), `${INR0.format(k.projectCount)} projects`],
+    ["Total CSR spent", crore(k.totalSpend), `${INR0.format(k.projectCount)} projects`],
     ["Companies reporting", INR0.format(k.companyCount), `${k.sectorCount} sectors`],
-    ["Avg spend / company", crore(k.avgSpendPerCompany), `Median ${crore(k.medianSpendPerCompany)}`],
+    ["Avg amount spent / company", crore(k.avgSpendPerCompany), `Median ${crore(k.medianSpendPerCompany)}`],
     ["Year-on-year growth", pct(k.yoyGrowthPct), `${k.previousYear ?? "—"} → ${k.latestYear ?? "—"}`],
     ["States covered", String(k.stateCount), `${INR0.format(k.districtCount)} districts`],
     ["Top-10 concentration", share(k.top10Share), "Share held by 10 largest filers"],
@@ -370,10 +370,10 @@ export async function buildPptxReport(filters: Filters): Promise<Buffer> {
     return slide;
   };
 
-  chartSlide("Top companies by CSR spend", summary.topCompanies.slice(0, 10).reverse());
-  chartSlide("Spend by state", summary.byState.slice(0, 10).reverse());
-  chartSlide("Spend by sector", summary.bySector.slice(0, 10).reverse());
-  chartSlide("Spend by Schedule VII category", summary.byTheme.slice(0, 10).reverse());
+  chartSlide("Top companies by CSR spent", summary.topCompanies.slice(0, 10).reverse());
+  chartSlide("Amount spent by state", summary.byState.slice(0, 10).reverse());
+  chartSlide("Amount spent by sector", summary.bySector.slice(0, 10).reverse());
+  chartSlide("Amount spent by Schedule VII category", summary.byTheme.slice(0, 10).reverse());
 
   // Insights
   const insightSlide = pptx.addSlide();

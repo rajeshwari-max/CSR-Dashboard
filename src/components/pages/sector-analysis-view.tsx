@@ -78,7 +78,7 @@ export function SectorAnalysisView() {
   return (
     <PageFrame
       title="Sector Analysis"
-      subtitle={`How CSR spend splits across BRSR sectors · ${scope}`}
+      subtitle={`How CSR spent splits across BRSR sectors · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -94,7 +94,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Sector overview</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="CSR Spend Share by BRSR Sector"
+          title="CSR Spent Share by BRSR Sector"
           description="Top sectors, remainder grouped"
           height={340}
           isLoading={summary.isLoading}
@@ -105,7 +105,7 @@ export function SectorAnalysisView() {
         </ChartCard>
 
         <ChartCard
-          title="Total CSR Spend by Sector and Financial Year"
+          title="Total CSR Spent by Sector and Financial Year"
           description="Top 6 sectors across financial years"
           className="xl:col-span-2"
           height={340}
@@ -138,7 +138,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Growth rate</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <ChartCard
-          title="Year-over-Year Change in CSR Spend by Sector"
+          title="Year-over-Year Change in CSR Spent by Sector"
           description="Sectors with at least ₹5 Cr in the prior year"
           height={380}
           isLoading={summary.isLoading}
@@ -177,8 +177,8 @@ export function SectorAnalysisView() {
         <Card className="overflow-hidden">
           <CardHeader>
             <div>
-              <CardTitle>Schedule VII Thematic Areas by Total CSR Spend</CardTitle>
-              <CardDescription>Area size represents total spend; hover for ₹ crore and use the labels for spend share. Active filters apply.</CardDescription>
+              <CardTitle>Schedule VII Thematic Areas by Total CSR Spent</CardTitle>
+              <CardDescription>Area size represents total amount spent; hover for ₹ crore and use the labels for share of amount spent. Active filters apply.</CardDescription>
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>

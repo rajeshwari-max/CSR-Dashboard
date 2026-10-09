@@ -66,7 +66,7 @@ export function StateAnalysisView() {
   return (
     <PageFrame
       title="State Analysis"
-      subtitle={`Geographic distribution of CSR spend · ${scope}`}
+      subtitle={`Geographic distribution of CSR spent · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -83,7 +83,7 @@ export function StateAnalysisView() {
       <SectionLabel>India map &amp; heatmap</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="State-wise Total CSR Spend"
+          title="State-wise Total CSR Spent"
           description="Click a state to filter · sqrt colour scale"
           className="xl:col-span-2"
           height={520}
@@ -116,7 +116,7 @@ export function StateAnalysisView() {
               ))}
               <p className="pt-1 text-xs text-muted-foreground">
                 Rows filed as &ldquo;Pan India&rdquo; or with no state cannot be mapped, so the choropleth covers{" "}
-                {formatShare(totalMapped / Math.max(1, summary.data?.kpis.totalSpend ?? 1))} of spend in this view.
+                {formatShare(totalMapped / Math.max(1, summary.data?.kpis.totalSpend ?? 1))} of amount spent in this view.
               </p>
             </CardContent>
           </Card>
@@ -124,7 +124,7 @@ export function StateAnalysisView() {
           <Card className="flex-1">
             <CardHeader>
               <div>
-                <CardTitle>Fastest-Growing States by CSR Spend</CardTitle>
+                <CardTitle>Fastest-Growing States by CSR Spent</CardTitle>
                 <CardDescription>Latest FY vs. previous, minimum ₹10 Cr base</CardDescription>
               </div>
             </CardHeader>
@@ -207,7 +207,7 @@ export function StateAnalysisView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Districts Ranked by Total CSR Spend</CardTitle>
+            <CardTitle>Districts Ranked by Total CSR Spent</CardTitle>
             <CardDescription>
               {formatNumber(districts.data?.rows.length ?? 0)} districts recorded · click to filter
             </CardDescription>

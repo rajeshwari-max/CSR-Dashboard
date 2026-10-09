@@ -54,7 +54,7 @@ export function NgoAnalysisView() {
       <SectionLabel>Delivery channel</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Implementation Channels by Total CSR Spend"
+          title="Implementation Channels by Total CSR Spent"
           description="Share of amount spent by delivery channel"
           height={320}
           isLoading={summary.isLoading}
@@ -92,7 +92,7 @@ export function NgoAnalysisView() {
             <div>
               <CardTitle>Implementation Channels Summary</CardTitle>
               <CardDescription>
-                {formatShare(throughAgencies / total)} of spend in this view is routed through an external agency,
+                {formatShare(throughAgencies / total)} of amount spent in this view is routed through an external agency,
                 trust or Section 8 company rather than executed directly
               </CardDescription>
             </div>

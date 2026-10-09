@@ -186,9 +186,9 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "trend-yoy",
       kind: "trend",
       severity,
-      title: `CSR spend ${direction} ${PCT(kpis.yoyGrowthPct)} in ${kpis.latestYear}`,
+      title: `CSR spent ${direction} ${PCT(kpis.yoyGrowthPct)} in ${kpis.latestYear}`,
       detail:
-        `Reported spend moved from ${CRORE(trend[trend.length - 2].spend)} in ${kpis.previousYear} to ` +
+        `Reported amount spent moved from ${CRORE(trend[trend.length - 2].spend)} in ${kpis.previousYear} to ` +
         `${CRORE(trend[trend.length - 1].spend)} in ${kpis.latestYear}, across ` +
         `${trend[trend.length - 1].companies.toLocaleString("en-IN")} reporting ${trend[trend.length - 1].companies === 1 ? "company" : "companies"}.`,
       evidence: [
@@ -230,7 +230,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "concentration-companies",
       kind: "concentration",
       severity: kpis.top10Share > 0.35 ? "warning" : "neutral",
-      title: `Top 10 companies account for ${SHARE(kpis.top10Share)} of spend`,
+      title: `Top 10 companies account for ${SHARE(kpis.top10Share)} of amount spent`,
       detail:
         `${summary.topCompanies[0].name} alone contributes ${SHARE(summary.topCompanies[0].share ?? 0)} ` +
         `(${CRORE(summary.topCompanies[0].value)}). Aggregate trends are therefore sensitive to a handful of large filers.`,
@@ -255,9 +255,9 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "concentration-states",
       kind: "concentration",
       severity: top5 / stateTotal > 0.5 ? "warning" : "neutral",
-      title: `${mappedStates[0].name} leads with ${CRORE(mappedStates[0].value)} of state-attributed spend`,
+      title: `${mappedStates[0].name} leads with ${CRORE(mappedStates[0].value)} of state-attributed amount spent`,
       detail:
-        `The top five states take ${SHARE(top5 / stateTotal)} of all state-attributed spend, while the bottom ` +
+        `The top five states take ${SHARE(top5 / stateTotal)} of all state-attributed amount spent, while the bottom ` +
         `${mappedStates.slice(-5).length} states receive ${SHARE(mappedStates.slice(-5).reduce((sum, row) => sum + row.value, 0) / stateTotal)} between them.`,
       evidence: [
         { label: "Top state", value: `${mappedStates[0].name} · ${CRORE(mappedStates[0].value)}` },
@@ -278,7 +278,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "gap-geography",
       kind: "gap",
       severity: share > 0.25 ? "warning" : "neutral",
-      title: `${SHARE(share)} of spend cannot be placed on the map`,
+      title: `${SHARE(share)} of amount spent cannot be placed on the map`,
       detail:
         `${CRORE(panIndia?.value ?? 0)} is filed as "Pan India" and ${CRORE(unspecified?.value ?? 0)} has no state recorded. ` +
         `State-level rankings and the choropleth cover only the remaining ${CRORE(kpis.totalSpend - unattributed)}.`,
@@ -298,7 +298,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "concentration-themes",
       kind: "concentration",
       severity: "neutral",
-      title: `${first.name} and ${second.name} take ${combined.toFixed(0)}% of spend`,
+      title: `${first.name} and ${second.name} take ${combined.toFixed(0)}% of amount spent`,
       detail:
         `${first.name} received ${CRORE(first.value)} across ${first.count?.toLocaleString("en-IN")} projects and ` +
         `${second.name} ${CRORE(second.value)}. The remaining ${summary.byTheme.length - 2} Schedule VII categories ` +
@@ -341,12 +341,12 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       id: "aspirational",
       kind: "gap",
       severity: kpis.aspirationalShare < 0.05 ? "warning" : "positive",
-      title: `${SHARE(kpis.aspirationalShare)} of spend reaches aspirational districts`,
+      title: `${SHARE(kpis.aspirationalShare)} of amount spent reaches aspirational districts`,
       detail:
         `${CRORE(kpis.aspirationalSpend)} is recorded in districts on the government's aspirational list. ` +
         `The dashboard flags these from the workbook's own aspirational-districts sheet.`,
       evidence: [
-        { label: "Aspirational spend", value: CRORE(kpis.aspirationalSpend) },
+        { label: "Aspirational amount spent", value: CRORE(kpis.aspirationalSpend) },
         { label: "Share", value: SHARE(kpis.aspirationalShare) },
       ],
       action: { label: "Show aspirational only", filters: { aspirationalOnly: true } },
@@ -444,29 +444,29 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
   const recommendations: InsightsResponse["recommendations"] = [];
   if (unattributed / Math.max(1, kpis.totalSpend) > 0.15) {
     recommendations.push({
-      title: "Push filers to attribute spend to a state",
-      detail: `${SHARE(unattributed / kpis.totalSpend)} of spend is filed as Pan India or left blank, which blocks any regional analysis.`,
+      title: "Push filers to attribute amount spent to a state",
+      detail: `${SHARE(unattributed / kpis.totalSpend)} of amount spent is filed as Pan India or left blank, which blocks any regional analysis.`,
       impact: `${CRORE(unattributed)} currently unmappable`,
     });
   }
   if (kpis.top10Share > 0.3) {
     recommendations.push({
       title: "Report medians alongside totals",
-      detail: `With the top 10 filers at ${SHARE(kpis.top10Share)} of spend, the mean (${CRORE(kpis.avgSpendPerCompany)}) overstates the typical company. The median is ${CRORE(kpis.medianSpendPerCompany)}.`,
+      detail: `With the top 10 filers at ${SHARE(kpis.top10Share)} of amount spent, the mean (${CRORE(kpis.avgSpendPerCompany)}) overstates the typical company. The median is ${CRORE(kpis.medianSpendPerCompany)}.`,
       impact: `${(kpis.avgSpendPerCompany / Math.max(0.01, kpis.medianSpendPerCompany)).toFixed(1)}× gap between mean and median`,
     });
   }
   if (kpis.aspirationalShare < 0.08 && kpis.aspirationalSpend > 0) {
     recommendations.push({
       title: "Aspirational-district coverage is thin",
-      detail: `Only ${SHARE(kpis.aspirationalShare)} of spend lands in aspirational districts despite policy emphasis on them.`,
+      detail: `Only ${SHARE(kpis.aspirationalShare)} of amount spent lands in aspirational districts despite policy emphasis on them.`,
       impact: `${CRORE(kpis.aspirationalSpend)} of ${CRORE(kpis.totalSpend)}`,
     });
   }
   if (summary.byTheme.length && (summary.byTheme[0].share ?? 0) > 0.2) {
     recommendations.push({
       title: `Check whether ${summary.byTheme[0].name} crowds out other categories`,
-      detail: `${summary.byTheme[0].name} absorbs ${SHARE(summary.byTheme[0].share ?? 0)} of spend; the bottom half of Schedule VII categories share ${SHARE(summary.byTheme.slice(Math.ceil(summary.byTheme.length / 2)).reduce((sum, row) => sum + (row.share ?? 0), 0))}.`,
+      detail: `${summary.byTheme[0].name} absorbs ${SHARE(summary.byTheme[0].share ?? 0)} of amount spent; the bottom half of Schedule VII categories share ${SHARE(summary.byTheme.slice(Math.ceil(summary.byTheme.length / 2)).reduce((sum, row) => sum + (row.share ?? 0), 0))}.`,
       impact: `${summary.byTheme.length} categories in view`,
     });
   }
@@ -479,12 +479,12 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
   }
 
   const summaryLines = [
-    `${scopeLabel}: ${CRORE(kpis.totalSpend)} of CSR spend across ${kpis.projectCount.toLocaleString("en-IN")} ${kpis.projectCount === 1 ? "project" : "projects"} and ${kpis.companyCount.toLocaleString("en-IN")} ${kpis.companyCount === 1 ? "company" : "companies"}.`,
+    `${scopeLabel}: ${CRORE(kpis.totalSpend)} of CSR spent across ${kpis.projectCount.toLocaleString("en-IN")} ${kpis.projectCount === 1 ? "project" : "projects"} and ${kpis.companyCount.toLocaleString("en-IN")} ${kpis.companyCount === 1 ? "company" : "companies"}.`,
     kpis.yoyGrowthPct !== null
-      ? `Spend ${kpis.yoyGrowthPct >= 0 ? "grew" : "contracted"} ${PCT(kpis.yoyGrowthPct)} in ${kpis.latestYear}, with ${CRORE(kpis.latestYearSpend)} reported.`
+      ? `Amount spent ${kpis.yoyGrowthPct >= 0 ? "grew" : "contracted"} ${PCT(kpis.yoyGrowthPct)} in ${kpis.latestYear}, with ${CRORE(kpis.latestYearSpend)} reported.`
       : `Only one financial year is in view, so no growth rate is available.`,
     kpis.companyCount > 10
-      ? `Spend is concentrated: the top 10 companies hold ${SHARE(kpis.top10Share)}, and ${summary.byTheme[0]?.name ?? "the leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix.`
+      ? `Amount spent is concentrated: the top 10 companies hold ${SHARE(kpis.top10Share)}, and ${summary.byTheme[0]?.name ?? "the leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix.`
       : `${summary.byTheme[0]?.name ?? "The leading category"} takes ${SHARE(summary.byTheme[0]?.share ?? 0)} of the thematic mix, across ${summary.byTheme.length} Schedule VII categories.`,
     forecast.nextYear && forecast.nextYearSpend !== null
       ? `A linear projection puts ${forecast.nextYear} at ${CRORE(forecast.nextYearSpend)} (R² ${forecast.r2?.toFixed(2) ?? "—"}); treat it as directional.`

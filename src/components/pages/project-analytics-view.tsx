@@ -64,11 +64,11 @@ export function ProjectAnalyticsView() {
       <SectionLabel>Project profile</SectionLabel>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Stat label="Total CSR Projects in the Selected Period" value={formatNumber(kpis?.projectCount ?? 0)} sub={`${formatNumber(kpis?.companyCount ?? 0)} companies`} />
-        <Stat label="Average CSR Spend per Project" value={formatCrore(kpis?.avgProjectSize ?? 0)} sub="Mean disclosed amount" />
+        <Stat label="Average CSR Spent per Project" value={formatCrore(kpis?.avgProjectSize ?? 0)} sub="Mean disclosed amount" />
         <Stat
-          label="CSR Spend in Aspirational Districts"
+          label="CSR Spent in Aspirational Districts"
           value={formatCrore(kpis?.aspirationalSpend ?? 0)}
-          sub={`${formatShare(kpis?.aspirationalShare ?? 0)} of spend in view`}
+          sub={`${formatShare(kpis?.aspirationalShare ?? 0)} of amount spent in view`}
         />
         <Stat
           label="Districts Reached by Reported CSR Projects"
@@ -93,7 +93,7 @@ export function ProjectAnalyticsView() {
       <SectionLabel>Distribution &amp; impact</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="Project Count by Disclosed CSR Spend Range"
+          title="Project Count by Disclosed CSR Spent Range"
           description="All projects with a disclosed amount spent · click a bar to filter by amount"
           className="xl:col-span-2"
           height={320}
@@ -131,7 +131,7 @@ export function ProjectAnalyticsView() {
         </ChartCard>
 
         <ChartCard
-          title="Districts Ranked by Project-Level CSR Spend"
+          title="Districts Ranked by Project-Level CSR Spent"
           description="Districts with the highest recorded amount spent"
           height={320}
           isLoading={summary.isLoading}

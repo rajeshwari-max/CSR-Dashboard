@@ -75,7 +75,7 @@ export function ExecutiveDashboard() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <ExplainedTitle title="CSR Spend and Project Count by Financial Year" />
+              <ExplainedTitle title="CSR Spent and Project Count by Financial Year" />
               <div className="muted">
                 {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · amount spent (₹ Cr) and projects reported
               </div>
@@ -93,7 +93,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <ExplainedTitle title="States Ranked by Total CSR Spend" />
+            <ExplainedTitle title="States Ranked by Total CSR Spent" />
             <Link href={`/state-analysis?${filterQuery}`} className="card-badge">
               View all
             </Link>
@@ -112,7 +112,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <ExplainedTitle title="Sectors Ranked by Total CSR Spend" />
+            <ExplainedTitle title="Sectors Ranked by Total CSR Spent" />
             <Link href={`/sector-analysis?${filterQuery}`} className="card-badge">
               View all
             </Link>
@@ -136,7 +136,7 @@ export function ExecutiveDashboard() {
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <ExplainedTitle title="Geographic Distribution of Total CSR Spend by State" />
+              <ExplainedTitle title="Geographic Distribution of Total CSR Spent by State" />
               <div className="muted">Click a state to filter</div>
             </div>
             <span className="card-badge">Across India</span>
@@ -157,7 +157,7 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <ExplainedTitle title="Companies Ranked by Total CSR Spend" />
+            <ExplainedTitle title="Companies Ranked by Total CSR Spent" />
             <Link href={`/company-analysis?${filterQuery}`} className="card-badge">
               Compare
             </Link>

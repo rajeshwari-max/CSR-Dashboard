@@ -153,7 +153,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
               {formatCrore(hovered?.value ?? 0)} · {formatNumber(hovered?.count ?? 0)} projects
             </p>
             <p className="numeric text-[11px] text-muted-foreground">
-              {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of filtered spend
+              {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of filtered amount spent
             </p>
           </div>
         ) : null}

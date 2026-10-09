@@ -298,7 +298,7 @@ export function AiInsightsView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Year-on-Year CSR Spend Outliers</CardTitle>
+            <CardTitle>Year-on-Year CSR Spent Outliers</CardTitle>
             <CardDescription>
               Entities whose change is at least 2 standard deviations from the typical move in this view
             </CardDescription>

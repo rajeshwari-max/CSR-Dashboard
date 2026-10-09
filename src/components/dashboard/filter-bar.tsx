@@ -199,12 +199,12 @@ export function FilterBar({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-9 px-2.5 text-xs">
-                Spend bands
+                Amount spent bands
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-2" align="end">
               <p className="px-2 pb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Project spend
+                Project amount spent
               </p>
               <div className="space-y-1">
                 {SPEND_RANGES.map((range) => {

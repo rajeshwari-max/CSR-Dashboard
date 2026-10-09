@@ -87,7 +87,7 @@ export function CompanyAnalysisView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Companies Ranked by Total CSR Spend in This View</CardTitle>
+              <CardTitle>Companies Ranked by Total CSR Spent in This View</CardTitle>
               <CardDescription>Use the common search above, then click a row to analyse that company</CardDescription>
             </div>
           </CardHeader>
@@ -170,7 +170,7 @@ export function CompanyAnalysisView() {
             <Card className="xl:col-span-3">
               <CardHeader>
                 <div>
-                  <CardTitle>Company Benchmark by Total CSR Spend</CardTitle>
+                  <CardTitle>Company Benchmark by Total CSR Spent</CardTitle>
                   <CardDescription>Compliance uses the disclosed 2%-of-net-profit obligation</CardDescription>
                 </div>
               </CardHeader>
@@ -420,7 +420,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card className="xl:col-span-2">
           <CardHeader>
             <div>
-              <CardTitle>CSR Spend by Schedule VII Thematic Area</CardTitle>
+              <CardTitle>CSR Spent by Schedule VII Thematic Area</CardTitle>
               <CardDescription>Schedule VII categories, largest first</CardDescription>
             </div>
           </CardHeader>
