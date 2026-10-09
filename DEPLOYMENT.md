@@ -53,31 +53,13 @@ too if you'd rather not keep the source workbook in the repo.
 | Variable | Value | Purpose |
 | --- | --- | --- |
 | `APP_PASSWORD` | pick something strong | The shared password. **Required** — leaving it blank disables the gate entirely. |
-| `RESEND_API_KEY` | secret API key | Sends one-time sign-in codes. Required for registered-user login. |
-| `OTP_FROM_EMAIL` | `CMS CSR <access@your-domain>` | Sender address on a verified domain. |
-| `ADMIN_EMAIL` | administrator email | Receives new registration approval notices. |
-| `AUTH_EMAIL_OTP` | `required` (default) or `off` | `off` lets approved users sign in with email + password only. |
-| `APP_BASE_URL` | *(optional)* `https://your-domain` | Link in approval emails. Defaults to Render's automatic `RENDER_EXTERNAL_URL`. |
 | `LLM_API_KEY` | *(optional)* | Enables AI narration + the chat box. Everything else works without it. |
 | `LLM_PROVIDER` | `anthropic` or `openai` | Only if you set a key. |
 
 4. **Create** → first build takes 5–10 minutes.
 
 You'll get a URL like `https://cms-csr.onrender.com`. The browser will prompt for
-credentials: select **Administrator access** and enter `APP_PASSWORD`. New users register first, wait for administrator approval, then verify a six-digit email code at every sign-in. Administrators manage requests at `/admin/access`.
-
-### Email delivery (Resend) — must be set up for approvals and sign-in
-
-Approval notices and sign-in codes are sent through Resend. `OTP_FROM_EMAIL` must use a
-domain you have **verified in Resend** (Resend → Domains). With the default
-`onboarding@resend.dev` sender, or an unverified domain, Resend only delivers to the
-Resend account owner's own address: the administrator notice arrives, but approval
-emails and sign-in codes to every other user are rejected (HTTP 403), so approved users
-cannot finish signing in. Delivery failures are logged in Render → Logs as
-`[auth-email] delivery rejected by Resend` with Resend's reason.
-
-The **Access approvals** page (`/admin/access`) shows a warning if email delivery is not
-configured or if account storage is not on the persistent disk.
+credentials: select **Administrator access** and enter `APP_PASSWORD`. Users can register with an email address and password, then sign in directly with those credentials. Administrators can deactivate or restore accounts at `/admin/access`.
 
 ---
 

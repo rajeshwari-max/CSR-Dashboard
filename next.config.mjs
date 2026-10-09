@@ -1,3 +1,8 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectDir = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -16,6 +21,10 @@ const nextConfig = {
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
+  },
+  webpack(config) {
+    config.resolve.alias["@"] = path.join(projectDir, "src");
+    return config;
   },
 };
 

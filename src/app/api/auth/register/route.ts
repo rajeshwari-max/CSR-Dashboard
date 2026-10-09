@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { notifyAdminOfRegistration } from "@/lib/auth-email";
 import { registerUser } from "@/lib/auth-store";
 
 export async function POST(request: Request) {
@@ -21,8 +20,7 @@ export async function POST(request: Request) {
   const password = typeof body.password === "string" ? body.password : "";
 
   try {
-    const user = await registerUser({ name, email, password });
-    notifyAdminOfRegistration(user.name, user.email).catch((noticeError) => console.error("Admin registration notice failed", noticeError));
+    await registerUser({ name, email, password });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Registration failed." },
@@ -30,5 +28,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true, pendingApproval: true, message: "Registration submitted. An administrator must approve your account before you can sign in." });
+  return NextResponse.json({ ok: true, registered: true, message: "Account created. You can now sign in with your email and password." });
 }

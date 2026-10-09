@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomInt, scrypt as scryptCallback, timingSafeEqual as cryptoTimingSafeEqual } from "node:crypto";
+import { randomBytes, scrypt as scryptCallback, timingSafeEqual as cryptoTimingSafeEqual } from "node:crypto";
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -25,14 +25,9 @@ export const REVIEW_DECISIONS: readonly ReviewDecision[] = ["approved", "rejecte
 
 interface StoredUser {
   id: string; name: string; email: string; passwordHash: string; salt: string; createdAt: string;
-  status?: string; reviewedAt?: string; approvalEmailSentAt?: string;
-  otpHash?: string; otpExpiresAt?: string; otpRequestedAt?: string; otpAttempts?: number;
+  status?: string; reviewedAt?: string;
 }
-export interface AuthUser { id: string; name: string; email: string; status: AccountStatus; createdAt: string; reviewedAt?: string; approvalEmailSentAt?: string }
-
-export class OtpRateLimitError extends Error {
-  constructor() { super("Please wait one minute before requesting another code."); this.name = "OtpRateLimitError"; }
-}
+export interface AuthUser { id: string; name: string; email: string; status: AccountStatus; createdAt: string; reviewedAt?: string }
 
 /**
  * Accounts created before the approval workflow existed carry no status and were
@@ -71,7 +66,7 @@ async function writeUsers(users: StoredUser[]) {
 
 /**
  * Every read-modify-write of users.json runs through this queue. Without it, an
- * approval racing a registration or an OTP request could overwrite the file with a
+ * an administrator update racing a registration could overwrite the file with a
  * stale copy and silently undo the approval.
  */
 let queue: Promise<unknown> = Promise.resolve();
@@ -83,9 +78,8 @@ function withUsers<T>(task: (users: StoredUser[]) => Promise<T>): Promise<T> {
 
 async function passwordHash(password: string, salt: string): Promise<Buffer> { return await scrypt(password, salt, 64) as Buffer; }
 function publicUser(user: StoredUser): AuthUser {
-  return { id: user.id, name: user.name, email: user.email, status: normalizeStatus(user.status), createdAt: user.createdAt, reviewedAt: user.reviewedAt, approvalEmailSentAt: user.approvalEmailSentAt };
+  return { id: user.id, name: user.name, email: user.email, status: normalizeStatus(user.status), createdAt: user.createdAt, reviewedAt: user.reviewedAt };
 }
-function clearOtp(user: StoredUser) { delete user.otpHash; delete user.otpExpiresAt; delete user.otpAttempts; }
 
 /** Returns the account when the password matches, whatever its status; callers decide whether that status may sign in. */
 export async function authenticateUser(email: string, password: string): Promise<AuthUser | null> {
@@ -103,7 +97,7 @@ export async function registerUser(input: { name: string; email: string; passwor
   const salt = randomBytes(16).toString("hex"); const hash = (await passwordHash(input.password, salt)).toString("hex");
   return withUsers(async (users) => {
     if (findByEmail(users, email)) throw new Error("An account already exists for this email.");
-    const user: StoredUser = { id: randomBytes(16).toString("hex"), name, email, salt, passwordHash: hash, createdAt: new Date().toISOString(), status: "pending" };
+    const user: StoredUser = { id: randomBytes(16).toString("hex"), name, email, salt, passwordHash: hash, createdAt: new Date().toISOString(), status: "approved" };
     users.push(user); await writeUsers(users); return publicUser(user);
   });
 }
@@ -117,58 +111,9 @@ export async function reviewUser(id: string, status: ReviewDecision): Promise<{ 
     const user = users.find((candidate) => candidate.id === id); if (!user) return null;
     const previousStatus = normalizeStatus(user.status);
     if (previousStatus === status && user.status === status) return { user: publicUser(user), previousStatus, changed: false };
-    user.status = status; user.reviewedAt = new Date().toISOString(); clearOtp(user); delete user.otpRequestedAt;
-    // Leaving "approved" resets the notice so a later re-approval is announced again.
-    if (status !== "approved") delete user.approvalEmailSentAt;
+    user.status = status; user.reviewedAt = new Date().toISOString();
     await writeUsers(users);
     return { user: publicUser(user), previousStatus, changed: previousStatus !== status };
-  });
-}
-
-/** Records that the approval notice was delivered, which is what prevents duplicate emails. */
-export async function markApprovalEmailSent(id: string): Promise<AuthUser | null> {
-  return withUsers(async (users) => {
-    const user = users.find((candidate) => candidate.id === id); if (!user) return null;
-    if (normalizeStatus(user.status) === "approved" && !user.approvalEmailSentAt) { user.approvalEmailSentAt = new Date().toISOString(); await writeUsers(users); }
-    return publicUser(user);
-  });
-}
-
-function hashOtp(user: StoredUser, code: string, secret: string) { return createHash("sha256").update(`${user.id}:${code}:${secret}`).digest("hex"); }
-
-export async function createLoginOtp(email: string, secret: string): Promise<{ code: string; user: AuthUser }> {
-  return withUsers(async (users) => {
-    const user = findByEmail(users, email); if (!user || normalizeStatus(user.status) !== "approved") throw new Error("Account not found.");
-    const lastRequest = user.otpRequestedAt ? Date.parse(user.otpRequestedAt) : 0; if (Date.now() - lastRequest < 60_000) throw new OtpRateLimitError();
-    const code = randomInt(100000, 1000000).toString(); user.otpHash = hashOtp(user, code, secret); user.otpExpiresAt = new Date(Date.now() + 10 * 60_000).toISOString(); user.otpRequestedAt = new Date().toISOString(); user.otpAttempts = 0;
-    await writeUsers(users); return { code, user: publicUser(user) };
-  });
-}
-
-/** Called when the code email could not be sent, so the user can retry immediately instead of hitting the one-minute limit. */
-export async function cancelLoginOtp(email: string): Promise<void> {
-  await withUsers(async (users) => { const user = findByEmail(users, email); if (!user) return; clearOtp(user); delete user.otpRequestedAt; await writeUsers(users); });
-}
-
-export async function verifyLoginOtp(email: string, code: string, secret: string): Promise<AuthUser | null> {
-  return withUsers(async (users) => {
-    const user = findByEmail(users, email);
-    if (!user || normalizeStatus(user.status) !== "approved" || !user.otpHash || !user.otpExpiresAt || Date.now() > Date.parse(user.otpExpiresAt) || (user.otpAttempts ?? 0) >= 5) return null;
-    user.otpAttempts = (user.otpAttempts ?? 0) + 1; const valid = cryptoTimingSafeEqual(Buffer.from(hashOtp(user, code, secret)), Buffer.from(user.otpHash));
-    if (valid) clearOtp(user); await writeUsers(users); return valid ? publicUser(user) : null;
-  });
-}
-
-export async function resetUserPassword(email: string, code: string, newPassword: string, secret: string): Promise<AuthUser | null> {
-  if (newPassword.length < 10 || newPassword.length > 128) throw new Error("Password must contain 10 to 128 characters.");
-  const salt = randomBytes(16).toString("hex"); const hash = (await passwordHash(newPassword, salt)).toString("hex");
-  return withUsers(async (users) => {
-    const user = findByEmail(users, email);
-    if (!user || normalizeStatus(user.status) !== "approved" || !user.otpHash || !user.otpExpiresAt || Date.now() > Date.parse(user.otpExpiresAt) || (user.otpAttempts ?? 0) >= 5) return null;
-    user.otpAttempts = (user.otpAttempts ?? 0) + 1;
-    const valid = cryptoTimingSafeEqual(Buffer.from(hashOtp(user, code, secret)), Buffer.from(user.otpHash));
-    if (!valid) { await writeUsers(users); return null; }
-    user.salt = salt; user.passwordHash = hash; clearOtp(user); await writeUsers(users); return publicUser(user);
   });
 }
 
