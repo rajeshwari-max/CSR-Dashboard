@@ -5,6 +5,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Building2,
+  CalendarRange,
   FolderKanban,
   IndianRupee,
   Minus,
@@ -15,6 +16,34 @@ import {
 import { formatCrore, formatNumber, formatSignedPercent } from "@/lib/format";
 import type { Kpis, Meta } from "@/types";
 import { MetricInfo } from "@/components/shared/metric-info";
+import { useFilterStore } from "@/store/filters";
+
+const shortYear = (year: string) => year.replace(/^FY\s*/, "FY");
+
+/**
+ * The years every KPI card covers: all reporting years in the dashboard by
+ * default, or exactly the years picked in the Year filter.
+ */
+export function describeKpiPeriod(allYears: string[], selectedYears: string[]) {
+  const all = [...allYears].sort((a, b) => a.localeCompare(b));
+  const filtered = selectedYears.length > 0;
+  const years = filtered ? all.filter((year) => selectedYears.includes(year)) : all;
+  if (!years.length) return null;
+  const first = all.indexOf(years[0]);
+  const contiguous = years.every((year, index) => all.indexOf(year) === first + index);
+  const range =
+    years.length === 1
+      ? years[0]
+      : contiguous
+        ? `${years[0]} – ${years[years.length - 1]}`
+        : years.map(shortYear).join(", ");
+  const tag = filtered
+    ? `${years.length} of ${all.length} ${all.length === 1 ? "year" : "years"}`
+    : years.length === 1
+      ? "Only year"
+      : `All ${years.length} years`;
+  return { range, tag, filtered, count: years.length };
+}
 
 /**
  * The draft's 6-up KPI row, in the drafted order:
@@ -47,6 +76,7 @@ export function KpiRow({
   isLoading: boolean;
   onSelect?: (key: string) => void;
 }) {
+  const selectedYears = useFilterStore((state) => state.years);
   if (isLoading || !kpis) {
     return (
       <div className="kpi-row">
@@ -62,11 +92,22 @@ export function KpiRow({
   }
 
   const beneficiaries = meta?.capabilities.beneficiaries ?? false;
+  const period = describeKpiPeriod(meta?.years ?? [], selectedYears);
+  const periodTip = period
+    ? period.filtered
+      ? `Covers ${period.range} only, as picked in the Year filter. Clear the Year filter to see every year in the dashboard.`
+      : `Covers every financial year in the dashboard (${period.range}). Pick years in the Year filter to narrow it.`
+    : undefined;
   const cards: KpiSpec[] = [
     {
       label: "Total CSR Amount Spent for the Selected Period",
       value: formatCrore(kpis.totalSpend),
-      sub: `${kpis.latestYear ?? "—"} latest · cumulative view`,
+      sub:
+        kpis.yoyGrowthPct !== null && kpis.previousYear
+          ? `${kpis.latestYear} vs ${kpis.previousYear}`
+          : period && period.count > 1
+            ? "Cumulative across the years shown"
+            : `${kpis.latestYear ?? "—"}`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
       tip: "Cumulative CSR amount spent across all projects and financial years in the current filter selection.",
@@ -129,6 +170,13 @@ export function KpiRow({
               <Icon width={15} height={15} />
             </span>
             <div className="kpi-label metric-title"><span>{card.label}</span><MetricInfo title={card.label} /></div>
+            {period ? (
+              <div className="kpi-period" title={periodTip}>
+                <CalendarRange width={12} height={12} aria-hidden="true" />
+                <span className="kpi-period-range">{period.range}</span>
+                <span className={`kpi-period-tag${period.filtered ? " filtered" : ""}`}>{period.tag}</span>
+              </div>
+            ) : null}
             <div
               className="kpi-value"
               title={card.value}

@@ -5,7 +5,7 @@ export interface DashboardMetricMeta {
   source?: string;
 }
 
-const FILTER_NOTE = "Updates with the active year, company, sector, geography, domain, implementation and amount filters.";
+const FILTER_NOTE = "By default this covers every financial year in the dashboard; picking years in the Year filter narrows it to those years. It also updates with the company, sector, geography, domain, implementation and amount filters.";
 
 export const dashboardMetadata: Record<string, DashboardMetricMeta> = {
   "Total CSR Amount Spent for the Selected Period": { description: `Sum of reported project-level CSR amount spent across the current selection. ${FILTER_NOTE}`, calculation: "SUM(amountSpent)", unit: "₹ crore", source: "Project-level Amount Spent" },
