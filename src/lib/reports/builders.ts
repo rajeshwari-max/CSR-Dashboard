@@ -60,6 +60,7 @@ export function describeScope(filters: Filters): string {
   if (filters.districts.length) parts.push(`${filters.districts.length} districts`);
   if (filters.themes.length) parts.push(filters.themes.join(", "));
   if (filters.modes.length) parts.push(filters.modes.join(", "));
+  if (filters.ownership.length) parts.push(filters.ownership.join(", "));
   if (filters.aspirationalOnly) parts.push("aspirational districts only");
   if (filters.minSpend !== null || filters.maxSpend !== null) {
     parts.push(`amount spent ${filters.minSpend ?? 0}–${filters.maxSpend ?? "∞"} Cr`);

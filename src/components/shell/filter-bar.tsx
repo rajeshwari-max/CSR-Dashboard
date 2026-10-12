@@ -23,7 +23,16 @@ interface ChipSpec {
 }
 
 const CHIPS: ChipSpec[] = [
-  { key: "years", label: "Year", options: (meta) => meta.years },
+  {
+    key: "years",
+    label: "Year",
+    options: (meta) => [...meta.years, ...(meta.earlierYears ?? [])],
+    // FY 2020-21 onwards is the default view; earlier years are opt-in.
+    optionValue: (meta) => [
+      ...meta.years.map((year) => ({ value: year, label: year })),
+      ...[...(meta.earlierYears ?? [])].reverse().map((year) => ({ value: year, label: year, hint: "Earlier year, not in default view" })),
+    ],
+  },
   { key: "sectors", label: "Sector", options: (meta) => meta.sectors },
   {
     key: "companies",
@@ -35,6 +44,7 @@ const CHIPS: ChipSpec[] = [
   },
   { key: "themes", label: "Domain", options: (meta) => meta.themes },
   { key: "modes", label: "Implementation", options: (meta) => meta.modes },
+  { key: "ownership", label: "Ownership", options: (meta) => meta.ownerships ?? [] },
 ];
 
 /**

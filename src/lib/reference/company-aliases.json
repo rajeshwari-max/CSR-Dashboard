@@ -1,0 +1,8 @@
+{
+  "_source": "Names that the source files use for the same company in different years. Keys and values are company match keys (see data-cleanup.ts).",
+  "tcs": "tataconsultancyservices",
+  "hdfc": "hdfcbank",
+  "hdfcstandardlifeinsurance": "hdfclifeinsurance",
+  "getandd": "gevernovatandd",
+  "gmrairportsinfrastructure": "gmrairports"
+}

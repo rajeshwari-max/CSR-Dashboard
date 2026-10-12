@@ -1,0 +1,37 @@
+{
+  "_source": "Classified by CMS from public shareholding: Central PSU = Government of India or a central PSU holds over 50% (includes subsidiaries of central PSUs); State PSU = a state government or its undertakings is the controlling shareholder; Public sector bank / insurer = government-owned banks and insurers. Every other company is Private. Edit this list to correct a classification.",
+  "Central PSU": [
+    "Balmer Lawrie And Company Limited", "Beml Limited", "Bharat Dynamics Limited", "Bharat Electronics Limited",
+    "Bharat Heavy Electricals Limited", "Bharat Petroleum Corporation Limited", "Chennai Petroleum Corporation Limited",
+    "Coal India Limited", "Cochin Shipyard Limited", "Container Corporation Of India Limited", "Dredging Corporation Of India Limited",
+    "Engineers India Limited", "Fertilizers and Chemicals Travancore Limited", "Gail (India) Limited",
+    "Garden Reach Shipbuilders & Engineers Limited", "Hemisphere Properties India Limited", "Hindustan Aeronautics Limited",
+    "Hindustan Copper Limited", "Hindustan Petroleum Corporation Limited", "HMT Limited", "Hmt Watches Limited",
+    "Housing And Urban Development Corporation Limited", "Ifci Limited", "Ifci Factors Limited", "Indian Oil Corporation Limited",
+    "Indian Railway Catering And Tourism Corporation Limited", "Indian Railway Finance Corporation Limited",
+    "Indian Renewable Energy Development Agency Limited", "Ircon International Limited", "Iti Limited", "Kiocl Limited",
+    "Madras Fertilizers Limited", "Mahanagar Telephone Nigam Limited", "Mangalore Refinery And Petrochemicals Limited",
+    "Mazagon Dock Shipbuilders Limited", "Mishra Dhatu Nigam Limited", "Mmtc Limited", "Moil Limited",
+    "National Aluminium Company Limited", "National Fertilizers Limited", "Nbcc (India) Limited", "Nhpc Limited",
+    "Nlc India Limited", "NMDC Steel Limited", "Nmdc Limited", "Ntpc Green Energy Limited", "Ntpc Limited",
+    "Oil And Natural Gas Corporation Limited", "Oil India International Limited", "Oil India Limited",
+    "Power Finance Corporation Limited", "Power Grid Corporation Of India Limited", "Rail Vikas Nigam Limited",
+    "Railtel Corporation Of India Limited", "Rashtriya Chemicals And Fertilizers Limited", "Rec Limited", "Rites Limited",
+    "Shipping Corporation Of India Limited", "Sjvn Limited", "Steel Authority Of India Limited"
+  ],
+  "Public sector bank": [
+    "Bank of Baroda", "Bank of India", "Bank of Maharashtra", "Canara Bank", "Canara Bank Securities Limited",
+    "Central Bank of India", "Idbi Bank Limited", "Indian Bank", "Indian Overseas Bank", "Punjab & Sind Bank",
+    "Punjab National Bank", "Sbi Cards And Payment Services Limited", "State Bank Operations Support Services Private Limited",
+    "State Bank of India", "UCO Bank", "Union Bank of India"
+  ],
+  "Public sector insurer": [
+    "General Insurance Corporation Of India", "Life Insurance Corporation of India", "Sbi Life Insurance Company Limited",
+    "The New India Assurance Company Limited"
+  ],
+  "State PSU": [
+    "Gujarat Alkalies And Chemicals Limited", "Gujarat Gas Company Limited", "Gujarat Industries Power Company Limited",
+    "Gujarat Mineral Development Corporation Limited", "Gujarat Narmada Valley Fertilizers and Chemicals Limited",
+    "Gujarat State Fertilizers & Chemicals Limited", "Gujarat State Petronet Limited", "Tamil Nadu Newsprint & Papers Limited"
+  ]
+}

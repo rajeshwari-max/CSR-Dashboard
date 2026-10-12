@@ -8,7 +8,7 @@ import { CACHE_HEADERS, handleRouteError } from "../_lib";
 
 export const dynamic = "force-dynamic";
 
-const DIMENSIONS: Dimension[] = ["company", "sector", "state", "district", "theme", "mode", "year"];
+const DIMENSIONS: Dimension[] = ["company", "sector", "state", "district", "theme", "mode", "year", "ownership"];
 
 /**
  * GET /api/breakdown?dimension=state

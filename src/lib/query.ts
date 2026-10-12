@@ -2,7 +2,7 @@
 
 import { EMPTY_FILTERS, type Filters, type SortDirection, type SortField } from "@/types";
 
-export const LIST_KEYS = ["years", "sectors", "states", "districts", "themes", "companies", "modes"] as const;
+export const LIST_KEYS = ["years", "sectors", "states", "districts", "themes", "companies", "modes", "ownership"] as const;
 export type ListKey = (typeof LIST_KEYS)[number];
 
 export function filtersToParams(filters: Filters, extra: Record<string, string | number | undefined> = {}) {
@@ -48,6 +48,7 @@ export function paramsToFilters(params: URLSearchParams): Filters {
     themes: read("themes"),
     companies: read("companies"),
     modes: read("modes"),
+    ownership: read("ownership"),
     search: (params.get("search") ?? "").slice(0, 120),
     minSpend: number("minSpend"),
     maxSpend: number("maxSpend"),
@@ -94,6 +95,7 @@ export function describeFilters(filters: Filters): string {
   if (filters.districts.length) parts.push(`${filters.districts.length} districts`);
   if (filters.themes.length) parts.push(filters.themes.join(", "));
   if (filters.modes.length) parts.push(filters.modes.join(", "));
+  if (filters.ownership.length) parts.push(filters.ownership.join(", "));
   if (filters.aspirationalOnly) parts.push("aspirational districts");
   if (filters.search.trim()) parts.push(`"${filters.search.trim()}"`);
   return parts.join(" · ");

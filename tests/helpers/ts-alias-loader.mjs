@@ -11,6 +11,9 @@ export async function resolve(specifier, context, nextResolve) {
   let base = null;
   if (specifier.startsWith("@/")) base = resolvePath(src, specifier.slice(2));
   else if ((specifier.startsWith("./") || specifier.startsWith("../")) && context.parentURL?.endsWith(".ts")) base = resolvePath(dirname(fileURLToPath(context.parentURL)), specifier);
+  if (base && base.endsWith(".json") && existsSync(base)) {
+    return { url: pathToFileURL(base).href, shortCircuit: true, importAttributes: { type: "json" } };
+  }
   if (base) for (const file of candidates(base)) if (existsSync(file) && !file.endsWith(base) || (file === base && /\.[cm]?[jt]sx?$/.test(file) && existsSync(file))) return { url: pathToFileURL(file).href, shortCircuit: true };
   // Bare package subpaths such as "next/server" need the explicit .js file under ESM.
   if (specifier === "next/server") return nextResolve("next/server.js", context);

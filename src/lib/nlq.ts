@@ -114,7 +114,7 @@ function detect<T>(question: string, table: [RegExp, T][]): T | null {
 
 const LABEL: Record<Dimension, string> = {
   state: "state", district: "district", sector: "sector",
-  company: "company", theme: "category", mode: "implementation mode", year: "year",
+  company: "company", theme: "category", mode: "implementation mode", year: "year", ownership: "ownership",
 };
 
 export function answerQuestion(question: string, filters: Filters): NlqAnswer {

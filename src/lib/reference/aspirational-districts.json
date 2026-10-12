@@ -1,0 +1,618 @@
+{
+ "_source": "NITI Aayog, List of 112 Aspirational Districts (2023). Aliases cover earlier names used in filings, e.g. Visakhapatnam before Alluri Sitharamaraju was carved out (2022), and West Sikkim before Soreng.",
+ "populationShare": 0.15,
+ "populationShareSource": "Over 15% of India's population (NITI Aayog CSR consultation concept note, citing Sattva 2025)",
+ "districts": [
+  {
+   "state": "Andhra Pradesh",
+   "district": "Alluri Sitharamaraju",
+   "aliases": [
+    "Visakhapatnam"
+   ]
+  },
+  {
+   "state": "Andhra Pradesh",
+   "district": "Parvathipuram Manyam",
+   "aliases": [
+    "Vizianagaram"
+   ]
+  },
+  {
+   "state": "Andhra Pradesh",
+   "district": "Y.S.R. Kadapa",
+   "aliases": [
+    "YSR Kadapa",
+    "Kadapa",
+    "Cuddapah",
+    "YSR"
+   ]
+  },
+  {
+   "state": "Arunachal Pradesh",
+   "district": "Namsai",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Baksa",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Barpeta",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Darrang",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Dhubri",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Goalpara",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Hailakandi",
+   "aliases": []
+  },
+  {
+   "state": "Assam",
+   "district": "Udalguri",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Araria",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Aurangabad",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Banka",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Begusarai",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Gaya",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Jamui",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Katihar",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Khagaria",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Muzaffarpur",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Nawada",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Purnea",
+   "aliases": [
+    "Purnia"
+   ]
+  },
+  {
+   "state": "Bihar",
+   "district": "Sheikhpura",
+   "aliases": []
+  },
+  {
+   "state": "Bihar",
+   "district": "Sitamarhi",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Bastar",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Bijapur",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Dantewada",
+   "aliases": [
+    "Dakshin Bastar Dantewada"
+   ]
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Kanker",
+   "aliases": [
+    "Uttar Bastar Kanker"
+   ]
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Kondagaon",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Korba",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Mahasamund",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Narayanpur",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Rajnandgaon",
+   "aliases": []
+  },
+  {
+   "state": "Chhattisgarh",
+   "district": "Sukma",
+   "aliases": []
+  },
+  {
+   "state": "Gujarat",
+   "district": "Dahod",
+   "aliases": []
+  },
+  {
+   "state": "Gujarat",
+   "district": "Narmada",
+   "aliases": []
+  },
+  {
+   "state": "Haryana",
+   "district": "Mewat",
+   "aliases": [
+    "Nuh"
+   ]
+  },
+  {
+   "state": "Himachal Pradesh",
+   "district": "Chamba",
+   "aliases": []
+  },
+  {
+   "state": "Jammu and Kashmir",
+   "district": "Baramula",
+   "aliases": [
+    "Baramulla"
+   ]
+  },
+  {
+   "state": "Jammu and Kashmir",
+   "district": "Kupwara",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Bokaro",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Chatra",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Dumka",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Garhwa",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Giridih",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Godda",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Gumla",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Hazaribag",
+   "aliases": [
+    "Hazaribagh"
+   ]
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Khunti",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Latehar",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Lohardaga",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Pakur",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Palamu",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Pashchimi Singhbhum",
+   "aliases": [
+    "West Singhbhum",
+    "Paschimi Singhbhum"
+   ]
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Purbi Singhbhum",
+   "aliases": [
+    "East Singhbhum"
+   ]
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Ramgarh",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Ranchi",
+   "aliases": []
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Sahibganj",
+   "aliases": [
+    "Sahebganj"
+   ]
+  },
+  {
+   "state": "Jharkhand",
+   "district": "Simdega",
+   "aliases": []
+  },
+  {
+   "state": "Karnataka",
+   "district": "Raichur",
+   "aliases": []
+  },
+  {
+   "state": "Karnataka",
+   "district": "Yadgir",
+   "aliases": []
+  },
+  {
+   "state": "Kerala",
+   "district": "Wayanad",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Barwani",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Chhatarpur",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Damoh",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Guna",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Khandwa",
+   "aliases": [
+    "East Nimar"
+   ]
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Rajgarh",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Singrauli",
+   "aliases": []
+  },
+  {
+   "state": "Madhya Pradesh",
+   "district": "Vidisha",
+   "aliases": []
+  },
+  {
+   "state": "Maharashtra",
+   "district": "Gadchiroli",
+   "aliases": []
+  },
+  {
+   "state": "Maharashtra",
+   "district": "Nandurbar",
+   "aliases": []
+  },
+  {
+   "state": "Maharashtra",
+   "district": "Osmanabad",
+   "aliases": [
+    "Dharashiv"
+   ]
+  },
+  {
+   "state": "Maharashtra",
+   "district": "Washim",
+   "aliases": []
+  },
+  {
+   "state": "Manipur",
+   "district": "Chandel",
+   "aliases": []
+  },
+  {
+   "state": "Meghalaya",
+   "district": "Ribhoi",
+   "aliases": [
+    "Ri Bhoi"
+   ]
+  },
+  {
+   "state": "Mizoram",
+   "district": "Mamit",
+   "aliases": []
+  },
+  {
+   "state": "Nagaland",
+   "district": "Kiphire",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Balangir",
+   "aliases": [
+    "Bolangir"
+   ]
+  },
+  {
+   "state": "Odisha",
+   "district": "Dhenkanal",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Gajapati",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Kalahandi",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Kandhamal",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Koraput",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Malkangiri",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Nabarangapur",
+   "aliases": [
+    "Nabarangpur"
+   ]
+  },
+  {
+   "state": "Odisha",
+   "district": "Nuapada",
+   "aliases": []
+  },
+  {
+   "state": "Odisha",
+   "district": "Rayagada",
+   "aliases": []
+  },
+  {
+   "state": "Punjab",
+   "district": "Ferozepur",
+   "aliases": [
+    "Firozpur"
+   ]
+  },
+  {
+   "state": "Punjab",
+   "district": "Moga",
+   "aliases": []
+  },
+  {
+   "state": "Rajasthan",
+   "district": "Baran",
+   "aliases": []
+  },
+  {
+   "state": "Rajasthan",
+   "district": "Dholpur",
+   "aliases": []
+  },
+  {
+   "state": "Rajasthan",
+   "district": "Jaisalmer",
+   "aliases": []
+  },
+  {
+   "state": "Rajasthan",
+   "district": "Karauli",
+   "aliases": []
+  },
+  {
+   "state": "Rajasthan",
+   "district": "Sirohi",
+   "aliases": []
+  },
+  {
+   "state": "Sikkim",
+   "district": "Soreng",
+   "aliases": [
+    "West Sikkim"
+   ]
+  },
+  {
+   "state": "Tamil Nadu",
+   "district": "Ramanathapuram",
+   "aliases": []
+  },
+  {
+   "state": "Tamil Nadu",
+   "district": "Virudhunagar",
+   "aliases": []
+  },
+  {
+   "state": "Telangana",
+   "district": "Asifabad",
+   "aliases": [
+    "Kumuram Bheem Asifabad",
+    "Komaram Bheem Asifabad"
+   ]
+  },
+  {
+   "state": "Telangana",
+   "district": "Bhadradri-Kothagudem",
+   "aliases": [
+    "Bhadradri Kothagudem"
+   ]
+  },
+  {
+   "state": "Telangana",
+   "district": "Bhupalpally",
+   "aliases": [
+    "Jayashankar Bhupalpally"
+   ]
+  },
+  {
+   "state": "Tripura",
+   "district": "Dhalai",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Bahraich",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Balrampur",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Chandauli",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Chitrakoot",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Fatehpur",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Shravasti",
+   "aliases": []
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Siddharthnagar",
+   "aliases": [
+    "Siddharth Nagar"
+   ]
+  },
+  {
+   "state": "Uttar Pradesh",
+   "district": "Sonbhadra",
+   "aliases": []
+  },
+  {
+   "state": "Uttarakhand",
+   "district": "Haridwar",
+   "aliases": []
+  },
+  {
+   "state": "Uttarakhand",
+   "district": "Udham Singh Nagar",
+   "aliases": []
+  }
+ ]
+}

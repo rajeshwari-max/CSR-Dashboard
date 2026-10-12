@@ -1,0 +1,11 @@
+{
+  "source": "MCA data as quoted in NITI Aayog's concept note 'Consultation on CSR Expenditure Trends, Implementation Challenges, and Diversification of Focus Areas', Table 1",
+  "unit": "INR crore",
+  "years": {
+    "FY 2020-21": 26210.95,
+    "FY 2021-22": 27141.45,
+    "FY 2022-23": 31183.28,
+    "FY 2023-24": 35917.98,
+    "FY 2024-25": 40794.00
+  }
+}

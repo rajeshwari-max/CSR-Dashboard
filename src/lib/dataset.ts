@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { cleanDataset, focusBits, OWNERSHIP_CLASSES, type CleanupReport } from "@/lib/data-cleanup";
 import { REPORTING_START_YEAR } from "@/types";
 import type {
   Capabilities,
@@ -105,6 +106,12 @@ export interface Dataset {
   projects: (string | null)[];
   searchBlob: string[];
   companyIdToIndex: Map<string, number>;
+  /** Ownership class labels, and per-row index into them (via the row's company). */
+  ownerships: string[];
+  ownershipIdx: Int32Array;
+  /** Bitmask of FOCUS_TAGS matched by the project name. */
+  focus: Uint8Array;
+  cleanup: CleanupReport;
   /** Sorted ascending — every year-over-year calculation walks this. */
   yearOrder: number[];
   stats: Record<string, number>;
@@ -147,7 +154,8 @@ function isReportingYear(label: string): boolean {
 export function getDataset(): Dataset {
   if (globalThis.__csrDataset) return globalThis.__csrDataset;
 
-  const raw = readJson<RawDataset>("dataset.json");
+  const cleaned = cleanDataset(readJson<RawDataset>("dataset.json"));
+  const raw = cleaned.data;
   const n = raw.rows.length;
   const d = raw.dictionaries;
 
@@ -182,12 +190,17 @@ export function getDataset(): Dataset {
     beneficiaries: new Float64Array(n),
     projects: new Array(n),
     searchBlob: new Array(n),
-    companyIdToIndex: new Map(),
+    companyIdToIndex: cleaned.aliasIndex,
+    ownerships: [...OWNERSHIP_CLASSES],
+    ownershipIdx: new Int32Array(n),
+    focus: new Uint8Array(n),
+    cleanup: cleaned.report,
     yearOrder: [],
     stats: raw.stats,
   };
 
   d.companies.forEach((company, index) => dataset.companyIdToIndex.set(company.id, index));
+  const companyOwnership = d.companies.map((company) => Math.max(0, dataset.ownerships.indexOf(company.ownership ?? "Private")));
 
   for (let i = 0; i < n; i += 1) {
     const row = raw.rows[i];
@@ -205,6 +218,8 @@ export function getDataset(): Dataset {
     dataset.beneficiaries[i] = row[11] ?? Number.NaN;
     dataset.statusIdx[i] = row[12] ?? -1;
     dataset.aspirational[i] = row[14] ? 1 : 0;
+    dataset.ownershipIdx[i] = companyOwnership[row[0]] ?? dataset.ownerships.length - 1;
+    dataset.focus[i] = focusBits(`${row[9] ?? ""} ${d.themes[row[4]] ?? ""}`);
     dataset.searchBlob[i] = (
       `${d.companies[row[0]]?.name ?? ""} ${row[9] ?? ""} ${d.themes[row[4]] ?? ""} ` +
       `${d.states[row[3]] ?? ""} ${row[6] >= 0 ? d.districts[row[6]] : ""} ` +
@@ -213,8 +228,10 @@ export function getDataset(): Dataset {
     ).toLowerCase();
   }
 
+  // Every year, oldest first. Rows are still limited to the reporting years
+  // unless a Year filter picks earlier ones (see selectRows).
   dataset.yearOrder = [...d.years.keys()]
-    .filter((index) => isReportingYear(d.years[index]))
+    .filter((index) => /^FY\s+\d{4}-\d{2}$/.test(d.years[index].trim()))
     .sort((a, b) => d.years[a].localeCompare(d.years[b]));
 
   globalThis.__csrDataset = dataset;
@@ -266,6 +283,11 @@ export function getMeta(): Meta {
       companyCount: companies.size,
       totalSpend: round(totalSpend),
       years: [...reportingYears].sort((a, b) => a.localeCompare(b)),
+      earlierYears: data.years
+        .filter((year) => /^FY\s+\d{4}-\d{2}$/.test(year.trim()) && !isReportingYear(year))
+        .sort((a, b) => a.localeCompare(b)),
+      ownerships: [...data.ownerships],
+      cleanup: data.cleanup,
       aspirationalDistricts: [...aspirationalDistricts].sort((a, b) => a.localeCompare(b)),
       districtsByState: Object.fromEntries(
         [...districtsByState.entries()].map(([state, districts]) => [
@@ -304,6 +326,7 @@ export function selectRows(filters: Filters): Int32Array {
   const districts = indexSet(filters.districts, data.districts);
   const themes = indexSet(filters.themes, data.themes);
   const modes = indexSet(filters.modes, data.modes);
+  const ownerships = indexSet(filters.ownership ?? [], data.ownerships);
 
   let companies: Set<number> | null = null;
   if (filters.companies.length) {
@@ -321,8 +344,12 @@ export function selectRows(filters: Filters): Int32Array {
   let size = 0;
 
   for (let i = 0; i < data.count; i += 1) {
-    if (reportingYears && !reportingYears.has(data.yearIdx[i])) continue;
-    if (years && !years.has(data.yearIdx[i])) continue;
+    // Earlier years (before FY 2020-21) are opt-in: only rows of a year the
+    // Year filter names explicitly; with no Year filter, the reporting years.
+    if (years) {
+      if (!years.has(data.yearIdx[i])) continue;
+    } else if (reportingYears && !reportingYears.has(data.yearIdx[i])) continue;
+    if (ownerships && !ownerships.has(data.ownershipIdx[i])) continue;
     if (sectors && !sectors.has(data.sectorIdx[i])) continue;
     if (states && !states.has(data.stateIdx[i])) continue;
     if (districts && !districts.has(data.districtIdx[i])) continue;
@@ -375,6 +402,8 @@ export function dimensionSpec(data: Dataset, dimension: Dimension): DimensionSpe
       return { keys: data.themeIdx, labels: data.themes };
     case "mode":
       return { keys: data.modeIdx, labels: data.modes };
+    case "ownership":
+      return { keys: data.ownershipIdx, labels: data.ownerships };
     case "year":
     default:
       return { keys: data.yearIdx, labels: data.years };
@@ -878,6 +907,7 @@ function scopedFilters(companyIds: string[], base?: Partial<Filters>): Filters {
     themes: base?.themes ?? [],
     companies: companyIds,
     modes: base?.modes ?? [],
+    ownership: base?.ownership ?? [],
     search: base?.search ?? "",
     minSpend: null,
     maxSpend: null,

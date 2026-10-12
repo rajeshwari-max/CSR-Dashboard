@@ -20,6 +20,8 @@ export interface Company {
   contactPhone: string | null;
   listed: string | null;
   companyType: string | null;
+  /** Central PSU, State PSU, Public sector bank, Public sector insurer or Private (src/lib/reference/ownership.json). */
+  ownership?: string | null;
 }
 
 export interface CompanyOption {
@@ -69,6 +71,20 @@ export interface Meta {
   districts: string[];
   /** District options grouped by their source state for hierarchical filtering. */
   districtsByState: Record<string, string[]>;
+  /** Financial years before FY 2020-21: hidden by default, selectable in the Year filter. */
+  earlierYears: string[];
+  /** Ownership classes for the Ownership filter. */
+  ownerships: string[];
+  /** What the load-time clean-up changed (src/lib/data-cleanup.ts). */
+  cleanup: {
+    companiesMerged: number;
+    mergedNames: string[][];
+    cinsCleared: number;
+    duplicateRows: number;
+    duplicateSpend: number;
+    aspirationalAdded: number;
+    aspirationalRemoved: number;
+  };
   /** District labels attached to rows flagged as aspirational in the source data. */
   aspirationalDistricts: string[];
   ngos: string[];
@@ -86,6 +102,8 @@ export interface Filters {
   themes: string[];
   companies: string[];
   modes: string[];
+  /** Ownership classes (Central PSU, Private, ...). */
+  ownership: string[];
   search: string;
   minSpend: number | null;
   maxSpend: number | null;
@@ -103,13 +121,14 @@ export const EMPTY_FILTERS: Filters = {
   themes: [],
   companies: [],
   modes: [],
+  ownership: [],
   search: "",
   minSpend: null,
   maxSpend: null,
   aspirationalOnly: false,
 };
 
-export type Dimension = "company" | "sector" | "state" | "district" | "theme" | "mode" | "year";
+export type Dimension = "company" | "sector" | "state" | "district" | "theme" | "mode" | "year" | "ownership";
 
 export interface Kpis {
   totalSpend: number;

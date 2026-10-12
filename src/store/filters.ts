@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 import { EMPTY_FILTERS, type Filters } from "@/types";
 
-export type ListKey = "years" | "sectors" | "states" | "districts" | "themes" | "companies" | "modes";
+export type ListKey = "years" | "sectors" | "states" | "districts" | "themes" | "companies" | "modes" | "ownership";
 
 interface FilterStore extends Filters {
   setValues: (key: ListKey, values: string[]) => void;
@@ -60,6 +60,7 @@ export function selectFilters(state: FilterStore): Filters {
     themes: state.themes,
     companies: state.companies,
     modes: state.modes,
+    ownership: state.ownership,
     search: state.search,
     minSpend: state.minSpend,
     maxSpend: state.maxSpend,

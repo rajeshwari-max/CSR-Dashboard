@@ -24,10 +24,10 @@ const shortYear = (year: string) => year.replace(/^FY\s*/, "FY");
  * The years every KPI card covers: all reporting years in the dashboard by
  * default, or exactly the years picked in the Year filter.
  */
-export function describeKpiPeriod(allYears: string[], selectedYears: string[]) {
-  const all = [...allYears].sort((a, b) => a.localeCompare(b));
+export function describeKpiPeriod(reportingYears: string[], selectedYears: string[], earlierYears: string[] = []) {
+  const all = [...earlierYears, ...reportingYears].sort((a, b) => a.localeCompare(b));
   const filtered = selectedYears.length > 0;
-  const years = filtered ? all.filter((year) => selectedYears.includes(year)) : all;
+  const years = filtered ? all.filter((year) => selectedYears.includes(year)) : [...reportingYears].sort((a, b) => a.localeCompare(b));
   if (!years.length) return null;
   const first = all.indexOf(years[0]);
   const contiguous = years.every((year, index) => all.indexOf(year) === first + index);
@@ -38,10 +38,12 @@ export function describeKpiPeriod(allYears: string[], selectedYears: string[]) {
         ? `${years[0]} – ${years[years.length - 1]}`
         : years.map(shortYear).join(", ");
   const tag = filtered
-    ? `${years.length} of ${all.length} ${all.length === 1 ? "year" : "years"}`
+    ? `${years.length} ${years.length === 1 ? "year" : "years"} selected`
     : years.length === 1
       ? "Only year"
-      : `All ${years.length} years`;
+      : earlierYears.length
+        ? `Default ${years.length} years`
+        : `All ${years.length} years`;
   return { range, tag, filtered, count: years.length };
 }
 
@@ -92,11 +94,11 @@ export function KpiRow({
   }
 
   const beneficiaries = meta?.capabilities.beneficiaries ?? false;
-  const period = describeKpiPeriod(meta?.years ?? [], selectedYears);
+  const period = describeKpiPeriod(meta?.years ?? [], selectedYears, meta?.earlierYears ?? []);
   const periodTip = period
     ? period.filtered
       ? `Covers ${period.range} only, as picked in the Year filter. Clear the Year filter to see every year in the dashboard.`
-      : `Covers every financial year in the dashboard (${period.range}). Pick years in the Year filter to narrow it.`
+      : `Covers every financial year in the default view (${period.range}). Pick years in the Year filter to narrow it${meta?.earlierYears?.length ? `, or to add earlier years (${meta.earlierYears[0]} onwards)` : ""}.`
     : undefined;
   const cards: KpiSpec[] = [
     {
