@@ -50,15 +50,21 @@ export function companyMatchKey(name: string): string {
 const normDistrict = (value: string) => value.toLowerCase().replace(/district/g, "").replace(/[^a-z]/g, "");
 const normState = (value: string) => value.toLowerCase().replace(/&/g, "and").replace(/[^a-z]/g, "");
 
-const ASPIRATIONAL = new Set<string>();
+/** Filing spelling (state|district) -> official district, so old and new names count once. */
+const ASPIRATIONAL = new Map<string, string>();
 for (const entry of (aspirationalJson as { districts: { state: string; district: string; aliases: string[] }[] }).districts) {
-  for (const name of [entry.district, ...entry.aliases]) ASPIRATIONAL.add(`${normState(entry.state)}|${normDistrict(name)}`);
+  for (const name of [entry.district, ...entry.aliases]) ASPIRATIONAL.set(`${normState(entry.state)}|${normDistrict(name)}`, `${entry.district}, ${entry.state}`);
 }
 export const ASPIRATIONAL_POPULATION_SHARE = (aspirationalJson as { populationShare: number }).populationShare;
 export const ASPIRATIONAL_DISTRICT_COUNT = (aspirationalJson as { districts: unknown[] }).districts.length;
 
 export function isAspirationalDistrict(state: string, district: string): boolean {
   return ASPIRATIONAL.has(`${normState(state)}|${normDistrict(district)}`);
+}
+
+/** The official aspirational district a filing's state + district refers to, or null. */
+export function officialAspirationalDistrict(state: string, district: string): string | null {
+  return ASPIRATIONAL.get(`${normState(state)}|${normDistrict(district)}`) ?? null;
 }
 
 const OWNERSHIP = new Map<string, Ownership>();

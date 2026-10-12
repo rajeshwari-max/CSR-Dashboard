@@ -70,7 +70,7 @@ test("policy insights and template upload round-trip", async () => {
   const before = buildPolicyInsights({ ...EMPTY_FILTERS });
   assert.equal(before.coverage.length, 5);
   assert.ok(before.coverage.every((c) => c.share > 0.3 && c.share < 0.6));
-  assert.ok(before.aspirational.districtsReached > 60);
+  assert.ok(before.aspirational.districtsReached > 60 && before.aspirational.districtsReached <= 112);
   assert.equal(before.focus.length, 3);
 
   const { parseExtra } = await import("@/lib/extra-data");

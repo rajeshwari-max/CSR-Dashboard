@@ -5,7 +5,7 @@
  * reduction, disability, unspent CSR, impact assessment and implementing partners.
  */
 import nationalJson from "@/lib/reference/national-totals.json";
-import { ASPIRATIONAL_DISTRICT_COUNT, ASPIRATIONAL_POPULATION_SHARE, companyMatchKey, FOCUS_TAGS } from "@/lib/data-cleanup";
+import { ASPIRATIONAL_DISTRICT_COUNT, ASPIRATIONAL_POPULATION_SHARE, companyMatchKey, FOCUS_TAGS, officialAspirationalDistrict } from "@/lib/data-cleanup";
 import { getDataset, groupBy, round, selectRows } from "@/lib/dataset";
 import { readExtra, type ExtraRecord } from "@/lib/extra-data";
 import type { Filters } from "@/types";
@@ -86,13 +86,16 @@ export function buildPolicyInsights(filters: Filters) {
 
   // 3. aspirational districts --------------------------------------------------------
   const aspByYear = new Map<string, number>();
-  const aspDistricts = new Set<number>();
+  const aspDistricts = new Set<string>();
   const aspRows: number[] = [];
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
     if (!data.aspirational[row]) continue;
     aspRows.push(row);
-    if (data.districtIdx[row] >= 0) aspDistricts.add(data.districtIdx[row]);
+    if (data.districtIdx[row] >= 0) {
+      const official = officialAspirationalDistrict(data.states[data.stateIdx[row]] ?? "", data.districts[data.districtIdx[row]]);
+      if (official) aspDistricts.add(official);
+    }
     const value = data.spent[row];
     if (Number.isNaN(value)) continue;
     const year = data.years[data.yearIdx[row]];
