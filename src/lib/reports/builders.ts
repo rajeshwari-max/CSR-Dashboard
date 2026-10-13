@@ -21,6 +21,7 @@ import {
   CSV_HEADERS,
   getDataset,
   hydrateRow,
+  isReportingYear,
   rowToCsvValues,
   selectSortedRows,
 } from "@/lib/dataset";
@@ -49,9 +50,15 @@ function share(value: number | null | undefined): string {
 
 export function describeScope(filters: Filters): string {
   const parts: string[] = [];
+  const data = getDataset();
   if (filters.years.length) parts.push(filters.years.join(", "));
+  else {
+    // No Year filter = the default reporting years, never "all years": the
+    // earlier years (FY 2014-15 to FY 2019-20) are only in when picked.
+    const years = data.yearOrder.map((index) => data.years[index]).filter(isReportingYear);
+    if (years.length) parts.push(years.length > 1 ? `${years[0]} to ${years[years.length - 1]}` : years[0]);
+  }
   if (filters.companies.length) {
-    const data = getDataset();
     const names = filters.companies
       .map((id) => data.companyIdToIndex.get(id))
       .filter((index): index is number => index !== undefined)
@@ -69,7 +76,8 @@ export function describeScope(filters: Filters): string {
     parts.push(`amount spent ${filters.minSpend ?? 0}–${filters.maxSpend ?? "∞"} Cr`);
   }
   if (filters.search.trim()) parts.push(`search "${filters.search.trim()}"`);
-  return parts.length ? parts.join(" · ") : "All companies, all years, all states";
+  if (parts.length === 1 && !filters.years.length) parts.push("all companies and states");
+  return parts.join(" · ");
 }
 
 export function reportStamp(): string {

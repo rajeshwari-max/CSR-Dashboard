@@ -147,7 +147,7 @@ export function round(value: number, digits = 2): number {
 }
 
 /** Include FY 2020-21 and every later financial year present in an uploaded dataset. */
-function isReportingYear(label: string): boolean {
+export function isReportingYear(label: string): boolean {
   const match = /^FY\s+(\d{4})-\d{2}$/.exec(label.trim());
   return match !== null && Number.parseInt(match[1], 10) >= REPORTING_START_YEAR;
 }

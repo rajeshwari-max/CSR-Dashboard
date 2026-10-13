@@ -6,6 +6,9 @@ import { CornerDownLeft, Search } from "lucide-react";
 
 import { ICONS } from "@/components/shell/icons";
 import { NAV } from "@/components/shell/nav";
+import { downloadFile } from "@/lib/api";
+import { filtersToParams } from "@/lib/query";
+import { selectFilters, useFilterStore } from "@/store/filters";
 
 interface Command {
   label: string;
@@ -34,18 +37,25 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         icon: "upload",
         run: () => router.push("/data-upload"),
       },
-      {
-        label: "Download PDF report",
+      // Downloads use the current filters (like the Reports page) and save in
+      // this tab; opening a bare URL in a new tab ignored the filters and was
+      // stopped by pop-up blockers.
+      ...([
+        ["pdf", "Download PDF report"],
+        ["xlsx", "Download Excel workbook"],
+        ["pptx", "Download PowerPoint deck"],
+        ["csv", "Download CSV register"],
+      ] as const).map(([format, label]) => ({
+        label,
         meta: "Action",
         icon: "report",
-        run: () => window.open("/api/report/pdf", "_blank"),
-      },
-      {
-        label: "Download Excel workbook",
-        meta: "Action",
-        icon: "report",
-        run: () => window.open("/api/report/xlsx", "_blank"),
-      },
+        run: () => {
+          const query = filtersToParams(selectFilters(useFilterStore.getState())).toString();
+          void downloadFile(`/api/report/${format}?${query}`, `csr-report-${new Date().toISOString().slice(0, 10)}.${format}`)
+            // On failure, open Reports, which shows the reason and a retry button.
+            .catch(() => router.push(`/reports${query ? `?${query}` : ""}`));
+        },
+      })),
     ],
     [router],
   );
