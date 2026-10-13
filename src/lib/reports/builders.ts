@@ -10,6 +10,8 @@
  * a serverless host.
  */
 
+import { PassThrough } from "node:stream";
+
 import type ExcelJSType from "exceljs";
 
 
@@ -95,7 +97,15 @@ export class ReportDependencyError extends Error {
 
 async function loadExcelJs() {
   try {
-    return (await import("exceljs")).default as unknown as typeof ExcelJSType;
+    // Bundled and plain-Node imports expose exceljs differently (namespace
+    // vs. default export); take whichever object carries the streaming writer.
+    const loaded = (await import("exceljs")) as unknown as Record<string, unknown> & { default?: unknown };
+    const candidates = [loaded.default, loaded, (loaded.default as { default?: unknown } | undefined)?.default];
+    const lib = candidates.find(
+      (candidate) => typeof (candidate as typeof ExcelJSType | undefined)?.stream?.xlsx?.WorkbookWriter === "function",
+    );
+    if (!lib) throw new Error("exceljs loaded without its streaming WorkbookWriter");
+    return lib as typeof ExcelJSType;
   } catch (error) {
     throw new ReportDependencyError("exceljs", error);
   }
@@ -141,7 +151,6 @@ export async function buildExcelReport(filters: Filters, rowLimit = 250_000): Pr
   // 60,000-row register needs a fraction of the memory (and time) the in-memory
   // Workbook did. The in-memory build peaked above 1 GB and timed out on the
   // 512 MB Render instance, which is why the Excel download used to fail.
-  const { PassThrough } = await import("node:stream");
   const sink = new PassThrough();
   const chunks: Buffer[] = [];
   sink.on("data", (chunk: Buffer) => chunks.push(chunk));

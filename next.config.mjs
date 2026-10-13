@@ -14,6 +14,10 @@ const nextConfig = {
     "/": ["./data/**"],
   },
   logging: { fetches: { fullUrl: false } },
+  // Load exceljs from node_modules at runtime instead of bundling it: the
+  // bundled copy resolves to its browser build, which has no streaming
+  // WorkbookWriter, so the Excel report failed with "is not a constructor".
+  serverExternalPackages: ["exceljs"],
   // Recharts and lucide-react are barrel files with hundreds of exports; without
   // this the dev server compiles all of them on first paint.
   experimental: {

@@ -9,7 +9,7 @@ import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { downloadFile, useApi } from "@/lib/api";
+import { ApiRequestError, downloadFile, useApi } from "@/lib/api";
 import { formatCrore, formatDateTime, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { SummaryResponse } from "@/types";
@@ -89,7 +89,9 @@ export function ReportsView() {
         ...history,
       ]);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Report generation failed");
+      // Show the server's reason as well, so a failure can be diagnosed from a screenshot.
+      const detail = cause instanceof ApiRequestError && cause.detail ? ` (${cause.detail})` : "";
+      setError(`${cause instanceof Error ? cause.message : "Report generation failed"}${detail}`);
     } finally {
       setBusy(null);
     }
