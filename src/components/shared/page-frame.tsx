@@ -8,6 +8,7 @@ import { useShell } from "@/components/shell/app-shell";
 import { FilterBar } from "@/components/shell/filter-bar";
 import { Topbar } from "@/components/shell/topbar";
 import { ApiRequestError } from "@/lib/api";
+import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 import { formatDateTime } from "@/lib/format";
 import type { ListKey } from "@/store/filters";
 import type { Filters, Meta } from "@/types";
@@ -96,8 +97,11 @@ export function PageFrame({
 
       <footer className="footer">
         <span>
-          CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · all
-          amounts INR Crore
+          CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · Source:{" "}
+          <a href={DATA_SOURCE.url} target="_blank" rel="noreferrer noopener" title={DATA_SOURCE.long} style={{ textDecoration: "underline" }}>
+            {DATA_SOURCE.short}
+          </a>{" "}
+          · {UNITS_NOTE}
         </span>
         <span>Dataset built {meta ? formatDateTime(meta.generatedAt) : "—"}</span>
       </footer>

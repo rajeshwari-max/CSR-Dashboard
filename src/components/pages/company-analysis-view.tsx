@@ -21,6 +21,9 @@ import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPerc
 import { useFilterStore } from "@/store/filters";
 import type { CompanyDetail, ComparisonResponse, SummaryResponse } from "@/types";
 
+/** Companies benchmarked side by side (the comparison API allows six). */
+const MAX_COMPARE = 6;
+
 const REPORT_KEYS = [
   ["csrReportUrl", "CSR report"],
   ["brsrReportUrl", "BRSR report"],
@@ -39,7 +42,7 @@ export function CompanyAnalysisView() {
   const [compare, setCompare] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    setCompare(filters.companies.slice(0, 4));
+    setCompare(filters.companies.slice(0, MAX_COMPARE));
   }, [filters.companies]);
 
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=50`);
@@ -50,7 +53,7 @@ export function CompanyAnalysisView() {
   const toggleCompare = (id: string) => {
     const next = compare.includes(id)
       ? compare.filter((x) => x !== id)
-      : compare.length >= 4
+      : compare.length >= MAX_COMPARE
         ? compare
         : [...compare, id];
     setCompare(next);
@@ -111,10 +114,17 @@ export function CompanyAnalysisView() {
       {compare.length === 1 ? <CompanyProfile companyId={compare[0]} filterQuery={filterQuery} /> : null}
 
       <SectionLabel>Company comparison</SectionLabel>
+      <CompanyPicker
+        companies={meta.data?.companies ?? []}
+        chosen={compare}
+        max={MAX_COMPARE}
+        onAdd={(id) => toggleCompare(id)}
+      />
       {compare.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            Select companies from the Company filter above to benchmark them side by side.
+            Add up to {MAX_COMPARE} companies above (or use the Company filter) to compare their CSR spent, reach and
+            focus side by side, year by year.
           </CardContent>
         </Card>
       ) : (
@@ -137,23 +147,29 @@ export function CompanyAnalysisView() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+          {/* Stacked rather than side by side: the benchmark has ten columns and
+              was cut off at half width. */}
+          <div className="grid grid-cols-1 gap-5">
             <ChartCard
               title="CSR Amount Spent by Company and Financial Year"
               description="Selected companies"
-              className="xl:col-span-2"
               height={320}
               isLoading={comparison.isLoading}
               error={comparison.error}
               isEmpty={!chartData.length}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+                <BarChart data={chartData} margin={{ top: 8, right: 12, bottom: 22, left: 18 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="year" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -2 }} />
-                  <YAxis {...AXIS_PROPS} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft" }} />
+                  <XAxis dataKey="year" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -12 }} />
+                  <YAxis
+                    {...AXIS_PROPS}
+                    width={72}
+                    tickFormatter={(value: number) => formatCrore(value, false)}
+                    label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }}
+                  />
                   <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
-                  <Legend iconType="circle" iconSize={8} />
+                  <Legend iconType="circle" iconSize={8} verticalAlign="top" height={30} />
                   {(comparison.data?.companies ?? []).map((company, index) => (
                     <Bar
                       key={company.id}
@@ -167,7 +183,7 @@ export function CompanyAnalysisView() {
               </ResponsiveContainer>
             </ChartCard>
 
-            <Card className="xl:col-span-3">
+            <Card className="overflow-x-auto">
               <CardHeader>
                 <div>
                   <CardTitle>Company Benchmark by Total CSR Spent</CardTitle>
@@ -184,6 +200,9 @@ export function CompanyAnalysisView() {
                       <TableHead className="text-right">YoY</TableHead>
                       <TableHead className="text-right">Projects</TableHead>
                       <TableHead className="text-right">States</TableHead>
+                      <TableHead className="text-right">Avg project</TableHead>
+                      <TableHead>Largest category</TableHead>
+                      <TableHead>Largest state</TableHead>
                       <TableHead className="text-right">Obligation use</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -209,6 +228,9 @@ export function CompanyAnalysisView() {
                         </TableCell>
                         <TableCell className="numeric text-right text-[13px]">{formatNumber(company.projectCount)}</TableCell>
                         <TableCell className="numeric text-right text-[13px]">{company.stateCount}</TableCell>
+                        <TableCell className="numeric text-right text-[13px]">{formatCrore(company.avgProjectSize)}</TableCell>
+                        <TableCell className="text-[12.5px]">{company.topTheme ?? "—"}</TableCell>
+                        <TableCell className="text-[12.5px]">{company.topState ?? "—"}</TableCell>
                         <TableCell className="numeric text-right text-[13px]">
                           {formatPercent(company.utilisationPct)}
                         </TableCell>
@@ -370,7 +392,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
       <SectionLabel>Company profile — {data.company.name}</SectionLabel>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <ProfileStat label="Total CSR amount spent" value={formatCrore(kpis.totalSpend)} sub="All years in view" />
+        <ProfileStat label="Total CSR amount spent" value={formatCrore(kpis.totalSpend)} sub="All years in view (Year filter applies)" />
         <ProfileStat
           label="Latest FY amount spent"
           value={formatCrore(kpis.latestYearSpend)}
@@ -386,21 +408,16 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           sub={`${kpis.themeCount} Schedule VII categories`}
         />
         <ProfileStat
-          label="Geographic reach"
+          label="States reached"
           value={formatNumber(kpis.stateCount)}
-          sub={
-            kpis.sectorRank
-              ? `#${kpis.sectorRank} in ${data.company.sector}`
-              : "States and UTs receiving funds"
-          }
+          sub={`Named states and UTs; Pan India excluded${kpis.sectorRank ? ` · #${kpis.sectorRank} in ${data.company.sector}` : ""}`}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <ChartCard
-              title="Amount Spent Trajectory"
+          title="Amount Spent Trajectory"
           description="This company's disclosed amount spent per financial year"
-          className="xl:col-span-3"
           height={300}
           isLoading={detail.isLoading}
           error={detail.error}
@@ -417,7 +434,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           </ResponsiveContainer>
         </ChartCard>
 
-        <Card className="xl:col-span-2">
+        <Card className="overflow-x-auto">
           <CardHeader>
             <div>
               <CardTitle>CSR Spent by Schedule VII Thematic Area</CardTitle>
@@ -431,6 +448,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
               limit={10}
               showBars
               columns={["value", "share", "count"]}
+              showTotal
             />
           </CardContent>
         </Card>
@@ -451,6 +469,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
               limit={12}
               showBars
               columns={["value", "share", "count"]}
+              showTotal
             />
           </CardContent>
         </Card>
@@ -531,5 +550,77 @@ function ProfileStat({ label, value, sub }: { label: string; value: string; sub:
       <p className="kpi-value mt-2 text-xl">{value}</p>
       <p className="mt-1 line-clamp-2 text-[11px] text-muted-foreground">{sub}</p>
     </Card>
+  );
+}
+
+/**
+ * Search box for adding companies to the comparison. Picks go into the
+ * Company filter, so the charts, profile and register below follow them.
+ */
+function CompanyPicker({
+  companies,
+  chosen,
+  max,
+  onAdd,
+}: {
+  companies: { id: string; name: string; sector?: string }[];
+  chosen: string[];
+  max: number;
+  onAdd: (id: string) => void;
+}) {
+  const [query, setQuery] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const matches = React.useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (needle.length < 2) return [];
+    return companies
+      .filter((company) => !chosen.includes(company.id) && company.name.toLowerCase().includes(needle))
+      .sort((a, b) => a.name.toLowerCase().indexOf(needle) - b.name.toLowerCase().indexOf(needle))
+      .slice(0, 8);
+  }, [companies, chosen, query]);
+  const full = chosen.length >= max;
+
+  return (
+    <div className="relative max-w-xl">
+      <label htmlFor="compare-company" className="mb-1 block text-[12.5px] font-medium text-muted-foreground">
+        Add a company to compare {full ? `(maximum ${max} reached; remove one to add another)` : `(${chosen.length} of ${max})`}
+      </label>
+      <input
+        id="compare-company"
+        type="search"
+        value={query}
+        disabled={full}
+        placeholder="Type a company name, e.g. Infosys"
+        autoComplete="off"
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+      />
+      {open && matches.length ? (
+        <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-md border bg-[var(--surface)] shadow-lg" role="listbox">
+          {matches.map((company) => (
+            <li key={company.id}>
+              <button
+                type="button"
+                className="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-accent"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  onAdd(company.id);
+                  setQuery("");
+                  setOpen(false);
+                }}
+              >
+                <span className="truncate">{company.name}</span>
+                {company.sector ? <span className="shrink-0 text-[11px] text-muted-foreground">{company.sector}</span> : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }

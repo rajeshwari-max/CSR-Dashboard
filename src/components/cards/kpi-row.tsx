@@ -112,7 +112,7 @@ export function KpiRow({
             : `${kpis.latestYear ?? "—"}`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
-      tip: "Cumulative CSR amount spent across all projects and financial years in the current filter selection.",
+      tip: "Cumulative CSR amount spent on project implementation across all projects and financial years in the current filter selection. Administrative overheads and impact assessment (evaluation) costs are reported separately by companies and are not included.",
     },
     {
       label: "Companies Reporting in the Selected Period",

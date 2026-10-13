@@ -12,6 +12,7 @@ import { useApi } from "@/lib/api";
 import { formatCompact, formatCrore, formatNumber, formatSignedPercent, truncate } from "@/lib/format";
 import type { BreakdownResponse, InsightsResponse, SummaryResponse } from "@/types";
 import { ExplainedTitle, MetricInfo } from "@/components/shared/metric-info";
+import { TrendComparison } from "@/components/trend/trend-comparison";
 
 const AXIS = { tickLine: false, axisLine: false, tick: { fontSize: 10.5 } } as const;
 const PALETTE = ["#7e3fa1", "#00a88f", "#e07a24", "#2468b4", "#d64562", "#6f7d2c"];
@@ -186,6 +187,9 @@ export function TrendView() {
           )}
         </div>
       </div>
+
+      <MiniLabel>Compare states, programmes, sectors or companies</MiniLabel>
+      <TrendComparison filterQuery={filterQuery} />
 
       <MiniLabel>Historical comparison</MiniLabel>
       <ExplainedTitle title="Historical CSR Spent, Projects and Companies by Financial Year" />

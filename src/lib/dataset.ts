@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { cleanDataset, focusBits, OWNERSHIP_CLASSES, type CleanupReport } from "@/lib/data-cleanup";
+import { displayCompanyName } from "@/lib/format";
 import { REPORTING_START_YEAR } from "@/types";
 import type {
   Capabilities,
@@ -166,7 +167,8 @@ export function getDataset(): Dataset {
     capabilities: raw.capabilities,
     columnCoverage: raw.columnCoverage,
     count: n,
-    companies: d.companies,
+    // "Itc Limited" -> "ITC Limited" once, so every page, export and answer agrees.
+    companies: d.companies.map((company) => ({ ...company, name: displayCompanyName(company.name) })),
     years: d.years,
     sectors: d.sectors,
     states: d.states,
@@ -969,8 +971,10 @@ export function buildCompanyDetail(companyId: string, base?: Partial<Filters>): 
       aspirationalShare: summary.kpis.aspirationalShare,
     },
     trend: summary.trend,
-    byTheme: summary.byTheme.slice(0, 10),
-    byState: summary.byState.slice(0, 12),
+    // Full lists: the page shows the top rows plus a total over all of them, so
+    // the project counts in each table add up to the same headline figure.
+    byTheme: summary.byTheme,
+    byState: summary.byState,
     byMode: summary.byMode,
     topProjects,
     peers: sectorRanking.slice(0, 8),
@@ -1013,7 +1017,10 @@ export function buildComparison(companyIds: string[], base?: Partial<Filters>): 
     });
   }
 
-  return { companies, years };
+  // Only the years that hold data for these companies, so the default view is
+  // not padded with the opt-in earlier years.
+  const used = new Set(companies.flatMap((row) => Object.keys(row.byYear)));
+  return { companies, years: years.filter((year) => used.has(year)) };
 }
 
 export function listCompanies(): Company[] {

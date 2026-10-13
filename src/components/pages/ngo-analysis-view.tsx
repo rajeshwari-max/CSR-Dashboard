@@ -51,6 +51,15 @@ export function NgoAnalysisView() {
       }}
       isRefreshing={summary.isValidating}
     >
+      <Card className="border-dashed p-4 text-[13px] leading-relaxed text-muted-foreground">
+        <strong className="text-foreground">Which organisations receive the funds?</strong> The MCA project filings record only the
+        delivery channel (directly, own trust or Section 8 company, government body, or other implementing agency), not the
+        name of the implementing agency or of any monitoring and evaluation (M&amp;E) partner. Agency names and CSR registration
+        numbers are given in many companies&apos; CSR annexures; once added through the NGO partners template on{" "}
+        <a href="/policy-insights" className="font-medium text-primary underline">Policy Insights</a>, they are analysed there.
+        Evaluation partners are usually named only in impact assessment reports.
+      </Card>
+
       <SectionLabel>Delivery channel</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard

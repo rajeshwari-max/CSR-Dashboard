@@ -182,7 +182,7 @@ export function SectorAnalysisView() {
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>
-          <CardContent className="h-[310px] pb-5">
+          <CardContent className="h-[340px] pb-5">
             <ResponsiveContainer width="100%" height="100%">
               <Treemap
                 data={flow}
@@ -256,8 +256,18 @@ function FundingTreemapNode({
 }: FundingNodeProps) {
   if (depth !== 1) return null;
   const active = selected.length === 0 || selected.includes(name);
-  const showLabel = width > 90 && height > 45;
-  const showValue = width > 120 && height > 68;
+  // Readability: 13px names wrapped over two lines, 12px figures, and a dark
+  // halo behind white text so labels stay legible on the light mint and
+  // lavender tiles as well as the dark purple ones.
+  // Shrink the type (down to 10.5px) before cutting a long word such as
+  // "Sustainability" in a narrow tile.
+  const longestWord = Math.max(...name.split(" ").map((word) => word.length));
+  const fontSize = Math.max(10.5, Math.min(13, (width - 18) / (longestWord * 0.62)));
+  const charsPerLine = Math.max(6, Math.floor((width - 18) / (fontSize * 0.6)));
+  const lines = wrapLabel(name, charsPerLine, height > 88 ? 3 : 2);
+  const showLabel = width > 70 && height > 34;
+  const showValue = width > 110 && height > 34 + lines.length * (fontSize + 3) + 16;
+  const halo = { stroke: "rgba(24, 10, 34, 0.55)", strokeWidth: 3, paintOrder: "stroke" as const, strokeLinejoin: "round" as const };
   return (
     <g className="cursor-pointer">
       <rect
@@ -267,20 +277,44 @@ function FundingTreemapNode({
         height={Math.max(0, height - 2)}
         rx={8}
         fill={colorAt(index)}
-        fillOpacity={active ? 0.88 : 0.32}
+        fillOpacity={active ? 0.92 : 0.32}
         stroke={active && selected.includes(name) ? "var(--text)" : "var(--surface)"}
         strokeWidth={active && selected.includes(name) ? 2.5 : 2}
       />
-      {showLabel ? (
-        <text x={x + 10} y={y + 20} fill="white" fontSize={11} fontWeight={700}>
-          {truncate(name, Math.max(12, Math.floor(width / 8)))}
-        </text>
-      ) : null}
+      {showLabel
+        ? lines.map((line, lineIndex) => (
+            <text key={lineIndex} x={x + 9} y={y + 21 + lineIndex * (fontSize + 3)} fill="#fff" fontSize={fontSize} fontWeight={700} {...halo}>
+              {line}
+            </text>
+          ))
+        : null}
       {showValue ? (
-        <text x={x + 10} y={y + 39} fill="white" fontSize={10} opacity={0.9}>
-          {formatCrore(value)} · {(share * 100).toFixed(1)}% · {count.toLocaleString("en-IN")} projects
+        <text x={x + 9} y={y + 23 + lines.length * (fontSize + 3)} fill="#fff" fontSize={Math.min(12, fontSize)} fontWeight={500} {...halo}>
+          {formatCrore(value)} · {(share * 100).toFixed(1)}%
+          {width > 230 ? ` · ${count.toLocaleString("en-IN")} projects` : ""}
         </text>
       ) : null}
     </g>
   );
+}
+
+/** Splits a label into at most `maxLines` lines of about `width` characters. */
+function wrapLabel(text: string, width: number, maxLines: number): string[] {
+  const lines: string[] = [];
+  let current = "";
+  for (const word of text.split(" ")) {
+    const next = current ? `${current} ${word}` : word;
+    if (next.length <= width || !current) current = next;
+    else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  if (lines.length > maxLines) {
+    const kept = lines.slice(0, maxLines);
+    kept[maxLines - 1] = truncate(`${kept[maxLines - 1]} ${lines.slice(maxLines).join(" ")}`, width);
+    return kept;
+  }
+  return lines.map((line) => truncate(line, width + 1));
 }

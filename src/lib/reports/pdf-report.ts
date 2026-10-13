@@ -14,6 +14,7 @@
 import type { PDFDocument, PDFFont, PDFPage } from "pdf-lib";
 
 import { buildBreakdown, buildSummary, getDataset, selectRows } from "@/lib/dataset";
+import { displayCompanyName } from "@/lib/format";
 import { buildInsights } from "@/lib/insights";
 import type { Filters, InsightSeverity, NamedValue } from "@/types";
 
@@ -87,16 +88,7 @@ const sharePct = (value: number | null | undefined) =>
   value === null || value === undefined || Number.isNaN(value) ? "-" : `${(value * 100).toFixed(1)}%`;
 
 /** "Itc Limited" -> "ITC Limited": the source workbook title-cases acronyms. */
-export function displayCompanyName(name: string): string {
-  return name
-    .split(" ")
-    .map((word) =>
-      /^[a-z]{2,4}$/i.test(word) && !/^(ltd|pvt|and|the|for|of|co|inc|plc|llp)$/i.test(word) && !/[aeiouy]/i.test(word.slice(1))
-        ? word.toUpperCase()
-        : word,
-    )
-    .join(" ");
-}
+export { displayCompanyName };
 
 // ---------------------------------------------------------------------------
 // Drawing primitives
@@ -562,7 +554,7 @@ export async function renderPdfReport(filters: Filters, scope: string): Promise<
     const mappedTotal = mapped.reduce((s, row) => s + row.value, 0) || 1;
     const topFive = mapped.slice(0, 5).reduce((s, row) => s + row.value, 0) / mappedTotal;
     section(ctx, "Geography", "State-wise distribution",
-      `${topMappedState ? `${topMappedState.name} leads with ${sharePct(topMappedState.share)} of all amount spent; ` : ""}the top five states take ${sharePct(topFive)} of state-attributed amount spent. ${unmapped > 0 ? `${crore(unmapped)} is filed as Pan India or without a state.` : ""}`,
+      `${topMappedState ? `${topMappedState.name} is the largest named state with ${sharePct(topMappedState.share)} of all amount spent; ` : ""}${mapped.length > 5 ? `the top five states take ${sharePct(topFive)} of state-attributed amount spent. ` : `spend reaches ${mapped.length} named state${mapped.length === 1 ? "" : "s"}. `}${unmapped > 0 ? `${crore(unmapped)} is filed as Pan India or without a state.` : ""}`,
       Math.min(summary.byState.length, 15) * 17);
     hbars(ctx, summary.byState.slice(0, 15).map((row, index) => ({
       label: row.name,

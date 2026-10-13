@@ -7,6 +7,7 @@ const inr0 = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
 export function formatCrore(value: number | null | undefined, withSymbol = true): string {
   if (value === null || value === undefined || Number.isNaN(value)) return "—";
   const prefix = withSymbol ? "₹" : "";
+  if (value === 0) return `${prefix}0 Cr`;
   if (Math.abs(value) >= 100_000) return `${prefix}${inr.format(value / 100_000)} L Cr`;
   if (Math.abs(value) >= 1_000) return `${prefix}${inr0.format(value)} Cr`;
   if (Math.abs(value) >= 1) return `${prefix}${inr.format(value)} Cr`;
@@ -51,4 +52,26 @@ export function formatDateTime(iso: string | null | undefined): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "—";
   return date.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+}
+
+/** "Itc Limited" -> "ITC Limited": the source workbook title-cases acronyms. Also drops a stray trailing full stop. */
+const ACRONYMS = new Set([
+  "icici", "hdfc", "idbi", "idfc", "ntpc", "ongc", "sbi", "lic", "bhel", "gail", "nmdc", "nhpc", "sjvn", "irctc", "irfc",
+  "rites", "hcl", "acc", "mrf", "dlf", "upl", "kec", "pnb", "bpcl", "hpcl", "iocl", "nlc", "sail", "rec", "pfc", "jsw",
+  "itc", "tvs", "abb", "bse", "nse", "mmtc", "kpit", "ihcl", "ircon", "hudco", "ireda", "bel", "hal", "beml", "nbcc",
+  "crisil", "gmr", "jk", "srf", "pi", "aia", "ptc", "cesc", "ksb", "skf", "lg", "gsk", "bnp", "ubs", "dcm", "gvk",
+]);
+
+export function displayCompanyName(name: string): string {
+  return name
+    .replace(/\.\s*$/, "")
+    .split(" ")
+    .map((word) =>
+      ACRONYMS.has(word.toLowerCase().replace(/[^a-z]/g, "")) && /^[a-z]+$/i.test(word)
+        ? word.toUpperCase()
+        : /^[a-z]{2,4}$/i.test(word) && !/^(ltd|pvt|and|the|for|of|co|inc|plc|llp)$/i.test(word) && !/[aeiouy]/i.test(word.slice(1))
+        ? word.toUpperCase()
+        : word,
+    )
+    .join(" ");
 }

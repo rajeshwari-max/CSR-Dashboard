@@ -10,6 +10,7 @@ import { useShell } from "@/components/shell/app-shell";
 import { ApiRequestError } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import type { Filters, Meta } from "@/types";
+import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 
 interface PageFrameProps {
   title: string;
@@ -92,8 +93,11 @@ export function PageFrame({
 
       <footer className="footer">
         <span>
-          CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} ·
-          all amounts INR Crore
+          CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · Source:{" "}
+          <a href={DATA_SOURCE.url} target="_blank" rel="noreferrer noopener" title={DATA_SOURCE.long} style={{ textDecoration: "underline" }}>
+            {DATA_SOURCE.short}
+          </a>{" "}
+          · {UNITS_NOTE}
         </span>
         <span>Dataset built {meta ? formatDateTime(meta.generatedAt) : "—"}</span>
       </footer>

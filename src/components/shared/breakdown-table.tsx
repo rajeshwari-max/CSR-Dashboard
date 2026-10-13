@@ -21,6 +21,11 @@ interface BreakdownTableProps {
   /** Renders an inline proportional bar behind the name cell. */
   showBars?: boolean;
   latestLabel?: string;
+  /**
+   * Adds a total row summed over every row (not only the ones shown), so the
+   * project tally reconciles with the headline figures and with other tables.
+   */
+  showTotal?: boolean;
 }
 
 const HEADERS: Record<Column, string> = {
@@ -44,6 +49,7 @@ export function BreakdownTable({
   selected = [],
   showBars = true,
   latestLabel,
+  showTotal = false,
 }: BreakdownTableProps) {
   const [sortColumn, setSortColumn] = React.useState<Column>("value");
   const [ascending, setAscending] = React.useState(false);
@@ -155,6 +161,33 @@ export function BreakdownTable({
             );
           })
         )}
+        {showTotal && rows.length ? (
+          <TableRow className="border-t-2 bg-muted/40 font-semibold hover:bg-muted/40">
+            <TableCell />
+            <TableCell className="text-[13px]">
+              Total
+              <span className="ml-1 text-[11px] font-normal text-muted-foreground">
+                {rows.length > sorted.length
+                  ? `(all ${formatNumber(rows.length)} rows; ${formatNumber(sorted.length)} shown)`
+                  : `(${formatNumber(rows.length)} rows)`}
+              </span>
+            </TableCell>
+            {columns.map((column) => {
+              const sum = (pick: (row: NamedValue) => number) => rows.reduce((total, row) => total + pick(row), 0);
+              const value =
+                column === "value" ? formatCrore(sum((row) => row.value))
+                : column === "share" ? "100%"
+                : column === "count" ? formatNumber(sum((row) => row.count ?? 0))
+                : column === "latest" ? formatCrore(sum((row) => row.latest ?? 0))
+                : ""; // companies and YoY do not add up across rows
+              return (
+                <TableCell key={column} className="numeric whitespace-nowrap text-right text-[13px]">
+                  {value}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        ) : null}
       </TableBody>
     </Table>
   );

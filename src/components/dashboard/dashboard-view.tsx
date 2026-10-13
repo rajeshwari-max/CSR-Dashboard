@@ -19,6 +19,7 @@ import { useFilterStore } from "@/store/filters";
 import type { ProjectsResponse, SortDirection, SortField, SummaryResponse } from "@/types";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 
 export function DashboardView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
@@ -180,8 +181,7 @@ export function DashboardView() {
       />
 
       <p className="pb-2 text-center text-[11px] text-muted-foreground">
-        {meta.data?.sources.map((source) => source.file).join(", ") ?? "CSR database"} · dataset built{" "}
-        {formatDateTime(meta.data?.generatedAt)} · all amounts in INR Crore
+        Source: {DATA_SOURCE.short} · dataset built {formatDateTime(meta.data?.generatedAt)} · {UNITS_NOTE}
       </p>
     </PageFrame>
   );

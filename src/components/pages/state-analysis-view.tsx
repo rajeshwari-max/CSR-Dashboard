@@ -14,14 +14,15 @@ import { formatCrore, formatNumber, formatShare, formatSignedPercent } from "@/l
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 import {
-  PolarAngleAxis,
-  PolarGrid,
-  PolarRadiusAxis,
-  Radar,
-  RadarChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
   Legend,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
 import { ChartTip } from "@/components/charts2/chart-tooltip";
@@ -47,7 +48,7 @@ export function StateAnalysisView() {
     [summary.data],
   );
 
-  // Radar profile: latest two financial years across the top eight mapped states.
+  // Previous vs latest financial year for the top eight mapped states.
   const comparison = React.useMemo(() => {
     const byName = new Map((stateSeries.data?.series ?? []).map((item) => [item.name, item.values]));
     return mapped.slice(0, 8).map((row) => {
@@ -148,43 +149,78 @@ export function StateAnalysisView() {
 
       <SectionLabel>State comparison</SectionLabel>
       <ChartCard
-        title="Leading States: CSR Funding Profile"
-        description={`${years.at(-2) ?? "Previous FY"} vs ${years.at(-1) ?? "Latest FY"} · amount spent in ₹ crore`}
-        height={390}
+        title="Leading States: CSR Spent, Previous vs Latest Year"
+        description={`Top 8 states · ${years.at(-2) ?? "Previous FY"} vs ${years.at(-1) ?? "Latest FY"} · ₹ crore, change shown at the end of each pair`}
+        height={460}
         isLoading={summary.isLoading}
         error={summary.error}
         isEmpty={comparison.length === 0}
       >
+        {/* A radar made eight states hard to compare; paired horizontal bars
+            put every value on one shared scale with the state name beside it. */}
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={comparison} outerRadius="72%" margin={{ top: 20, right: 42, bottom: 20, left: 42 }}>
-            <defs>
-              <linearGradient id="stateLatestFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colorAt(0)} stopOpacity={0.42} />
-                <stop offset="100%" stopColor={colorAt(0)} stopOpacity={0.08} />
-              </linearGradient>
-            </defs>
-            <PolarGrid stroke="var(--border)" />
-            <PolarAngleAxis dataKey="name" {...AXIS_PROPS} tick={{ fontSize: 10.5, fill: "var(--text-muted)" }} />
-            <PolarRadiusAxis tick={false} axisLine={false} />
+          <BarChart
+            data={comparison}
+            layout="vertical"
+            margin={{ top: 4, right: 96, bottom: 4, left: 8 }}
+            barCategoryGap="22%"
+            barGap={3}
+          >
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+            <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} />
+            <YAxis
+              type="category"
+              dataKey="name"
+              {...AXIS_PROPS}
+              width={128}
+              tick={{ fontSize: 12.5, fill: "var(--text)" }}
+            />
             <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
-            <Legend iconType="circle" iconSize={8} />
-            <Radar
+            <Legend iconType="circle" iconSize={9} wrapperStyle={{ fontSize: 12.5 }} />
+            <Bar
               dataKey="previous"
               name={years.at(-2) ?? "Previous FY"}
-              stroke={colorAt(2)}
-              fill={colorAt(2)}
-              fillOpacity={0.08}
-              strokeWidth={2}
+              fill={colorAt(5)}
+              radius={[0, 4, 4, 0]}
+              maxBarSize={16}
+              onClick={(entry: { name?: string }) => entry?.name && toggleValue("states", entry.name)}
+              cursor="pointer"
             />
-            <Radar
+            <Bar
               dataKey="latest"
               name={years.at(-1) ?? "Latest FY"}
-              stroke={colorAt(0)}
-              fill="url(#stateLatestFill)"
-              fillOpacity={1}
-              strokeWidth={2.5}
-            />
-          </RadarChart>
+              fill={colorAt(0)}
+              radius={[0, 4, 4, 0]}
+              maxBarSize={16}
+              onClick={(entry: { name?: string }) => entry?.name && toggleValue("states", entry.name)}
+              cursor="pointer"
+            >
+              <LabelList
+                dataKey="latest"
+                position="right"
+                content={(props) => {
+                  const { x = 0, y = 0, width = 0, height = 0, index = 0 } = props as {
+                    x?: number; y?: number; width?: number; height?: number; index?: number;
+                  };
+                  const row = comparison[index];
+                  if (!row) return null;
+                  const change = row.previous > 0 ? ((row.latest - row.previous) / row.previous) * 100 : null;
+                  return (
+                    <text
+                      x={Number(x) + Number(width) + 6}
+                      y={Number(y) + Number(height) / 2}
+                      dominantBaseline="central"
+                      fontSize={12}
+                      fill="var(--text)"
+                    >
+                      {formatCrore(row.latest, false)}
+                      {change === null ? "" : `  ${formatSignedPercent(change)}`}
+                    </text>
+                  );
+                }}
+              />
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </ChartCard>
 

@@ -25,6 +25,7 @@ import {
 import { buildInsights } from "@/lib/insights";
 import { displayCompanyName, renderPdfReport } from "@/lib/reports/pdf-report";
 import type { Filters, NamedValue } from "@/types";
+import { DATA_SOURCE } from "@/lib/data-source";
 
 const INR = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
 const INR0 = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
@@ -129,33 +130,49 @@ export async function buildPdfReport(filters: Filters): Promise<Uint8Array> {
 // Excel
 // ---------------------------------------------------------------------------
 
-export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Promise<Buffer> {
+export async function buildExcelReport(filters: Filters, rowLimit = 250_000): Promise<Buffer> {
   const ExcelJS = await loadExcelJs();
   const data = getDataset();
   const summary = buildSummary(filters, 50);
   const scope = describeScope(filters);
   const insights = buildInsights(filters, scope);
 
-  const workbook = new ExcelJS.Workbook();
+  // Streaming writer: rows are serialised as they are added and released, so a
+  // 60,000-row register needs a fraction of the memory (and time) the in-memory
+  // Workbook did. The in-memory build peaked above 1 GB and timed out on the
+  // 512 MB Render instance, which is why the Excel download used to fail.
+  const { PassThrough } = await import("node:stream");
+  const sink = new PassThrough();
+  const chunks: Buffer[] = [];
+  sink.on("data", (chunk: Buffer) => chunks.push(chunk));
+  const finished = new Promise<void>((resolve, reject) => {
+    sink.on("end", () => resolve());
+    sink.on("error", reject);
+  });
+  const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: sink, useStyles: true, useSharedStrings: false });
   workbook.creator = "CMS CSR Intelligence";
   workbook.created = new Date();
+
+  // Header row frozen; views must be given when a streamed sheet is created.
+  const addSheet = (name: string) => workbook.addWorksheet(name, { views: [{ state: "frozen", ySplit: 1 }] });
 
   const header = (sheet: ExcelJSType.Worksheet, columns: Partial<ExcelJSType.Column>[]) => {
     sheet.columns = columns;
     sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
     sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1E293B" } };
     sheet.getRow(1).height = 20;
-    sheet.views = [{ state: "frozen", ySplit: 1 }];
   };
 
   // Summary
-  const overview = workbook.addWorksheet("Summary");
+  const overview = workbook.addWorksheet("Summary", {});
   overview.columns = [{ width: 34 }, { width: 26 }, { width: 60 }];
   overview.addRow(["CSR Intelligence Report"]).font = { bold: true, size: 16 };
   overview.addRow(["Scope", scope]);
   overview.addRow(["Generated", new Date().toISOString()]);
   overview.addRow(["Dataset built", data.generatedAt]);
-  overview.addRow(["Sources", data.sources.map((s) => `${s.file} (${s.sheets.join(", ")})`).join("; ")]);
+  overview.addRow(["Source", DATA_SOURCE.long]);
+  overview.addRow(["Source files", data.sources.map((s) => `${s.file} (${s.sheets.join(", ")})`).join("; ")]);
+  overview.addRow(["Units", "All amounts in INR crore"]);
   overview.addRow([]);
   overview.addRow(["Key performance indicators"]).font = { bold: true, size: 12 };
   const k = summary.kpis;
@@ -182,7 +199,7 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
   insights.dataQuality.forEach((note) => overview.addRow([note.label, "", note.value]));
 
   // Trend
-  const trend = workbook.addWorksheet("Trend");
+  const trend = addSheet("Trend");
   header(trend, [
     { header: "Financial Year", key: "year", width: 18 },
     { header: "Amount Spent (INR Cr)", key: "spend", width: 22 },
@@ -202,6 +219,9 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
   });
 
   // Breakdown sheets
+  const SINGULAR: Record<string, string> = {
+    Companies: "Company", States: "State", Sectors: "Sector", Categories: "Category", Implementation: "Implementation mode", Districts: "District",
+  };
   const breakdowns: [string, NamedValue[]][] = [
     ["Companies", summary.topCompanies],
     ["States", summary.byState],
@@ -211,9 +231,9 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
     ["Districts", summary.byDistrict],
   ];
   for (const [name, rows] of breakdowns) {
-    const sheet = workbook.addWorksheet(name);
+    const sheet = addSheet(name);
     header(sheet, [
-      { header: name === "Companies" ? "Company" : name.replace(/s$/, ""), key: "name", width: 42 },
+      { header: SINGULAR[name] ?? name, key: "name", width: 42 },
       { header: "Amount spent (INR Cr)", key: "value", width: 16 },
       { header: "Share of view (%)", key: "share", width: 18 },
       { header: "Projects", key: "count", width: 12 },
@@ -238,7 +258,7 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
 
   // Anomalies
   if (insights.anomalies.length) {
-    const sheet = workbook.addWorksheet("Anomalies");
+    const sheet = addSheet("Anomalies");
     header(sheet, [
       { header: "Entity", key: "name", width: 42 },
       { header: "Year", key: "year", width: 14 },
@@ -262,7 +282,7 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
   }
 
   // Full register
-  const register = workbook.addWorksheet("Project Register");
+  const register = addSheet("Project Register");
   header(
     register,
     CSV_HEADERS.map((label) => ({
@@ -274,12 +294,13 @@ export async function buildExcelReport(filters: Filters, rowLimit = 60_000): Pro
   for (let i = 0; i < rows.length; i += 1) {
     const row = hydrateRow(rows[i]);
     const cin = data.companies[data.companyIdx[rows[i]]]?.cin ?? "";
-    register.addRow(rowToCsvValues(row, cin));
+    register.addRow(rowToCsvValues(row, cin)).commit();
   }
   register.autoFilter = { from: "A1", to: { row: 1, column: CSV_HEADERS.length } };
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  return Buffer.from(buffer);
+  await workbook.commit();
+  await finished;
+  return Buffer.concat(chunks);
 }
 
 // ---------------------------------------------------------------------------

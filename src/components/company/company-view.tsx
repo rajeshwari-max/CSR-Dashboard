@@ -206,7 +206,7 @@ export function CompanyView({ companyId }: { companyId: string }) {
 
           <ChartCard
             title="States Reached by Reported CSR Projects"
-            description={`${kpis?.stateCount ?? 0} locations reached`}
+            description={`${kpis?.stateCount ?? 0} named states and UTs; Pan India and unspecified filings listed separately`}
             height={320}
             isLoading={isLoading}
             error={error && !notFound ? error : null}
