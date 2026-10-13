@@ -270,21 +270,25 @@ export function PolicyInsightsView() {
       {p?.partners ? (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <Stat label="Implementing Agencies" value={formatNumber(p.partners.agencies)} sub={`${formatNumber(p.partners.registered)} with a CSR-1 registration number`} />
+            <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={`${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number`} />
             <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
             <Stat label="Largest Partner" value={p.partners.top[0]?.name ?? "—"} sub={p.partners.top[0] ? formatCrore(p.partners.top[0].value) : undefined} />
             <Stat label="State with Most Partners" value={p.partners.byState[0]?.name ?? "—"} sub={p.partners.byState[0] ? `${p.partners.byState[0].agencies} agencies` : undefined} />
           </div>
-          <ChartCard title="Largest Implementing Partners" description="Amount, number of funding companies and states covered" height={360} isEmpty={!p.partners.top.length}>
-            <ol className="h-full space-y-1 overflow-y-auto text-[13px]">
-              {p.partners.top.map((row, index) => (
-                <li key={row.name} className="flex justify-between gap-3">
-                  <span className="truncate">{index + 1}. {row.name}{row.registration ? ` (${row.registration})` : ""}</span>
-                  <span className="numeric shrink-0">{formatCrore(row.value)} · {row.companies} cos · {row.states} states</span>
-                </li>
-              ))}
-            </ol>
-          </ChartCard>
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <ChartCard title="Largest Implementing Partners" description="Organisations awarded funds to implement CSR projects: amount, funding companies and states" height={360} isEmpty={!p.partners.top.length}>
+              <PartnerList rows={p.partners.top} />
+            </ChartCard>
+            <ChartCard
+              title="M&E and Impact Assessment Agencies"
+              description="Organisations engaged for monitoring, evaluation or impact assessment (rows with Role = M&E)"
+              height={360}
+              isEmpty={!p.partners.evaluators.length}
+              emptyMessage="No M&E rows uploaded yet. Add them with Role = M&E, from companies' impact assessment reports."
+            >
+              <PartnerList rows={p.partners.evaluators} />
+            </ChartCard>
+          </div>
         </>
       ) : (
         <p className="text-sm text-muted-foreground">The MCA register records only whether an agency was used, not which one. Upload partner names from the annual-report CSR annexures to see who delivers CSR and where.</p>
@@ -292,9 +296,22 @@ export function PolicyInsightsView() {
       <UploadPanel
         kind="partners"
         title="Implementing partners upload"
-        what="One row per company, year and project: implementing agency name, CSR registration number, state, district and amount."
+        what="One row per company, year and project: agency name, its role (Implementation, or M&E for evaluation / impact assessment agencies), CSR registration number, state, district and amount."
         onDone={() => policy.refetch()}
       />
     </PageFrame>
+  );
+}
+
+function PartnerList({ rows }: { rows: { name: string; value: number; companies: number; states: number; registration: string | null }[] }) {
+  return (
+    <ol className="h-full space-y-1 overflow-y-auto text-[13px]">
+      {rows.map((row, index) => (
+        <li key={row.name} className="flex justify-between gap-3">
+          <span className="truncate">{index + 1}. {row.name}{row.registration ? ` (${row.registration})` : ""}</span>
+          <span className="numeric shrink-0">{formatCrore(row.value)} · {row.companies} cos · {row.states} states</span>
+        </li>
+      ))}
+    </ol>
   );
 }

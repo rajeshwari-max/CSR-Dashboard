@@ -7,7 +7,7 @@
 import nationalJson from "@/lib/reference/national-totals.json";
 import { ASPIRATIONAL_DISTRICT_COUNT, ASPIRATIONAL_POPULATION_SHARE, companyMatchKey, FOCUS_TAGS, officialAspirationalDistrict } from "@/lib/data-cleanup";
 import { getDataset, groupBy, round, selectRows } from "@/lib/dataset";
-import { readExtra, type ExtraRecord } from "@/lib/extra-data";
+import { readExtra, type ExtraRecord, partnerRole } from "@/lib/extra-data";
 import type { Filters } from "@/types";
 
 const NATIONAL = nationalJson as { source: string; years: Record<string, number> };
@@ -166,11 +166,13 @@ export function buildPolicyInsights(filters: Filters) {
   // 6. uploaded implementing partners ------------------------------------------------------
   const partnerStore = readExtra("partners");
   const par = (partnerStore?.records ?? []).filter(keep);
-  const agencies = new Map<string, { name: string; value: number; companies: Set<string>; states: Set<string>; registration: string | null }>();
+  const agencies = new Map<string, { name: string; role: string; value: number; companies: Set<string>; states: Set<string>; registration: string | null }>();
   for (const r of par) {
     const name = String(r.agency);
-    const key = name.toLowerCase();
-    const entry = agencies.get(key) ?? { name, value: 0, companies: new Set(), states: new Set(), registration: null };
+    // Rows uploaded before the Role column existed count as implementation.
+    const role = partnerRole(r.role);
+    const key = `${role}|${name.toLowerCase()}`;
+    const entry = agencies.get(key) ?? { name, role, value: 0, companies: new Set(), states: new Set(), registration: null };
     entry.value += num(r.amount);
     entry.companies.add(r.company);
     if (r.state) entry.states.add(String(r.state));
@@ -184,10 +186,13 @@ export function buildPolicyInsights(filters: Filters) {
         uploadedAt: partnerStore.uploadedAt,
         fileName: partnerStore.fileName,
         records: par.length,
-        agencies: agencies.size,
+        agencies: new Set([...agencies.values()].map((a) => a.name.toLowerCase())).size,
         amount: round(par.reduce((s, r) => s + num(r.amount), 0)),
         registered: [...agencies.values()].filter((a) => a.registration).length,
-        top: [...agencies.values()].sort((a, b) => b.value - a.value).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
+        top: [...agencies.values()].filter((a) => a.role === "Implementation").sort((a, b) => b.value - a.value).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
+        evaluators: [...agencies.values()].filter((a) => a.role === "M&E").sort((a, b) => b.value - a.value || b.companies.size - a.companies.size).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
+        implementers: [...agencies.values()].filter((a) => a.role === "Implementation").length,
+        evaluatorCount: [...agencies.values()].filter((a) => a.role === "M&E").length,
         byState: [...partnerStates.entries()].map(([name, set]) => ({ name, agencies: set.size })).sort((a, b) => b.agencies - a.agencies).slice(0, 15),
       }
     : null;

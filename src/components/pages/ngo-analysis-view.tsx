@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useApi } from "@/lib/api";
 import { formatCrore, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
+import type { PolicyInsights } from "@/lib/policy";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 
 /**
@@ -27,6 +28,8 @@ export function NgoAnalysisView() {
   const meta = useMeta();
 
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=10`);
+  const policy = useApi<PolicyInsights>(`/api/policy?${filterQuery}`);
+  const partners = policy.data?.partners ?? null;
   const modeSeries = useApi<BreakdownResponse>(`/api/breakdown?dimension=mode&${filterQuery}`);
 
   const modes = summary.data?.byMode ?? [];
@@ -51,13 +54,31 @@ export function NgoAnalysisView() {
       }}
       isRefreshing={summary.isValidating}
     >
+      <SectionLabel>Organisations receiving CSR funds</SectionLabel>
+      {partners ? (
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+          <OrgCard
+            title="Implementing Agencies Awarded the Most CSR Funds"
+            description={`From uploaded partner data (${partners.records.toLocaleString("en-IN")} project rows) · ${partners.implementers} ${partners.implementers === 1 ? "agency" : "agencies"}`}
+            rows={partners.top}
+            empty="No implementation rows in the uploaded partner data for this selection."
+          />
+          <OrgCard
+            title="Agencies Engaged for M&E and Impact Assessment"
+            description={`Rows uploaded with Role = M&E · ${partners.evaluatorCount} ${partners.evaluatorCount === 1 ? "agency" : "agencies"}`}
+            rows={partners.evaluators}
+            empty="No M&E rows uploaded yet. Add evaluation or impact assessment agencies (from companies' impact assessment reports) with Role = M&E in the partners template."
+          />
+        </div>
+      ) : null}
       <Card className="border-dashed p-4 text-[13px] leading-relaxed text-muted-foreground">
-        <strong className="text-foreground">Which organisations receive the funds?</strong> The MCA project filings record only the
+        <strong className="text-foreground">Where these names come from.</strong> The MCA project filings record only the
         delivery channel (directly, own trust or Section 8 company, government body, or other implementing agency), not the
-        name of the implementing agency or of any monitoring and evaluation (M&amp;E) partner. Agency names and CSR registration
-        numbers are given in many companies&apos; CSR annexures; once added through the NGO partners template on{" "}
-        <a href="/policy-insights" className="font-medium text-primary underline">Policy Insights</a>, they are analysed there.
-        Evaluation partners are usually named only in impact assessment reports.
+        name of the implementing agency or of any monitoring and evaluation (M&amp;E) partner. Names are added from
+        companies&apos; CSR annexures (implementing agencies, with CSR-1 registration numbers) and impact assessment reports
+        (M&amp;E agencies) through the partners template on{" "}
+        <a href="/policy-insights" className="font-medium text-primary underline">Policy Insights</a>
+        {partners ? "." : ". None have been uploaded yet, so the lists of organisations appear here once they are."}
       </Card>
 
       <SectionLabel>Delivery channel</SectionLabel>
@@ -152,5 +173,47 @@ export function NgoAnalysisView() {
         </ChartCard>
       </div>
     </PageFrame>
+  );
+}
+
+function OrgCard({
+  title,
+  description,
+  rows,
+  empty,
+}: {
+  title: string;
+  description: string;
+  rows: { name: string; value: number; companies: number; states: number; registration: string | null }[];
+  empty: string;
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <div>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {rows.length === 0 ? (
+          <p className="py-6 text-center text-[13px] text-muted-foreground">{empty}</p>
+        ) : (
+          <ol className="space-y-1.5 text-[13px]">
+            {rows.slice(0, 10).map((row, index) => (
+              <li key={row.name} className="flex justify-between gap-3">
+                <span className="truncate">
+                  {index + 1}. {row.name}
+                  {row.registration ? <span className="text-muted-foreground"> · {row.registration}</span> : null}
+                </span>
+                <span className="numeric shrink-0">
+                  {formatCrore(row.value)} · {row.companies} {row.companies === 1 ? "company" : "companies"} · {row.states} {row.states === 1 ? "state" : "states"}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </CardContent>
+    </Card>
   );
 }

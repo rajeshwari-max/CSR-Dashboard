@@ -47,6 +47,7 @@ export const COLUMNS: Record<ExtraKind, ColumnSpec[]> = {
     { key: "state", header: "State", aliases: ["state"], type: "text", note: "" },
     { key: "district", header: "District", aliases: ["district"], type: "text", note: "" },
     { key: "agency", header: "Implementing Agency Name", aliases: ["implementing agency", "agency name", "ngo", "name of implementing agency", "partner"], type: "text", required: true, note: "" },
+    { key: "role", header: "Role (Implementation or M&E)", aliases: ["role", "partner role", "type of work", "activity type"], type: "text", note: "Implementation for agencies running the project; M&E for agencies doing monitoring, evaluation or impact assessment (named in impact assessment reports). Blank = Implementation" },
     { key: "registration", header: "CSR Registration Number", aliases: ["csr registration", "registration number", "csr00"], type: "text", note: "CSR00000000 format (MCA Form CSR-1)" },
     { key: "amount", header: "Amount Spent (INR Cr)", aliases: ["amount spent", "amount"], type: "amount", note: "" },
   ],
@@ -98,6 +99,11 @@ const yes = (value: unknown) => {
 
 export interface ParseResult { records: ExtraRecord[]; skipped: number; missingColumns: string[]; matchedColumns: string[] }
 
+/** "Impact assessment", "evaluation", "M&E", "monitoring" -> M&E; anything else (or blank) -> Implementation. */
+export function partnerRole(raw: unknown): "Implementation" | "M&E" {
+  return typeof raw === "string" && /m\s*&\s*e|monitor|evaluat|impact|assess/i.test(raw) ? "M&E" : "Implementation";
+}
+
 export function parseExtra(kind: ExtraKind, tables: SourceTable[]): ParseResult {
   const specs = COLUMNS[kind];
   const records: ExtraRecord[] = [];
@@ -124,6 +130,7 @@ export function parseExtra(kind: ExtraKind, tables: SourceTable[]): ParseResult 
       const year = typeof record.year === "string" ? record.year : null;
       if (!company || !year || (kind === "partners" && !record.agency)) { skipped += 1; continue; }
       if (kind === "partners" && record.state) record.state = normaliseState(record.state);
+      if (kind === "partners") record.role = partnerRole(record.role);
       if (kind === "financials" && record.unspent === null && typeof record.obligation === "number") {
         const spent = typeof record.totalSpent === "number" ? record.totalSpent : null;
         if (spent !== null) record.unspent = Math.max(0, Math.round((record.obligation - spent) * 100) / 100);

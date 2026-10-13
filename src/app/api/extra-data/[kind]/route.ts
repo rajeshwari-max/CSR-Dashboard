@@ -31,7 +31,7 @@ export async function GET(_request: Request, context: { params: Promise<{ kind: 
     sheet.views = [{ state: "frozen", ySplit: 1 }];
     sheet.addRow(kind === "financials"
       ? { company: "Example Industries Limited", year: "FY 2023-24", obligation: 12.5, projects: 11.2, overheads: 0.55, impact: 0.2, totalSpent: 11.95, unspent: 0.55, toUnspentAccount: 0.55, toScheduleVIIFund: 0, impactApplicable: "Yes", impactReport: "https://example.com/impact-assessment.pdf", source: "https://example.com/annual-report-2024.pdf" }
-      : { company: "Example Industries Limited", year: "FY 2023-24", project: "School nutrition programme", state: "Bihar", district: "Gaya", agency: "Example Foundation", registration: "CSR00012345", amount: 1.25 });
+      : { company: "Example Industries Limited", year: "FY 2023-24", project: "School nutrition programme", state: "Bihar", district: "Gaya", agency: "Example Foundation", role: "Implementation", registration: "CSR00012345", amount: 1.25 });
     sheet.getRow(2).font = { italic: true, color: { argb: "FF6E6880" } };
     const help = workbook.addWorksheet("How to fill");
     help.columns = [{ header: "Column", key: "column", width: 44 }, { header: "Required", key: "required", width: 10 }, { header: "Notes", key: "note", width: 70 }];

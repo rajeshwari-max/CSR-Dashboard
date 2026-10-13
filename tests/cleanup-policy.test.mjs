@@ -85,3 +85,18 @@ test("policy insights and template upload round-trip", async () => {
   const missing = parseExtra("partners", tables);
   assert.ok(missing.missingColumns.includes("Implementing Agency Name"));
 });
+
+test("partner rows carry a role: implementation by default, M&E for evaluation agencies", async () => {
+  const { parseExtra, partnerRole } = await import("@/lib/extra-data");
+  assert.equal(partnerRole("Impact Assessment"), "M&E");
+  assert.equal(partnerRole("M & E"), "M&E");
+  assert.equal(partnerRole("monitoring and evaluation"), "M&E");
+  assert.equal(partnerRole(""), "Implementation");
+  assert.equal(partnerRole(null), "Implementation");
+  const headers = ["Company Name", "Financial Year", "Implementing Agency Name", "Role (Implementation or M&E)", "Amount Spent (INR Cr)"];
+  const parsed = parseExtra("partners", [{ name: "Partners", headers, rows: [
+    { "Company Name": "ITC Limited", "Financial Year": "FY 2023-24", "Implementing Agency Name": "Example Foundation", "Amount Spent (INR Cr)": 5 },
+    { "Company Name": "ITC Limited", "Financial Year": "FY 2023-24", "Implementing Agency Name": "Example Evaluators LLP", "Role (Implementation or M&E)": "Impact assessment", "Amount Spent (INR Cr)": 0.2 },
+  ] }]);
+  assert.deepEqual(parsed.records.map((r) => r.role), ["Implementation", "M&E"]);
+});
