@@ -69,6 +69,12 @@ export function ExecutiveDashboard() {
     >
       <MiniLabel>Key performance indicators</MiniLabel>
       <KpiRow kpis={kpis} meta={meta.data} isLoading={summary.isLoading} />
+      {/* Feedback asked whether "CSR spent" covers evaluation too; answer it on the page, not only in a tooltip. */}
+      <p className="muted" style={{ fontSize: 12.5, margin: "-6px 0 26px", lineHeight: 1.5 }}>
+        <strong style={{ color: "var(--text)" }}>What “CSR spent” covers:</strong> money spent on implementing CSR
+        projects, as companies file it project by project on the MCA portal. Administrative overheads and impact
+        assessment (evaluation) costs are reported separately in each company&apos;s CSR annexure and are not included.
+      </p>
 
       <MiniLabel>Trend &amp; distribution analysis</MiniLabel>
       <div className="grid chart-row" style={{ marginBottom: 32 }}>

@@ -136,7 +136,8 @@ export function SectorAnalysisView() {
       </div>
 
       <SectionLabel>Growth rate</SectionLabel>
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+      {/* One chart per row: at half width the treemap tiles were too small for readable labels. */}
+      <div className="grid grid-cols-1 gap-5">
         <ChartCard
           title="Year-over-Year Change in CSR Spent by Sector"
           description="Sectors with at least ₹5 Cr in the prior year"
@@ -182,7 +183,7 @@ export function SectorAnalysisView() {
             </div>
             <Badge variant="outline">{themes.length} categories</Badge>
           </CardHeader>
-          <CardContent className="h-[340px] pb-5">
+          <CardContent className="h-[420px] pb-5">
             <ResponsiveContainer width="100%" height="100%">
               <Treemap
                 data={flow}
