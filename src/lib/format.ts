@@ -3,15 +3,21 @@
 const inr = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
 const inr0 = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
 
-/** 1,234.56 Cr — with a Lakh-Crore rollup above 1,00,000 Cr. */
+const tiny = new Intl.NumberFormat("en-IN", { maximumSignificantDigits: 2 });
+
+/**
+ * Every amount in ₹ crore, so a column never mixes units. (Values under
+ * ₹1 Cr used to switch to lakh — "₹30 L" next to "₹2.33 Cr" — and totals over
+ * 1,00,000 Cr to "L Cr", which contradicted the "amounts in ₹ crore" note.)
+ *   68,652 Cr · 2.33 Cr · 0.3 Cr · 0.004 Cr
+ */
 export function formatCrore(value: number | null | undefined, withSymbol = true): string {
   if (value === null || value === undefined || Number.isNaN(value)) return "—";
   const prefix = withSymbol ? "₹" : "";
   if (value === 0) return `${prefix}0 Cr`;
-  if (Math.abs(value) >= 100_000) return `${prefix}${inr.format(value / 100_000)} L Cr`;
   if (Math.abs(value) >= 1_000) return `${prefix}${inr0.format(value)} Cr`;
-  if (Math.abs(value) >= 1) return `${prefix}${inr.format(value)} Cr`;
-  return `${prefix}${inr.format(value * 100)} L`; // sub-crore shown in lakh
+  if (Math.abs(value) >= 0.01) return `${prefix}${inr.format(value)} Cr`;
+  return `${prefix}${tiny.format(value)} Cr`; // e.g. 0.004 Cr (₹40,000)
 }
 
 /** Compact axis/tick label: 1.2K, 34.9 */

@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MetricInfo } from "@/components/shared/metric-info";
 import { ApiRequestError, downloadCsv, useApi } from "@/lib/api";
+import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPercent, truncate } from "@/lib/format";
 import type { CompanyDetail } from "@/types";
 
@@ -314,6 +315,17 @@ export function CompanyView({ companyId }: { companyId: string }) {
           </CardContent>
         </Card>
       </main>
+
+      {/* Same source and unit note as every other page. */}
+      <footer className="footer">
+        <span>
+          Source:{" "}
+          <a href={DATA_SOURCE.url} target="_blank" rel="noreferrer noopener" title={DATA_SOURCE.long} style={{ textDecoration: "underline" }}>
+            {DATA_SOURCE.short}
+          </a>{" "}
+          · {UNITS_NOTE}
+        </span>
+      </footer>
     </>
   );
 }

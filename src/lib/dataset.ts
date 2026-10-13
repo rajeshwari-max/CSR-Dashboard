@@ -587,9 +587,9 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
   let aspirationalSpend = 0;
   const districts = new Set<number>();
   const projectSizeDistribution = [
-    { label: "< ₹10 L", min: 0, max: 0.1, projects: 0, spend: 0 },
-    { label: "₹10–50 L", min: 0.1, max: 0.5, projects: 0, spend: 0 },
-    { label: "₹50 L–₹1 Cr", min: 0.5, max: 1, projects: 0, spend: 0 },
+    { label: "< ₹0.1 Cr", min: 0, max: 0.1, projects: 0, spend: 0 },
+    { label: "₹0.1–0.5 Cr", min: 0.1, max: 0.5, projects: 0, spend: 0 },
+    { label: "₹0.5–1 Cr", min: 0.5, max: 1, projects: 0, spend: 0 },
     { label: "₹1–5 Cr", min: 1, max: 5, projects: 0, spend: 0 },
     { label: "₹5–25 Cr", min: 5, max: 25, projects: 0, spend: 0 },
     { label: "> ₹25 Cr", min: 25, max: null, projects: 0, spend: 0 },

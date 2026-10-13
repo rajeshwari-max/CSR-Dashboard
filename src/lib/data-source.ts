@@ -10,4 +10,4 @@ export const DATA_SOURCE = {
   url: "https://www.csr.gov.in",
 } as const;
 
-export const UNITS_NOTE = "Amounts in ₹ crore (Cr); values below ₹1 Cr are shown in lakh (L), 1 Cr = 100 L";
+export const UNITS_NOTE = "All amounts in ₹ crore (Cr)";
