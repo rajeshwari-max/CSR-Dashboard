@@ -104,25 +104,6 @@ export function PolicyInsightsView() {
       onRefresh={() => policy.refetch()}
       isRefreshing={policy.isValidating}
     >
-      {p ? (
-        <Card className="border-sky-500/30 bg-sky-500/5">
-          <CardContent className="flex flex-col gap-1 py-4 text-sm">
-            <p className="font-medium">Data clean-up applied across the dashboard</p>
-            <p className="text-muted-foreground">
-              {formatNumber(p.cleanup.companiesMerged)} company name variants merged (e.g. “TCS” and “Tata Consultancy Services”) ·{" "}
-              {formatNumber(p.cleanup.duplicateRows)} duplicate project lines removed ({formatCrore(p.cleanup.duplicateSpend)} that was counted twice) ·{" "}
-              {formatNumber(p.cleanup.cinsCleared)} CINs shared by unrelated companies cleared · aspirational flags checked against NITI Aayog’s official list of 112 districts, by state and district.
-            </p>
-            {p.cleanup.mergedNames.length ? (
-              <details className="text-muted-foreground">
-                <summary className="cursor-pointer">Show merged names</summary>
-                <ul className="mt-2 list-disc pl-5">{p.cleanup.mergedNames.map((group) => <li key={group.join("|")}>{group.join(" = ")}</li>)}</ul>
-              </details>
-            ) : null}
-          </CardContent>
-        </Card>
-      ) : null}
-
       <SectionLabel>Coverage of all-India CSR</SectionLabel>
       <ChartCard
         title="Dashboard Companies against All-India CSR Spent"
@@ -229,7 +210,11 @@ export function PolicyInsightsView() {
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`${formatNumber(p.financials.companies)} companies uploaded`} />
             <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatCrore(p.financials.toUnspentAccount)} to Unspent CSR Accounts`} />
-            <Stat label="Transferred to Schedule VII Funds" value={formatCrore(p.financials.toScheduleVIIFund)} sub="e.g. PM CARES, Swachh Bharat Kosh" />
+            <Stat
+              label="Transferred to Schedule VII Funds"
+              value={p.financials.toScheduleVIIFund > 0 ? formatCrore(p.financials.toScheduleVIIFund) : "—"}
+              sub={p.financials.toScheduleVIIFund > 0 ? "e.g. PM CARES, Swachh Bharat Kosh" : "Not in the uploaded rows yet (column K of the template)"}
+            />
             <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`${formatNumber(p.financials.impactApplicable)} filings applicable · ${formatNumber(p.financials.impactReports)} reports linked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
@@ -271,12 +256,24 @@ export function PolicyInsightsView() {
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={`${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number`} />
-            <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
-            <Stat label="Largest Partner" value={p.partners.top[0]?.name ?? "—"} sub={p.partners.top[0] ? formatCrore(p.partners.top[0].value) : undefined} />
-            <Stat label="State with Most Partners" value={p.partners.byState[0]?.name ?? "—"} sub={p.partners.byState[0] ? `${p.partners.byState[0].agencies} agencies` : undefined} />
+            {p.partners.amount > 0 ? (
+              <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
+            ) : (
+              <Stat label="Companies Naming Partners" value={formatNumber(p.partners.companies)} sub={`${formatNumber(p.partners.records)} company-year-agency rows from CSR annexures`} />
+            )}
+            <Stat
+              label={p.partners.amount > 0 ? "Largest Partner" : "Most-used Partner"}
+              value={p.partners.top[0]?.name ?? "—"}
+              sub={p.partners.top[0] ? (p.partners.amount > 0 ? formatCrore(p.partners.top[0].value) : `${p.partners.top[0].companies} funding companies`) : undefined}
+            />
+            {p.partners.byState.length ? (
+              <Stat label="State with Most Partners" value={p.partners.byState[0].name} sub={`${p.partners.byState[0].agencies} agencies`} />
+            ) : (
+              <Stat label="Registered Agencies" value={formatNumber(p.partners.registered)} sub="with a CSR-1 registration number (MCA)" />
+            )}
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-            <ChartCard title="Largest Implementing Partners" description="Organisations awarded funds to implement CSR projects: amount, funding companies and states" height={360} isEmpty={!p.partners.top.length}>
+            <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations awarded funds to implement CSR projects: amount, funding companies and states" : "Agencies named by the most companies in their CSR annexures (annexures do not give per-agency amounts or states)"} height={360} isEmpty={!p.partners.top.length}>
               <PartnerList rows={p.partners.top} />
             </ChartCard>
             <ChartCard
@@ -284,7 +281,7 @@ export function PolicyInsightsView() {
               description="Organisations engaged for monitoring, evaluation or impact assessment (rows with Role = M&E)"
               height={360}
               isEmpty={!p.partners.evaluators.length}
-              emptyMessage="No M&E rows uploaded yet. Add them with Role = M&E, from companies' impact assessment reports."
+              emptyMessage="CSR annexures do not name M&E agencies. Add them with Role = M&E from companies' impact assessment reports."
             >
               <PartnerList rows={p.partners.evaluators} />
             </ChartCard>
@@ -309,7 +306,7 @@ function PartnerList({ rows }: { rows: { name: string; value: number; companies:
       {rows.map((row, index) => (
         <li key={row.name} className="flex justify-between gap-3">
           <span className="truncate">{index + 1}. {row.name}{row.registration ? ` (${row.registration})` : ""}</span>
-          <span className="numeric shrink-0">{formatCrore(row.value)} · {row.companies} cos · {row.states} states</span>
+          <span className="numeric shrink-0">{[row.value > 0 ? formatCrore(row.value) : null, `${row.companies} ${row.companies === 1 ? "company" : "companies"}`, row.states > 0 ? `${row.states} states` : null].filter(Boolean).join(" · ")}</span>
         </li>
       ))}
     </ol>

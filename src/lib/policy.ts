@@ -171,8 +171,12 @@ export function buildPolicyInsights(filters: Filters) {
     const name = String(r.agency);
     // Rows uploaded before the Role column existed count as implementation.
     const role = partnerRole(r.role);
-    const key = `${role}|${name.toLowerCase()}`;
+    // One agency is often spelt several ways across annexures; its CSR-1 registration
+    // number is the stable identity, so group on that when it is given.
+    const reg = typeof r.registration === "string" && /^CSR\d{8}$/i.test(r.registration.trim()) ? r.registration.trim().toUpperCase() : null;
+    const key = `${role}|${reg ?? name.toLowerCase()}`;
     const entry = agencies.get(key) ?? { name, role, value: 0, companies: new Set(), states: new Set(), registration: null };
+    if (name.length > entry.name.length && name.length <= 90) entry.name = name;
     entry.value += num(r.amount);
     entry.companies.add(r.company);
     if (r.state) entry.states.add(String(r.state));
@@ -186,10 +190,11 @@ export function buildPolicyInsights(filters: Filters) {
         uploadedAt: partnerStore.uploadedAt,
         fileName: partnerStore.fileName,
         records: par.length,
-        agencies: new Set([...agencies.values()].map((a) => a.name.toLowerCase())).size,
+        agencies: agencies.size,
+        companies: new Set(par.map((r) => r.companyKey)).size,
         amount: round(par.reduce((s, r) => s + num(r.amount), 0)),
         registered: [...agencies.values()].filter((a) => a.registration).length,
-        top: [...agencies.values()].filter((a) => a.role === "Implementation").sort((a, b) => b.value - a.value).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
+        top: [...agencies.values()].filter((a) => a.role === "Implementation").sort((a, b) => b.value - a.value || b.companies.size - a.companies.size).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
         evaluators: [...agencies.values()].filter((a) => a.role === "M&E").sort((a, b) => b.value - a.value || b.companies.size - a.companies.size).slice(0, 15).map((a) => ({ name: a.name, value: round(a.value), companies: a.companies.size, states: a.states.size, registration: a.registration })),
         implementers: [...agencies.values()].filter((a) => a.role === "Implementation").length,
         evaluatorCount: [...agencies.values()].filter((a) => a.role === "M&E").length,
