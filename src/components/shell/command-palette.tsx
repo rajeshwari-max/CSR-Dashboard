@@ -6,9 +6,10 @@ import { CornerDownLeft, Search } from "lucide-react";
 
 import { ICONS } from "@/components/shell/icons";
 import { NAV } from "@/components/shell/nav";
-import { downloadFile } from "@/lib/api";
+import { downloadFile, useApi } from "@/lib/api";
 import { filtersToParams } from "@/lib/query";
 import { selectFilters, useFilterStore } from "@/store/filters";
+import type { Meta } from "@/types";
 
 interface Command {
   label: string;
@@ -21,6 +22,12 @@ interface Command {
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const router = useRouter();
   const [term, setTerm] = React.useState("");
+  // Company list for search; only fetched once the palette has been opened.
+  const [wanted, setWanted] = React.useState(false);
+  React.useEffect(() => {
+    if (open) setWanted(true);
+  }, [open]);
+  const meta = useApi<Meta>(wanted ? "/api/meta" : null);
   const [index, setIndex] = React.useState(0);
 
   const commands = React.useMemo<Command[]>(
@@ -63,11 +70,26 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const results = React.useMemo(() => {
     const needle = term.trim().toLowerCase();
     if (!needle) return commands;
-    return commands.filter(
+    const pages = commands.filter(
       (command) =>
         command.label.toLowerCase().includes(needle) || command.meta.toLowerCase().includes(needle),
     );
-  }, [commands, term]);
+    // Companies: open Company Analysis with that company selected.
+    const companies: Command[] = needle.length < 2 ? [] : (meta.data?.companies ?? [])
+      .filter((company) => company.name.toLowerCase().includes(needle))
+      .sort((a, b) => a.name.toLowerCase().indexOf(needle) - b.name.toLowerCase().indexOf(needle) || a.name.localeCompare(b.name))
+      .slice(0, 8)
+      .map((company) => ({
+        label: company.name,
+        meta: company.sector ? `Company · ${company.sector}` : "Company",
+        icon: "building",
+        run: () => {
+          useFilterStore.getState().setValues("companies", [company.id]);
+          router.push("/company-analysis");
+        },
+      }));
+    return [...companies, ...pages];
+  }, [commands, meta.data, router, term]);
 
   React.useEffect(() => setIndex(0), [term]);
   React.useEffect(() => {
@@ -102,7 +124,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           <input
             autoFocus={open}
             value={term}
-            placeholder="Search pages and actions…"
+            placeholder="Search companies, pages and actions…"
             onChange={(event) => setTerm(event.target.value)}
             onKeyDown={onKeyDown}
           />

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, RefreshCw } from "lucide-react";
+import { ChevronDown, Menu, RefreshCw, Search } from "lucide-react";
 
 import { BREADCRUMB } from "@/components/shell/nav";
 
@@ -15,8 +15,8 @@ interface TopbarProps {
   datasetLabel?: string;
 }
 
-/** Topbar: menu, breadcrumbs, refresh and account controls. */
-export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
+/** Topbar: menu, breadcrumbs, global search, refresh and account controls. */
+export function Topbar({ onMenu, onOpenPalette, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
   const pathname = usePathname();
   const [avatarOpen, setAvatarOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
@@ -44,6 +44,12 @@ export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: Topbar
         <span className="sep">›</span>
         <span className="current">{current}</span>
       </nav>
+
+      <button type="button" className="cmdk-trigger" onClick={onOpenPalette} aria-label="Search companies and pages">
+        <Search className="icon" width={15} height={15} />
+        <span>Search companies, pages…</span>
+        <span className="kbd" style={{ flex: "none" }}>Ctrl K</span>
+      </button>
 
       <div className="topbar-actions">
         {onRefresh ? (
@@ -80,11 +86,9 @@ export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: Topbar
             <Link href="/data-explorer" className="menu-item">
               Saved views
             </Link>
-            <form action="/api/auth/logout" method="post">
-              <button type="submit" className="menu-item" style={{ width: "100%", border: 0 }}>
-                Sign out
-              </button>
-            </form>
+            {process.env.NEXT_PUBLIC_AUTH_ENABLED === "true" ? <form action="/api/auth/logout" method="post">
+              <button type="submit" className="menu-item" style={{ width: "100%", border: 0 }}>Sign out</button>
+            </form> : null}
           </div>
         </div>
       </div>

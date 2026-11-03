@@ -36,9 +36,8 @@ export function CompanyAnalysisView() {
   const setValues = useFilterStore((state) => state.setValues);
   const meta = useMeta();
 
-  // The company list is driven by the filter bar's search box — the page has no
-  // search field of its own, so there is exactly one place to type a company
-  // name and it filters the list, the charts and the register together.
+  // The company search box sets the shared Company filter, so picking a company
+  // opens its profile and scopes the charts and register below to it.
   const [compare, setCompare] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -91,9 +90,17 @@ export function CompanyAnalysisView() {
           <CardHeader>
             <div>
               <CardTitle>Companies Ranked by Total CSR Spent in This View</CardTitle>
-              <CardDescription>Use the common search above, then click a row to analyse that company</CardDescription>
+              <CardDescription>Search any of the {formatNumber(meta.data?.companies.length ?? 0)} companies, or click a row to analyse that company</CardDescription>
             </div>
           </CardHeader>
+          <CardContent className="pb-3">
+            <CompanySearch
+              companies={meta.data?.companies ?? []}
+              selectedName={filters.companies.length === 1 ? meta.data?.companies.find((c) => c.id === filters.companies[0])?.name ?? null : null}
+              onSelect={(id) => setValues("companies", [id])}
+              onClear={() => setValues("companies", [])}
+            />
+          </CardContent>
           <CardContent className="px-0">
             <BreakdownTable
               rows={summary.data?.topCompanies ?? []}
@@ -619,6 +626,88 @@ function CompanyPicker({
               </button>
             </li>
           ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+/** Search box over every company in the dataset; picking one opens its profile below. */
+function CompanySearch({
+  companies,
+  selectedName,
+  onSelect,
+  onClear,
+}: {
+  companies: { id: string; name: string; sector?: string }[];
+  selectedName: string | null;
+  onSelect: (id: string) => void;
+  onClear: () => void;
+}) {
+  const [query, setQuery] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState(0);
+  const matches = React.useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return [];
+    return companies
+      .filter((company) => company.name.toLowerCase().includes(needle))
+      .sort((a, b) => a.name.toLowerCase().indexOf(needle) - b.name.toLowerCase().indexOf(needle) || a.name.localeCompare(b.name))
+      .slice(0, 10);
+  }, [companies, query]);
+  React.useEffect(() => setActive(0), [query]);
+
+  const pick = (id: string) => {
+    onSelect(id);
+    setQuery("");
+    setOpen(false);
+  };
+
+  return (
+    <div className="relative max-w-xl">
+      <div className="flex items-center gap-2">
+        <input
+          type="search"
+          value={query}
+          placeholder="Search a company, e.g. Infosys"
+          aria-label="Search companies"
+          autoComplete="off"
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") { event.preventDefault(); setActive((i) => Math.min(i + 1, matches.length - 1)); }
+            else if (event.key === "ArrowUp") { event.preventDefault(); setActive((i) => Math.max(i - 1, 0)); }
+            else if (event.key === "Enter" && matches[active]) { event.preventDefault(); pick(matches[active].id); }
+            else if (event.key === "Escape") setOpen(false);
+          }}
+          className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+        />
+        {selectedName ? (
+          <button type="button" onClick={onClear} className="shrink-0 rounded-md border px-3 py-2 text-[12.5px] hover:bg-accent" title="Show all companies again">
+            Clear: {selectedName.length > 28 ? `${selectedName.slice(0, 28)}…` : selectedName}
+          </button>
+        ) : null}
+      </div>
+      {open && query.trim() ? (
+        <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-md border bg-[var(--surface)] shadow-lg" role="listbox">
+          {matches.length ? matches.map((company, index) => (
+            <li key={company.id}>
+              <button
+                type="button"
+                className={`flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-accent${index === active ? " bg-accent" : ""}`}
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseEnter={() => setActive(index)}
+                onClick={() => pick(company.id)}
+              >
+                <span className="truncate">{company.name}</span>
+                {company.sector ? <span className="shrink-0 text-[11px] text-muted-foreground">{company.sector}</span> : null}
+              </button>
+            </li>
+          )) : <li className="px-3 py-2 text-sm text-muted-foreground">No company matches “{query.trim()}”.</li>}
         </ul>
       ) : null}
     </div>
