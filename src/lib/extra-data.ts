@@ -109,12 +109,21 @@ export function parseExtra(kind: ExtraKind, tables: SourceTable[]): ParseResult 
   const records: ExtraRecord[] = [];
   let skipped = 0;
   let best: { missing: string[]; matched: string[] } | null = null;
-  for (const table of tables) {
+  // A workbook can hold several sheets (e.g. Financials + Partners + Coverage). Only read the
+  // sheets that actually carry this kind's data: a sheet that matches nothing beyond the
+  // required Company/Year columns would otherwise add blank records that overwrite real ones.
+  const requiredCount = specs.filter((spec) => spec.required).length;
+  const plans = tables.map((table) => {
     const columns = new Map(specs.map((spec) => [spec.key, resolve(table.headers, spec)]));
     const missing = specs.filter((spec) => spec.required && !columns.get(spec.key)).map((spec) => spec.header);
     const matched = specs.filter((spec) => columns.get(spec.key)).map((spec) => spec.header);
+    return { table, columns, missing, matched };
+  });
+  const bestCount = Math.max(0, ...plans.filter((plan) => !plan.missing.length).map((plan) => plan.matched.length));
+  for (const { table, columns, missing, matched } of plans) {
     if (!best || matched.length > best.matched.length) best = { missing, matched };
     if (missing.length) continue;
+    if (matched.length <= requiredCount || matched.length < bestCount / 2) continue;
     for (const row of table.rows) {
       const record: Record<string, string | number | boolean | null> = {};
       for (const spec of specs) {
