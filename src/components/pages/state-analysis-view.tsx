@@ -24,7 +24,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle } from "@/components/charts/chart-theme";
 import { ChartTip } from "@/components/charts2/chart-tooltip";
 
 const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified", "District Not Classified Elsewhere"]);
@@ -162,12 +162,12 @@ export function StateAnalysisView() {
           <BarChart
             data={comparison}
             layout="vertical"
-            margin={{ top: 4, right: 96, bottom: 4, left: 8 }}
+            margin={{ top: 4, right: 96, bottom: 20, left: 8 }}
             barCategoryGap="22%"
             barGap={3}
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} />
+            <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} label={xTitle("CSR amount spent (₹ crore)", -14)} />
             <YAxis
               type="category"
               dataKey="name"

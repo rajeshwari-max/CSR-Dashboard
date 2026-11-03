@@ -100,8 +100,6 @@ export function FilterBar({
         Filters
       </span>
 
-      <FilterSearch meta={meta} filters={filters} />
-
       {!hide.includes("states") && !hide.includes("districts") ? (
         <div className="pos-rel">
           <button
@@ -234,6 +232,8 @@ export function FilterBar({
           </div>
         ) : null}
       </div>
+
+      <FilterSearch meta={meta} filters={filters} />
 
       {(meta?.stats.aspirational_rows ?? 0) > 0 ? (
         <div className="pos-rel">
@@ -535,7 +535,6 @@ function AspirationalPopover({
 
 type Suggestion = { group: string; label: string; hint?: string; apply: () => void };
 
-const SUGGEST_GROUPS = ["Company", "State", "District", "Sector", "Domain", "Implementing agency"];
 
 /**
  * Search box in the filter bar. Typing suggests matching companies, states,
@@ -575,10 +574,10 @@ function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }
       setSearch("");
       setOpen(false);
     };
-    return [
-      ...pick(meta.companies, (c) => c.name, 5).map((c) => ({ group: "Company", label: c.name, hint: c.sector, apply: () => { setValues("companies", [c.id]); done(); } })),
-      ...pick(meta.states, (x) => x, 3).map((x) => ({ group: "State", label: x, apply: () => { setValues("states", [x]); setValues("districts", []); done(); } })),
-      ...pick(meta.districts, (x) => x, 3).map((x) => {
+    const all: Suggestion[] = [
+      ...pick(meta.companies, (c) => c.name, 8).map((c) => ({ group: "Company", label: c.name, hint: c.sector, apply: () => { setValues("companies", [c.id]); done(); } })),
+      ...pick(meta.states, (x) => x, 4).map((x) => ({ group: "State", label: x, apply: () => { setValues("states", [x]); setValues("districts", []); done(); } })),
+      ...pick(meta.districts, (x) => x, 6).map((x) => {
         const state = Object.entries(meta.districtsByState ?? {}).find(([, list]) => list.includes(x))?.[0];
         return { group: "District", label: x, hint: state, apply: () => { if (state) setValues("states", [state]); setValues("districts", [x]); done(); } };
       }),
@@ -586,6 +585,10 @@ function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }
       ...pick(meta.themes, (x) => x, 3).map((x) => ({ group: "Domain", label: x, apply: () => { setValues("themes", [x]); done(); } })),
       ...pick(meta.ngos ?? [], (x) => x, 3).map((x) => ({ group: "Implementing agency", label: x, apply: () => { setSearch(x); setText(x); setOpen(false); } })),
     ];
+    // One list, closest matches first, then A–Z — each row tagged with its type.
+    return all
+      .sort((a, b) => rank(a.label) - rank(b.label) || a.label.localeCompare(b.label))
+      .slice(0, 14);
   }, [meta, setSearch, setValues, text]);
 
   const runSearch = () => {
@@ -616,7 +619,7 @@ function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }
             else if (event.key === "Enter") { event.preventDefault(); (items[active] ?? { apply: runSearch }).apply(); }
             else if (event.key === "Escape") setOpen(false);
           }}
-          style={{ border: 0, outline: "none", background: "transparent", width: 210, fontSize: 12.5, color: "inherit" }}
+          style={{ border: 0, outline: "none", background: "transparent", width: 150, fontSize: 12.5, color: "inherit" }}
         />
         {text || filters.search ? (
           <button type="button" aria-label="Clear search" onClick={() => { setText(""); setSearch(""); }} style={{ display: "flex", padding: 2 }}>
@@ -627,29 +630,34 @@ function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }
       {open && items.length ? (
         <div
           role="listbox"
-          style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 60, width: 380, maxHeight: 380, overflowY: "auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, boxShadow: "0 12px 40px -12px rgb(15 23 42 / 0.28)", padding: 6 }}
+          style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 60, width: 340, maxHeight: 320, overflowY: "auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, boxShadow: "0 12px 40px -12px rgb(15 23 42 / 0.28)", padding: 6 }}
         >
-          {items.map((item, index) => {
-            const first = item.group && items.findIndex((x) => x.group === item.group) === index;
-            return (
-              <React.Fragment key={`${item.group}|${item.label}`}>
-                {first ? <div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: "var(--text-soft)", padding: "8px 8px 4px" }}>{SUGGEST_GROUPS.includes(item.group) ? item.group : ""}</div> : null}
-                {!item.group ? <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} /> : null}
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={index === active}
-                  onMouseEnter={() => setActive(index)}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => item.apply()}
-                  style={{ display: "flex", width: "100%", alignItems: "baseline", justifyContent: "space-between", gap: 10, padding: "7px 8px", borderRadius: 6, textAlign: "left", fontSize: 12.5, background: index === active ? "var(--surface-2)" : "transparent", fontWeight: item.group ? 500 : 650 }}
-                >
-                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.label}</span>
-                  {item.hint ? <span style={{ flex: "none", fontSize: 11, color: "var(--text-soft)" }}>{item.hint}</span> : null}
-                </button>
-              </React.Fragment>
-            );
-          })}
+          {items.map((item, index) => (
+            <React.Fragment key={`${item.group}|${item.label}`}>
+              {!item.group ? <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} /> : null}
+              <button
+                type="button"
+                role="option"
+                aria-selected={index === active}
+                onMouseEnter={() => setActive(index)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => item.apply()}
+                style={{ display: "flex", width: "100%", alignItems: "center", gap: 12, padding: "8px 10px", borderRadius: 6, textAlign: "left", background: index === active ? "var(--surface-2)" : "transparent" }}
+              >
+                {item.group ? (
+                  <span
+                    style={{ flex: "none", width: 92, textAlign: "center", fontSize: 9.5, fontWeight: 700, letterSpacing: ".06em", textTransform: "uppercase", padding: "3px 6px", borderRadius: 4, background: "color-mix(in srgb, var(--c2) 14%, transparent)", color: "var(--c2)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+                  >
+                    {item.group === "Implementing agency" ? "Agency" : item.group}
+                  </span>
+                ) : null}
+                <span style={{ display: "flex", minWidth: 0, flexDirection: "column" }}>
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12.5, fontWeight: 600, color: "var(--text)" }}>{item.label}</span>
+                  {item.hint ? <span style={{ fontSize: 11, color: "var(--text-soft)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.hint}</span> : null}
+                </span>
+              </button>
+            </React.Fragment>
+          ))}
         </div>
       ) : null}
     </div>

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle } from "@/components/charts/chart-theme";
 import { formatCompact, formatCrore, formatShare } from "@/lib/format";
 import { truncate } from "@/lib/format";
 import type { NamedValue } from "@/types";
@@ -14,9 +14,9 @@ export function CompanyBarChart({ data }: { data: NamedValue[] }) {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={rows} layout="vertical" margin={{ top: 4, right: 24, bottom: 4, left: 8 }}>
+      <BarChart data={rows} layout="vertical" margin={{ top: 4, right: 24, bottom: 20, left: 8 }}>
         <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-        <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => formatCompact(value)} />
+        <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => formatCompact(value)} label={xTitle("CSR amount spent (₹ crore)", -14)} />
         <YAxis
           type="category"
           dataKey="name"

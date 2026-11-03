@@ -1,17 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
-import { colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle } from "@/components/charts/chart-theme";
 import { RankList } from "@/components/charts/rank-list";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCrore, formatShare } from "@/lib/format";
+import { formatCrore, formatNumber, formatShare, truncate } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { PolicyInsights } from "@/lib/policy";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
@@ -58,8 +58,8 @@ export function NgoAnalysisView() {
       {partners ? (
         <div className={`grid grid-cols-1 gap-5 ${partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
           <OrgCard
-            title={partners.amount > 0 ? "Implementing Agencies Awarded the Most CSR Funds" : "Implementing Agencies Named by the Most Companies"}
-            description={`From companies\u2019 CSR annexures (${partners.records.toLocaleString("en-IN")} rows) · ${partners.implementers.toLocaleString("en-IN")} ${partners.implementers === 1 ? "agency" : "agencies"}`}
+            title={partners.amount > 0 ? "Implementing Agencies Awarded the Most CSR Funds" : "Top 15 Implementing Agencies by Number of Funding Companies"}
+            description={`Each bar shows how many companies named the agency in their CSR annexure. ${partners.implementers.toLocaleString("en-IN")} agencies across ${partners.records.toLocaleString("en-IN")} annexure rows; hover for the CSR-1 registration number.`}
             rows={partners.top}
             empty="No implementation rows in the uploaded partner data for this selection."
           />
@@ -174,6 +174,16 @@ export function NgoAnalysisView() {
   );
 }
 
+/** Annexure names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
+function cleanAgencyName(name: string) {
+  const words = name.trim().split(/\s+/);
+  if (words.length % 2 === 0) {
+    const half = words.length / 2;
+    if (words.slice(0, half).join(" ").toLowerCase() === words.slice(half).join(" ").toLowerCase()) return words.slice(0, half).join(" ");
+  }
+  return name.trim();
+}
+
 function OrgCard({
   title,
   description,
@@ -185,6 +195,8 @@ function OrgCard({
   rows: { name: string; value: number; companies: number; states: number; registration: string | null }[];
   empty: string;
 }) {
+  const byAmount = rows.some((row) => row.value > 0);
+  const data = rows.slice(0, 15).map((row) => ({ ...row, label: cleanAgencyName(row.name), metric: byAmount ? row.value : row.companies }));
   return (
     <Card>
       <CardHeader>
@@ -194,26 +206,51 @@ function OrgCard({
         </div>
       </CardHeader>
       <CardContent>
-        {rows.length === 0 ? (
+        {data.length === 0 ? (
           <p className="py-6 text-center text-[13px] text-muted-foreground">{empty}</p>
         ) : (
-          <ol className="space-y-1.5 text-[13px]">
-            {rows.slice(0, 10).map((row, index) => (
-              <li key={row.name} className="flex justify-between gap-3">
-                <span className="truncate">
-                  {index + 1}. {row.name}
-                  {row.registration ? <span className="text-muted-foreground"> · {row.registration}</span> : null}
-                </span>
-                <span className="numeric shrink-0">
-                  {[
-                    row.value > 0 ? formatCrore(row.value) : null,
-                    `${row.companies} ${row.companies === 1 ? "company" : "companies"}`,
-                    row.states > 0 ? `${row.states} ${row.states === 1 ? "state" : "states"}` : null,
-                  ].filter(Boolean).join(" · ")}
-                </span>
-              </li>
-            ))}
-          </ol>
+          <div style={{ height: Math.max(260, data.length * 34 + 50) }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} layout="vertical" margin={{ top: 4, right: 96, bottom: 22, left: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis
+                  type="number"
+                  {...AXIS_PROPS}
+                  allowDecimals={false}
+                  tickFormatter={(value: number) => (byAmount ? formatCrore(value, false) : formatNumber(value))}
+                  label={xTitle(byAmount ? "CSR funds received (₹ crore)" : "Companies funding the agency (count)", -14)}
+                />
+                <YAxis type="category" dataKey="label" width={300} {...AXIS_PROPS} tick={{ fontSize: 12, fill: "var(--text)" }} tickFormatter={(value: string) => truncate(value, 44)} />
+                <Tooltip
+                  cursor={TOOLTIP_STYLES.cursor}
+                  content={({ payload }) => {
+                    const row = payload?.[0]?.payload as (typeof data)[number] | undefined;
+                    if (!row) return null;
+                    return (
+                      <div style={{ ...TOOLTIP_STYLES.contentStyle, padding: "8px 10px", maxWidth: 340 }}>
+                        <p style={{ fontWeight: 600, marginBottom: 4 }}>{row.label}</p>
+                        {row.registration ? <p>CSR-1 registration: {row.registration}</p> : null}
+                        <p>Funded by {formatNumber(row.companies)} {row.companies === 1 ? "company" : "companies"}</p>
+                        {row.value > 0 ? <p>CSR funds received: {formatCrore(row.value)}</p> : null}
+                        {row.states > 0 ? <p>Working in {row.states} {row.states === 1 ? "state" : "states"}</p> : null}
+                      </div>
+                    );
+                  }}
+                />
+                <Bar dataKey="metric" radius={[0, 5, 5, 0]} maxBarSize={20}>
+                  {data.map((row, index) => (
+                    <Cell key={row.name} fill={index % 2 ? "var(--c2)" : "var(--c1)"} />
+                  ))}
+                  <LabelList
+                    dataKey="metric"
+                    position="right"
+                    formatter={(value: number) => (byAmount ? formatCrore(value) : `${formatNumber(value)} ${value === 1 ? "company" : "companies"}`)}
+                    style={{ fontSize: 11.5, fill: "var(--text)" }}
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         )}
       </CardContent>
     </Card>

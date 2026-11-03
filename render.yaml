@@ -17,6 +17,10 @@ services:
         value: /var/data
       - key: NODE_ENV
         value: production
+      - key: AUTH_ENABLED
+        value: "false"
+      - key: NEXT_PUBLIC_AUTH_ENABLED
+        value: "false"
       - key: APP_PASSWORD
         sync: false          # set this in the Render dashboard, not in git
       - key: LLM_API_KEY

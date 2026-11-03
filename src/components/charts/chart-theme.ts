@@ -15,6 +15,23 @@ export const AXIS_PROPS = {
   tick: { fontSize: 11 },
 } as const;
 
+/** Axis titles: every chart names what each axis measures and its unit. */
+export const AXIS_TITLE_STYLE = { fontSize: 11, fill: "var(--text-soft)", textAnchor: "middle" } as const;
+
+export function xTitle(value: string, offset = -12) {
+  return { value, position: "insideBottom" as const, offset, style: AXIS_TITLE_STYLE };
+}
+
+export function yTitle(value: string, side: "left" | "right" = "left", offset = 4) {
+  return {
+    value,
+    angle: side === "left" ? -90 : 90,
+    position: side === "left" ? ("insideLeft" as const) : ("insideRight" as const),
+    offset,
+    style: AXIS_TITLE_STYLE,
+  };
+}
+
 export const TOOLTIP_STYLES = {
   contentStyle: {
     borderRadius: 12,

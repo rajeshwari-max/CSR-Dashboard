@@ -6,9 +6,11 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Treemap,
   Tooltip,
@@ -17,7 +19,7 @@ import {
 } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
-import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle, yTitle } from "@/components/charts/chart-theme";
 import { ChartTip } from "@/components/charts2/chart-tooltip";
 import { SectorPieChart } from "@/components/charts/sector-pie-chart";
 import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
@@ -27,7 +29,7 @@ import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCrore, formatSignedPercent, truncate } from "@/lib/format";
+import { formatCompact, formatCrore, formatSignedPercent, truncate } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 
@@ -63,6 +65,13 @@ export function SectorAnalysisView() {
         .sort((a, b) => (b.yoyGrowthPct ?? 0) - (a.yoyGrowthPct ?? 0)),
     [sectors],
   );
+  const growthRows = React.useMemo(() => {
+    const up = growth.filter((row) => (row.yoyGrowthPct ?? 0) >= 0).slice(0, 6);
+    const down = growth.filter((row) => (row.yoyGrowthPct ?? 0) < 0).slice(-6);
+    return [...up, ...down];
+  }, [growth]);
+  const lastYear = years.at(-1);
+  const prevYear = years.at(-2);
 
   // Funding flow: which Schedule VII categories each top sector funds.
   const flow = React.useMemo(() => {
@@ -114,10 +123,10 @@ export function SectorAnalysisView() {
           isEmpty={!trendData.length}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+            <LineChart data={trendData} margin={{ top: 8, right: 12, bottom: 18, left: 12 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="year" {...AXIS_PROPS} />
-              <YAxis {...AXIS_PROPS} />
+              <XAxis dataKey="year" {...AXIS_PROPS} label={xTitle("Financial year", -14)} />
+              <YAxis {...AXIS_PROPS} width={64} tickFormatter={(value: number) => formatCompact(value)} label={yTitle("CSR amount spent (₹ crore)")} />
               <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
               <Legend iconType="circle" iconSize={8} />
               {sectors.slice(0, 6).map((sector, index) => (
@@ -139,40 +148,53 @@ export function SectorAnalysisView() {
       {/* One chart per row: at half width the treemap tiles were too small for readable labels. */}
       <div className="grid grid-cols-1 gap-5">
         <ChartCard
-          title="Year-over-Year Change in CSR Spent by Sector"
-          description="Sectors with at least ₹5 Cr in the prior year"
-          height={380}
+          title={`Which Sectors Raised or Cut CSR Spending${prevYear && lastYear ? `: ${prevYear} → ${lastYear}` : ""}`}
+          description={`Green: sectors that spent more on CSR than the year before. Red: sectors that spent less. Shows % change for sectors with at least ₹5 crore spent in ${prevYear ?? "the previous year"}; hover a bar for the ₹ crore amounts.`}
+          height={420}
           isLoading={summary.isLoading}
           error={summary.error}
           isEmpty={!growth.length}
           emptyMessage="Needs two financial years with comparable amounts spent."
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={[...growth.slice(0, 6), ...growth.slice(-6)]}
-              layout="vertical"
-              margin={{ top: 4, right: 30, bottom: 4, left: 8 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-              <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => `${value}%`} />
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={150}
-                {...AXIS_PROPS}
-                tickFormatter={(value: string) => truncate(value, 22)}
-              />
-              <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatSignedPercent(value)} />
-              <Bar dataKey="yoyGrowthPct" radius={[0, 5, 5, 0]} maxBarSize={20}>
-                {[...growth.slice(0, 6), ...growth.slice(-6)].map((row) => (
-                  <Cell
-                    key={row.name}
-                    fill={(row.yoyGrowthPct ?? 0) >= 0 ? "var(--success)" : "var(--danger)"}
+          <div className="flex h-full flex-col">
+            <div className="mb-1 flex flex-wrap gap-4 text-[12px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: "var(--c2)" }} /> Spending increased</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: "var(--danger)" }} /> Spending decreased</span>
+            </div>
+            <div className="min-h-0 flex-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={growthRows} layout="vertical" margin={{ top: 4, right: 64, bottom: 20, left: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" {...AXIS_PROPS} tickFormatter={(value: number) => `${value > 0 ? "+" : ""}${value}%`} label={xTitle(`Change in CSR spent, ${prevYear ?? "previous FY"} to ${lastYear ?? "latest FY"} (%)`, -14)} />
+                  <YAxis type="category" dataKey="name" width={170} {...AXIS_PROPS} tickFormatter={(value: string) => truncate(value, 26)} />
+                  <ReferenceLine x={0} stroke="var(--text-soft)" />
+                  <Tooltip
+                    cursor={TOOLTIP_STYLES.cursor}
+                    content={({ payload }) => {
+                      const row = payload?.[0]?.payload as (typeof growthRows)[number] | undefined;
+                      if (!row) return null;
+                      return (
+                        <div style={{ ...TOOLTIP_STYLES.contentStyle, padding: "8px 10px" }}>
+                          <p style={{ fontWeight: 600, marginBottom: 4 }}>{row.name}</p>
+                          <p>{prevYear ?? "Previous FY"}: {formatCrore(row.previous ?? 0)}</p>
+                          <p>{lastYear ?? "Latest FY"}: {formatCrore(row.latest ?? 0)}</p>
+                          <p style={{ fontWeight: 600, color: (row.yoyGrowthPct ?? 0) >= 0 ? "var(--c2)" : "var(--danger)" }}>
+                            {(row.yoyGrowthPct ?? 0) >= 0 ? "Up" : "Down"} {formatCrore(Math.abs((row.latest ?? 0) - (row.previous ?? 0)))} ({formatSignedPercent(row.yoyGrowthPct)})
+                          </p>
+                        </div>
+                      );
+                    }}
                   />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                  <Bar dataKey="yoyGrowthPct" radius={[0, 5, 5, 0]} maxBarSize={20}>
+                    {growthRows.map((row) => (
+                      <Cell key={row.name} fill={(row.yoyGrowthPct ?? 0) >= 0 ? "var(--c2)" : "var(--danger)"} />
+                    ))}
+                    <LabelList dataKey="yoyGrowthPct" position="right" formatter={(value: number) => formatSignedPercent(value)} style={{ fontSize: 11, fill: "var(--text)" }} />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </ChartCard>
 
         <Card className="overflow-hidden">

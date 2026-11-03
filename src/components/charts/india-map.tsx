@@ -23,11 +23,11 @@ const NON_GEOGRAPHIC = new Set(["Pan India", "Not Specified", "District Not Clas
 
 /** Single-hue sequential ramp — the convention for a quantity choropleth. */
 const HEAT_STOPS: [number, number, number][] = [
-  [239, 246, 255],
-  [191, 219, 254],
-  [96, 165, 250],
-  [37, 99, 235],
-  [30, 58, 138],
+  [244, 237, 247],
+  [221, 200, 228],
+  [184, 130, 199],
+  [130, 65, 154],
+  [84, 37, 102],
 ];
 
 function heatColor(t: number): string {
@@ -54,9 +54,15 @@ interface IndiaMapProps {
   data: NamedValue[];
   selected: string[];
   onSelect?: (state: string) => void;
+  /** Formatter for a non-spend indicator; defaults to ₹ crore. */
+  formatValue?: (value: number) => string;
+  /** Legend title, e.g. "Projects reported". Defaults to amount spent. */
+  metricLabel?: string;
 }
 
-export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
+export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel }: IndiaMapProps) {
+  const fmt = formatValue ?? formatCrore;
+  const isSpend = !formatValue;
   const [hover, setHover] = React.useState<{ name: string; x: number; y: number } | null>(null);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -118,7 +124,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
                 d={location.path}
                 tabIndex={onSelect ? 0 : -1}
                 role={onSelect ? "button" : undefined}
-                aria-label={`${locationName}: ${formatCrore(value)}`}
+                aria-label={`${locationName}: ${fmt(value)}`}
                 onMouseMove={(event) => {
                   const bounds = wrapperRef.current?.getBoundingClientRect();
                   setHover({
@@ -149,23 +155,31 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
             style={{ left: hover.x, top: hover.y - 10 }}
           >
             <p className="font-semibold">{hover.name}</p>
-            <p className="numeric mt-0.5 text-muted-foreground">
-              {formatCrore(hovered?.value ?? 0)} · {formatNumber(hovered?.count ?? 0)} projects
-            </p>
-            <p className="numeric text-[11px] text-muted-foreground">
-              {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of filtered amount spent
-            </p>
+            {isSpend ? (
+              <>
+                <p className="numeric mt-0.5 text-muted-foreground">
+                  {formatCrore(hovered?.value ?? 0)} · {formatNumber(hovered?.count ?? 0)} projects
+                </p>
+                <p className="numeric text-[11px] text-muted-foreground">
+                  {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of filtered amount spent
+                </p>
+              </>
+            ) : (
+              <p className="numeric mt-0.5 text-muted-foreground">
+                {metricLabel ? `${metricLabel}: ` : ""}{fmt(hovered?.value ?? 0)}
+              </p>
+            )}
           </div>
         ) : null}
       </div>
 
       <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Amount spent intensity</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{metricLabel ?? "Amount spent intensity"}</p>
           <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#f4edf7,#ddc8e4,#b882c7,#82419a,#542566)" }} />
           <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
-            <span>₹0</span>
-            <span>{formatCrore(max)}</span>
+            <span>{fmt(0)}</span>
+            <span>{fmt(max)}</span>
           </div>
         </div>
 
@@ -182,7 +196,7 @@ export function IndiaMap({ data, selected, onSelect }: IndiaMapProps) {
                 className="flex w-full items-center justify-between gap-2 rounded-lg border border-border px-2 py-1.5 text-left text-[11px] transition-colors hover:bg-accent/60"
               >
                 <span className="truncate text-muted-foreground">{row.name}</span>
-                <span className="numeric shrink-0 font-semibold">{formatCrore(row.value)}</span>
+                <span className="numeric shrink-0 font-semibold">{fmt(row.value)}</span>
               </button>
             ))}
           </div>

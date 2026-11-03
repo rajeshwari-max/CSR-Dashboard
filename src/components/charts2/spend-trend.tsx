@@ -54,7 +54,7 @@ export function SpendTrend({
 
   return (
     <ResponsiveContainer width="100%" height={height ?? "100%"}>
-      <ComposedChart data={data} margin={{ top: 6, right: 12, bottom: 0, left: 8 }}>
+      <ComposedChart data={data} margin={{ top: 6, right: 12, bottom: 16, left: 8 }}>
         <defs>
           <linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--c1)" stopOpacity={0.22} />
@@ -62,21 +62,21 @@ export function SpendTrend({
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey="year" {...AXIS} />
+        <XAxis dataKey="year" {...AXIS} label={{ value: "Financial year", position: "insideBottom", offset: -12, style: { fontSize: 10.5, fill: "var(--text-soft)" } }} />
         <YAxis
           yAxisId="spend"
-          width={52}
+          width={60}
           {...AXIS}
           tickFormatter={(value: number) => formatCompact(value)}
-          label={{ value: "₹ Cr", angle: -90, position: "insideLeft", style: { fontSize: 10 } }}
+          label={{ value: "CSR spent (₹ crore)", angle: -90, position: "insideLeft", style: { fontSize: 10, fill: "var(--text-soft)", textAnchor: "middle" } }}
         />
         <YAxis
           yAxisId="projects"
           orientation="right"
-          width={42}
+          width={50}
           {...AXIS}
           tickFormatter={(value: number) => formatCompact(value)}
-          label={{ value: "Projects", angle: 90, position: "insideRight", style: { fontSize: 10 } }}
+          label={{ value: "Projects (count)", angle: 90, position: "insideRight", style: { fontSize: 10, fill: "var(--text-soft)", textAnchor: "middle" } }}
         />
         <Tooltip content={<ChartTip />} />
         <Legend iconType="circle" iconSize={7} />

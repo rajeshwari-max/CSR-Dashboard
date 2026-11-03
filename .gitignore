@@ -19,3 +19,7 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Annexure stores written by local uploads (production loads data/extra on deploy)
+data/financials.json
+data/partners.json

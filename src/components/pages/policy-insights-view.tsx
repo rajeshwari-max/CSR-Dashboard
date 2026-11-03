@@ -170,7 +170,7 @@ export function PolicyInsightsView() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={tag.byYear.map((y) => ({ ...y, label: shortYear(y.year).replace(/^FY20/, "FY") }))} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
                     <XAxis dataKey="label" {...AXIS_PROPS} tick={{ fontSize: 10 }} />
-                    <YAxis {...AXIS_PROPS} width={44} tick={{ fontSize: 10 }} tickFormatter={(v: number) => formatNumber(v)} />
+                    <YAxis {...AXIS_PROPS} width={52} tick={{ fontSize: 10 }} tickFormatter={(v: number) => formatNumber(v)} label={{ value: "₹ crore", angle: -90, position: "insideLeft", offset: 6, style: { ...AXIS_LABEL, fontSize: 10, textAnchor: "middle" } }} />
                     <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => [formatCrore(value), "CSR spent"]} />
                     <Bar dataKey="spend" fill="var(--c1)" radius={[4, 4, 0, 0]} maxBarSize={26} />
                   </BarChart>

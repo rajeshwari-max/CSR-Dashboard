@@ -25,7 +25,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-import { AXIS_PROPS, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, TOOLTIP_STYLES, xTitle, yTitle } from "@/components/charts/chart-theme";
 import { ChartCard } from "@/components/charts/chart-card";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -36,7 +36,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ExportMenu } from "@/components/shared/export-menu";
 import { postJson, useApi } from "@/lib/api";
-import { formatCrore, formatSignedPercent } from "@/lib/format";
+import { formatCompact, formatCrore, formatSignedPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useFilterStore } from "@/store/filters";
 import type { ChatResponse, InsightSeverity, InsightsResponse } from "@/types";
@@ -178,10 +178,10 @@ export function AiInsightsView() {
           isEmpty={forecastData.length < 2}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={forecastData} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+            <ComposedChart data={forecastData} margin={{ top: 8, right: 12, bottom: 18, left: 12 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="year" {...AXIS_PROPS} />
-              <YAxis {...AXIS_PROPS} />
+              <XAxis dataKey="year" {...AXIS_PROPS} label={xTitle("Financial year", -14)} />
+              <YAxis {...AXIS_PROPS} width={64} tickFormatter={(value: number) => formatCompact(value)} label={yTitle("CSR amount spent (₹ crore)")} />
               <Tooltip
                 {...TOOLTIP_STYLES}
                 formatter={(value: number, name: string) => [formatCrore(value), name]}

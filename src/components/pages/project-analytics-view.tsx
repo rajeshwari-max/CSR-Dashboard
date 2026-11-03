@@ -4,7 +4,7 @@ import * as React from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
-import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
+import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle, yTitle } from "@/components/charts/chart-theme";
 import { RankList } from "@/components/charts/rank-list";
 import { ProjectsTable } from "@/components/dashboard/projects-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
@@ -102,10 +102,10 @@ export function ProjectAnalyticsView() {
           isEmpty={!histogram.some((bucket) => bucket.projects > 0)}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={histogram} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+            <BarChart data={histogram} margin={{ top: 8, right: 12, bottom: 18, left: 12 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" {...AXIS_PROPS} />
-              <YAxis {...AXIS_PROPS} />
+              <XAxis dataKey="label" {...AXIS_PROPS} label={xTitle("Amount spent per project (₹ crore range)", -14)} />
+              <YAxis {...AXIS_PROPS} width={60} allowDecimals={false} tickFormatter={(value: number) => formatNumber(value)} label={yTitle("Projects (count)")} />
               <Tooltip
                 {...TOOLTIP_STYLES}
                 formatter={(value: number, name: string) =>

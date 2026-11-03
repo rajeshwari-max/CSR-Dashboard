@@ -3,6 +3,7 @@
 import {
   Landmark,
   Building2,
+  Compass,
   Database,
   FileBarChart,
   FolderKanban,
@@ -30,4 +31,5 @@ export const ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles,
   database: Database,
   upload: Upload,
+  explore: Compass,
 };
