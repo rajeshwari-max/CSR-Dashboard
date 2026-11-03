@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { MiniLabel, PageFrame } from "@/components/shell/page-frame";
+import { UploadPanel } from "@/components/upload/extra-upload-panel";
 import { useShell } from "@/components/shell/app-shell";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { clearApiCache } from "@/lib/api";
@@ -448,6 +449,20 @@ export function UploadView() {
           ))
         )}
       </div>
+
+      <MiniLabel>CSR annexure data</MiniLabel>
+      <UploadPanel
+        kind="financials"
+        title="CSR financials"
+        what="One row per company per year: obligation, amount spent, unspent CSR, Unspent CSR Account and Schedule VII transfers, impact assessment."
+        onDone={() => clearApiCache()}
+      />
+      <UploadPanel
+        kind="partners"
+        title="Implementing partners"
+        what="One row per company, year and agency: agency name, role, CSR registration number, state, district and amount."
+        onDone={() => clearApiCache()}
+      />
     </PageFrame>
   );
 }

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Download, Upload } from "lucide-react";
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
@@ -26,61 +25,6 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
       <div className="kpi-value" title={value}>{value}</div>
       {sub ? <div className="kpi-sub"><span className="truncate1">{sub}</span></div> : null}
     </div>
-  );
-}
-
-function UploadPanel({ kind, title, what, onDone }: { kind: "financials" | "partners"; title: string; what: string; onDone: () => void }) {
-  const [busy, setBusy] = React.useState(false);
-  const [message, setMessage] = React.useState<{ ok: boolean; text: string } | null>(null);
-  const [mode, setMode] = React.useState<"merge" | "replace">("merge");
-  const inputId = `upload-${kind}`;
-  const upload = async (file: File) => {
-    setBusy(true);
-    setMessage(null);
-    try {
-      const body = new FormData();
-      body.set("file", file);
-      body.set("mode", mode);
-      const response = await fetch(`/api/extra-data/${kind}`, { method: "POST", body });
-      const result = await response.json();
-      if (!response.ok) throw new Error(`${result.error ?? "Upload failed"}${result.detail ? `: ${result.detail}` : ""}`);
-      setMessage({ ok: true, text: `Imported ${formatNumber(result.imported)} rows${result.skipped ? ` (${result.skipped} skipped: missing company, year or agency)` : ""}. ${formatNumber(result.total)} rows stored.` });
-      onDone();
-    } catch (error) {
-      setMessage({ ok: false, text: error instanceof Error ? error.message : "Upload failed." });
-    } finally {
-      setBusy(false);
-    }
-  };
-  return (
-    <Card>
-      <CardHeader>
-        <div className="min-w-0">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{what}</CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3 text-sm">
-        <div className="flex flex-wrap items-center gap-3">
-          <a className="btn btn-outline" href={`/api/extra-data/${kind}`}>
-            <Download width={14} height={14} /> Download Excel template
-          </a>
-          <label htmlFor={inputId} className="btn btn-primary" style={{ cursor: busy ? "wait" : "pointer", opacity: busy ? 0.6 : 1 }}>
-            <Upload width={14} height={14} /> {busy ? "Uploading…" : "Upload filled template"}
-          </label>
-          <input id={inputId} type="file" accept=".xlsx,.xlsm,.csv" className="sr-only" disabled={busy}
-            onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; if (file) void upload(file); }} />
-          <label className="flex items-center gap-2 text-muted-foreground" htmlFor={`${inputId}-mode`}>
-            If rows already exist
-            <select id={`${inputId}-mode`} value={mode} onChange={(event) => setMode(event.target.value as "merge" | "replace")} className="rounded-md border bg-transparent px-2 py-1">
-              <option value="merge">add and update</option>
-              <option value="replace">replace all</option>
-            </select>
-          </label>
-        </div>
-        {message ? <p className={message.ok ? "text-emerald-600" : "text-red-600"} role="status">{message.text}</p> : null}
-      </CardContent>
-    </Card>
   );
 }
 
@@ -240,19 +184,13 @@ export function PolicyInsightsView() {
           </div>
         </>
       ) : (
-        <p className="text-sm text-muted-foreground">Not in the MCA project register. Fill the template from each company’s annual-report CSR annexure and upload it to switch these figures on.</p>
+        <p className="text-sm text-muted-foreground">No annexure data loaded yet.</p>
       )}
-      <UploadPanel
-        kind="financials"
-        title="CSR financials upload"
-        what="One row per company per year: obligation, amount spent, unspent CSR, transfers to the Unspent CSR Account and Schedule VII funds, impact assessment."
-        onDone={() => policy.refetch()}
-      />
 
       <SectionLabel>Implementing partners (NGOs)</SectionLabel>
       {p?.partners ? (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className={`grid grid-cols-2 gap-4 ${p.partners.byState.length ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={p.partners.evaluatorCount > 0 ? `${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number` : `${formatNumber(p.partners.registered)} with a CSR-1 registration number`} />
             {p.partners.amount > 0 ? (
               <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
@@ -266,9 +204,7 @@ export function PolicyInsightsView() {
             />
             {p.partners.byState.length ? (
               <Stat label="State with Most Partners" value={p.partners.byState[0].name} sub={`${p.partners.byState[0].agencies} agencies`} />
-            ) : (
-              <Stat label="Registered Agencies" value={formatNumber(p.partners.registered)} sub="with a CSR-1 registration number (MCA)" />
-            )}
+            ) : null}
           </div>
           <div className={`grid grid-cols-1 gap-5 ${p.partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
             <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations awarded funds to implement CSR projects: amount, funding companies and states" : "Agencies named by the most companies in their CSR annexures"} height={360} isEmpty={!p.partners.top.length}>
@@ -288,14 +224,8 @@ export function PolicyInsightsView() {
           </div>
         </>
       ) : (
-        <p className="text-sm text-muted-foreground">The MCA register records only whether an agency was used, not which one. Upload partner names from the annual-report CSR annexures to see who delivers CSR and where.</p>
+        <p className="text-sm text-muted-foreground">No partner data loaded yet.</p>
       )}
-      <UploadPanel
-        kind="partners"
-        title="Implementing partners upload"
-        what="One row per company, year and project: agency name, its role (Implementation, or M&E for evaluation / impact assessment agencies), CSR registration number, state, district and amount."
-        onDone={() => policy.refetch()}
-      />
     </PageFrame>
   );
 }
