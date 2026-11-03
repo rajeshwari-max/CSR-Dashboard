@@ -13,13 +13,12 @@ export default function LoginPage() {
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const [administrator, setAdministrator] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState<string | null>(null);
 
   const switchMode = (nextMode: AuthMode) => {
-    setMode(nextMode); setError(null); setMessage(null); setAdministrator(false);
+    setMode(nextMode); setError(null); setMessage(null);
     setPassword(""); setConfirmPassword("");
   };
 
@@ -31,7 +30,7 @@ export default function LoginPage() {
     try {
       const response = await fetch(`/api/auth/${mode === "signin" ? "login" : "register"}`, {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify(mode === "signin" ? { email, password, administrator } : { name, email, password }),
+        body: JSON.stringify(mode === "signin" ? { email, password } : { name, email, password }),
       });
       const body = await response.json() as { error?: string; message?: string; registered?: boolean };
       if (!response.ok) throw new Error(body.error ?? (mode === "signin" ? "Sign-in failed." : "Registration failed."));
@@ -39,7 +38,7 @@ export default function LoginPage() {
         setMode("signin"); setPassword(""); setConfirmPassword("");
         setMessage(body.message ?? "Account created. Sign in with your email and password."); return;
       }
-      const destination = administrator ? "/admin/access" : new URLSearchParams(window.location.search).get("next") || "/";
+      const destination = new URLSearchParams(window.location.search).get("next") || "/";
       window.location.assign(destination.startsWith("/") ? destination : "/");
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Authentication failed."); }
     finally { setBusy(false); }
@@ -60,14 +59,13 @@ export default function LoginPage() {
     <form onSubmit={submit} className="login-form">
       {mode === "register" ? <><label htmlFor="register-name">Full name</label><div className="login-input-wrap"><input id="register-name" type="text" value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" autoFocus required /></div></> : null}
       <label htmlFor="account-email">Email</label>
-      <div className="login-input-wrap"><input id="account-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" autoFocus={mode === "signin"} required={!administrator} disabled={administrator} /></div>
+      <div className="login-input-wrap"><input id="account-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" autoFocus={mode === "signin"} required /></div>
       <label htmlFor="dashboard-password">Password</label>
       <div className="login-input-wrap"><input id="dashboard-password" type={showPassword ? "text" : "password"} value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={mode === "register" ? 10 : undefined} required /><button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? <EyeOff width={16} height={16} /> : <Eye width={16} height={16} />}</button></div>
       {mode === "register" ? <><label htmlFor="confirm-password">Confirm password</label><div className="login-input-wrap"><input id="confirm-password" type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} autoComplete="new-password" minLength={10} required /></div></> : null}
-      {mode === "signin" ? <label style={{ display: "flex", alignItems: "center", gap: 8, margin: "4px 0" }}><input type="checkbox" checked={administrator} onChange={(event) => { setAdministrator(event.target.checked); setEmail(""); setError(null); }} /> Administrator access</label> : null}
       {message ? <p className="login-help" role="status">{message}</p> : null}
       {error ? <p className="login-error" role="alert">{error}</p> : null}
-      <button type="submit" className="login-submit" disabled={busy || !password || (mode === "signin" && !administrator && !email) || (mode === "register" && (!name || !email || !confirmPassword))}>{busy ? (mode === "signin" ? "Signing in…" : "Creating account…") : (mode === "signin" ? "Sign in" : "Create account")}{!busy ? <ArrowRight width={16} height={16} /> : null}</button>
+      <button type="submit" className="login-submit" disabled={busy || !password || !email || (mode === "register" && (!name || !confirmPassword))}>{busy ? (mode === "signin" ? "Signing in…" : "Creating account…") : (mode === "signin" ? "Sign in" : "Create account")}{!busy ? <ArrowRight width={16} height={16} /> : null}</button>
     </form>
     <p className="login-security"><ShieldCheck width={14} height={14} /> Password-protected, HTTP-only 12-hour session</p>
   </section></main>;

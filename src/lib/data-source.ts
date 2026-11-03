@@ -10,4 +10,11 @@ export const DATA_SOURCE = {
   url: "https://www.csr.gov.in",
 } as const;
 
+/** Second source: annual-report CSR annexures (obligation, unspent CSR, impact assessment, partners). */
+export const ANNEXURE_SOURCE = {
+  short: "Company annual reports, CSR annexure (NSE)",
+  long: "Annexure on CSR activities in each company's annual report, as filed on the National Stock Exchange (nsearchives.nseindia.com)",
+  url: "https://www.nseindia.com/companies-listing/corporate-filings-annual-reports",
+} as const;
+
 export const UNITS_NOTE = "All amounts in ₹ crore (Cr)";

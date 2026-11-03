@@ -74,13 +74,9 @@ export function NgoAnalysisView() {
         </div>
       ) : null}
       <Card className="border-dashed p-4 text-[13px] leading-relaxed text-muted-foreground">
-        <strong className="text-foreground">Where these names come from.</strong> The MCA project filings record only the
-        delivery channel (directly, own trust or Section 8 company, government body, or other implementing agency), not the
-        name of the implementing agency or of any monitoring and evaluation (M&amp;E) partner. Names are added from
-        companies&apos; CSR annexures (implementing agencies, with CSR-1 registration numbers) and impact assessment reports
-        (M&amp;E agencies) through the partners template on{" "}
-        <a href="/policy-insights" className="font-medium text-primary underline">Policy Insights</a>
-        {partners ? "." : ". None have been uploaded yet, so the lists of organisations appear here once they are."}
+        <strong className="text-foreground">Source.</strong> Agency names and CSR-1 registration numbers are taken from the
+        Annexure on CSR activities in each company&apos;s annual report (filed on NSE). The MCA National CSR Portal
+        (csr.gov.in) records only the delivery channel, shown below.
       </Card>
 
       <SectionLabel>Delivery channel</SectionLabel>

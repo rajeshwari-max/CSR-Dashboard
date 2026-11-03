@@ -180,7 +180,7 @@ export function StateAnalysisView() {
             <Bar
               dataKey="previous"
               name={years.at(-2) ?? "Previous FY"}
-              fill={colorAt(5)}
+              fill="var(--c2)"
               radius={[0, 4, 4, 0]}
               maxBarSize={16}
               onClick={(entry: { name?: string }) => entry?.name && toggleValue("states", entry.name)}

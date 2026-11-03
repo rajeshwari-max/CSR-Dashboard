@@ -18,6 +18,30 @@ const companiesLine = (list: { name: string; value: number }[]) =>
   list.length ? list.map((c) => `${c.name} (${formatCrore(c.value)})`).join(" · ") : "—";
 const FIN_LABELS: Record<string, string> = { obligation: "Obligation", totalSpent: "Spent", unspent: "Unspent" };
 
+/** Small ranked list with proportional bars (used instead of plain text lists). */
+function RankBars({ rows, limit = 5 }: { rows: { name: string; value: number }[]; limit?: number }) {
+  const top = rows.slice(0, limit);
+  const max = Math.max(1, ...top.map((r) => r.value));
+  if (!top.length) return <p className="text-[12px] text-muted-foreground">—</p>;
+  return (
+    <ol className="flex flex-col gap-1.5">
+      {top.map((row, index) => (
+        <li key={row.name} className="text-[12px]">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="truncate">{index + 1}. {row.name}</span>
+            <span className="numeric shrink-0 font-semibold">{formatCrore(row.value)}</span>
+          </div>
+          <span className="mt-0.5 block h-1.5 overflow-hidden rounded-full bg-muted">
+            <span className="block h-full rounded-full" style={{ width: `${Math.max(3, (row.value / max) * 100)}%`, background: index % 2 ? "var(--c2)" : "var(--c1)" }} />
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+const AXIS_LABEL = { fontSize: 11, fill: "var(--text-soft)" } as const;
+
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="kpi-card">
@@ -51,21 +75,21 @@ export function PolicyInsightsView() {
       <SectionLabel>Coverage of all-India CSR</SectionLabel>
       <ChartCard
         title="Dashboard Companies against All-India CSR Spent"
-        description={p?.filtered ? "Filters are applied, so the dashboard bars show only part of the data" : "All-India totals: MCA data quoted in NITI Aayog’s CSR consultation concept note (Table 1); label shows the dashboard’s share"}
-        height={300}
+        description={p?.filtered ? "Filters are applied, so the violet bars show only part of the data" : "CSR spent each year (₹ crore): all companies in India vs the companies in this dashboard. The % under each year is the dashboard's share. Source: MCA data quoted in NITI Aayog's CSR concept note (Table 1)."}
+        height={330}
         isLoading={policy.isLoading}
         error={policy.error}
         isEmpty={!p?.coverage.length}
         emptyMessage="All-India totals are available for FY 2020-21 to FY 2024-25."
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={(p?.coverage ?? []).map((c) => ({ ...c, label: `${shortYear(c.year)} · ${formatShare(c.share)}` }))} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+          <BarChart data={(p?.coverage ?? []).map((c) => ({ ...c, label: `${shortYear(c.year)} · ${formatShare(c.share)}` }))} margin={{ top: 8, right: 8, bottom: 22, left: 18 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="label" {...AXIS_PROPS} />
-            <YAxis {...AXIS_PROPS} tickFormatter={(v: number) => formatNumber(v)} />
+            <XAxis dataKey="label" {...AXIS_PROPS} label={{ value: "Financial year · dashboard share of all-India CSR", position: "insideBottom", offset: -14, style: AXIS_LABEL }} />
+            <YAxis {...AXIS_PROPS} tickFormatter={(v: number) => formatNumber(v)} label={{ value: "CSR spent (₹ crore)", angle: -90, position: "insideLeft", offset: -8, style: AXIS_LABEL }} />
             <Tooltip {...TOOLTIP_STYLES} formatter={(value: number, name: string) => [formatCrore(value), name === "national" ? "All-India (MCA)" : "Dashboard companies"]} />
-            <Legend formatter={(name: string) => (name === "national" ? "All-India (MCA)" : "Dashboard companies")} />
-            <Bar dataKey="national" fill="var(--c6)" radius={[6, 6, 0, 0]} maxBarSize={44} />
+            <Legend verticalAlign="top" height={28} formatter={(name: string) => (name === "national" ? "All-India (MCA)" : "Dashboard companies")} />
+            <Bar dataKey="national" fill="var(--c2)" radius={[6, 6, 0, 0]} maxBarSize={44} />
             <Bar dataKey="dashboard" fill="var(--c1)" radius={[6, 6, 0, 0]} maxBarSize={44} />
           </BarChart>
         </ResponsiveContainer>
@@ -108,24 +132,26 @@ export function PolicyInsightsView() {
       </div>
       <ChartCard
         title="Share of CSR Spent Reaching Aspirational Districts"
-        description="Bars: share of each year’s spent · dashed line: these districts’ share of India’s population"
-        height={280}
+        description="Share of each year's CSR spent that went to NITI Aayog's 112 aspirational districts, against their share of India's population (dashed line)"
+        height={300}
         isLoading={policy.isLoading}
         error={policy.error}
         isEmpty={!p?.aspirational.byYear.length}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={(p?.aspirational.byYear ?? []).map((y) => ({ ...y, pct: Math.round(y.share * 1000) / 10, label: shortYear(y.year) }))} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+          <BarChart data={(p?.aspirational.byYear ?? []).map((y) => ({ ...y, pct: Math.round(y.share * 1000) / 10, label: shortYear(y.year) }))} margin={{ top: 8, right: 8, bottom: 22, left: 10 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="label" {...AXIS_PROPS} />
-            <YAxis {...AXIS_PROPS} unit="%" domain={[0, 16]} />
+            <XAxis dataKey="label" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -14, style: AXIS_LABEL }} />
+            <YAxis {...AXIS_PROPS} unit="%" domain={[0, 16]} label={{ value: "% of CSR spent", angle: -90, position: "insideLeft", offset: 0, style: AXIS_LABEL }} />
             <Tooltip {...TOOLTIP_STYLES} formatter={(value: number, _name: string, item: { payload?: { spend?: number } }) => [`${value}% (${formatCrore(item.payload?.spend ?? 0)})`, "Share of spent"]} />
             <ReferenceLine y={Math.round((p?.aspirational.populationShare ?? 0.15) * 100)} stroke="var(--text-soft)" strokeDasharray="5 4" label={{ value: "Population share", position: "insideTopRight", fontSize: 11, fill: "var(--text-soft)" }} />
             <Bar dataKey="pct" fill="var(--c2)" radius={[6, 6, 0, 0]} maxBarSize={52} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-      <p className="text-[12px] text-muted-foreground">Top contributors: {companiesLine(p?.aspirational.topCompanies ?? [])}</p>
+      <ChartCard title="Top Contributors to Aspirational Districts" description="Companies with the most CSR spent in aspirational districts (₹ crore)" height={200} isLoading={policy.isLoading} error={policy.error} isEmpty={!p?.aspirational.topCompanies.length}>
+        <RankBars rows={p?.aspirational.topCompanies ?? []} />
+      </ChartCard>
 
       <SectionLabel>Focus areas the Schedule VII head cannot show</SectionLabel>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -140,8 +166,19 @@ export function PolicyInsightsView() {
             <CardContent className="flex flex-col gap-2 text-sm">
               <p className="numeric text-2xl font-bold">{formatCrore(tag.spend)}</p>
               <p className="text-muted-foreground">{formatShare(tag.share)} of spent in view</p>
-              <p className="text-[12px] text-muted-foreground">By year: {tag.byYear.map((y) => `${shortYear(y.year)} ${formatCrore(y.spend)}`).join(" · ")}</p>
-              <p className="text-[12px]">Largest: {companiesLine(tag.topCompanies)}</p>
+              <div style={{ height: 120 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={tag.byYear.map((y) => ({ ...y, label: shortYear(y.year).replace(/^FY20/, "FY") }))} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                    <XAxis dataKey="label" {...AXIS_PROPS} tick={{ fontSize: 10 }} />
+                    <YAxis {...AXIS_PROPS} width={44} tick={{ fontSize: 10 }} tickFormatter={(v: number) => formatNumber(v)} />
+                    <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => [formatCrore(value), "CSR spent"]} />
+                    <Bar dataKey="spend" fill="var(--c1)" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="text-[11px] text-muted-foreground">CSR spent by financial year (₹ crore)</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Largest contributors</p>
+              <RankBars rows={tag.topCompanies} limit={3} />
             </CardContent>
           </Card>
         ))}
@@ -160,26 +197,22 @@ export function PolicyInsightsView() {
             <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`${formatNumber(p.financials.impactApplicable)} filings applicable · ${formatNumber(p.financials.impactReports)} reports linked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-            <ChartCard title="CSR Obligation, Spent and Unspent by Year" description="From uploaded annual-report CSR annexures" height={300} className="xl:col-span-2" isEmpty={!p.financials.byYear.some((y) => y.obligation || y.totalSpent)}>
+            <ChartCard title="CSR Obligation, Spent and Unspent by Year" description="Prescribed CSR obligation, amount spent and unspent amount each year (₹ crore), from company CSR annexures" height={320} className="xl:col-span-2" isEmpty={!p.financials.byYear.some((y) => y.obligation || y.totalSpent)}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={p.financials.byYear.map((y) => ({ ...y, label: shortYear(y.year) }))} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+                <BarChart data={p.financials.byYear.map((y) => ({ ...y, label: shortYear(y.year) }))} margin={{ top: 8, right: 8, bottom: 22, left: 18 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="label" {...AXIS_PROPS} />
-                  <YAxis {...AXIS_PROPS} tickFormatter={(v: number) => formatNumber(v)} />
+                  <XAxis dataKey="label" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -14, style: AXIS_LABEL }} />
+                  <YAxis {...AXIS_PROPS} tickFormatter={(v: number) => formatNumber(v)} label={{ value: "Amount (₹ crore)", angle: -90, position: "insideLeft", offset: -8, style: AXIS_LABEL }} />
                   <Tooltip {...TOOLTIP_STYLES} formatter={(value: number, name: string) => [formatCrore(value), FIN_LABELS[name] ?? name]} />
-                  <Legend formatter={(name: string) => FIN_LABELS[name] ?? name} />
-                  <Bar dataKey="obligation" fill="var(--c6)" radius={[6, 6, 0, 0]} maxBarSize={36} />
+                  <Legend verticalAlign="top" height={28} formatter={(name: string) => FIN_LABELS[name] ?? name} />
+                  <Bar dataKey="obligation" fill="var(--c2)" radius={[6, 6, 0, 0]} maxBarSize={36} />
                   <Bar dataKey="totalSpent" fill="var(--c1)" radius={[6, 6, 0, 0]} maxBarSize={36} />
-                  <Bar dataKey="unspent" fill="var(--c4)" radius={[6, 6, 0, 0]} maxBarSize={36} />
+                  <Bar dataKey="unspent" fill="var(--c3)" radius={[6, 6, 0, 0]} maxBarSize={36} />
                 </BarChart>
               </ResponsiveContainer>
             </ChartCard>
-            <ChartCard title="Companies with the Largest Unspent CSR" description="Total over the years in view" height={300} isEmpty={!p.financials.topUnspent.length} emptyMessage="No unspent amounts in the uploaded rows.">
-              <ol className="h-full space-y-1 overflow-y-auto text-[13px]">
-                {p.financials.topUnspent.map((row, index) => (
-                  <li key={row.name} className="flex justify-between gap-3"><span className="truncate">{index + 1}. {row.name}</span><span className="numeric font-semibold">{formatCrore(row.value)}</span></li>
-                ))}
-              </ol>
+            <ChartCard title="Companies with the Largest Unspent CSR" description="Unspent CSR, total over the years in view (₹ crore)" height={320} isEmpty={!p.financials.topUnspent.length} emptyMessage="No unspent amounts in the uploaded rows.">
+              <div className="h-full overflow-y-auto"><RankBars rows={p.financials.topUnspent} limit={10} /></div>
             </ChartCard>
           </div>
         </>
@@ -231,12 +264,18 @@ export function PolicyInsightsView() {
 }
 
 function PartnerList({ rows }: { rows: { name: string; value: number; companies: number; states: number; registration: string | null }[] }) {
+  const max = Math.max(1, ...rows.map((r) => (r.value > 0 ? r.value : r.companies)));
   return (
-    <ol className="h-full space-y-1 overflow-y-auto text-[13px]">
+    <ol className="h-full space-y-1.5 overflow-y-auto text-[13px]">
       {rows.map((row, index) => (
-        <li key={row.name} className="flex justify-between gap-3">
+        <li key={row.name}>
+        <div className="flex justify-between gap-3">
           <span className="truncate">{index + 1}. {row.name}{row.registration ? ` (${row.registration})` : ""}</span>
           <span className="numeric shrink-0">{[row.value > 0 ? formatCrore(row.value) : null, `${row.companies} ${row.companies === 1 ? "company" : "companies"}`, row.states > 0 ? `${row.states} states` : null].filter(Boolean).join(" · ")}</span>
+        </div>
+        <span className="mt-0.5 block h-1.5 overflow-hidden rounded-full bg-muted">
+          <span className="block h-full rounded-full" style={{ width: `${Math.max(3, ((row.value > 0 ? row.value : row.companies) / max) * 100)}%`, background: index % 2 ? "var(--c2)" : "var(--c1)" }} />
+        </span>
         </li>
       ))}
     </ol>

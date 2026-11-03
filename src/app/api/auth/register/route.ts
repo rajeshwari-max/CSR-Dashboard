@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { registerUser } from "@/lib/auth-store";
 
 export async function POST(request: Request) {
-  const configured = process.env.APP_PASSWORD;
-  if (!configured) {
+  if (process.env.AUTH_ENABLED !== "true") return NextResponse.json({ error: "Authentication is currently disabled." }, { status: 404 });
+  if (!process.env.APP_PASSWORD) {
     return NextResponse.json({ error: "Registration is unavailable until APP_PASSWORD is configured." }, { status: 503 });
   }
 

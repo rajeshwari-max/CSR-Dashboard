@@ -8,7 +8,7 @@ import { useShell } from "@/components/shell/app-shell";
 import { FilterBar } from "@/components/shell/filter-bar";
 import { Topbar } from "@/components/shell/topbar";
 import { ApiRequestError } from "@/lib/api";
-import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
+import { ANNEXURE_SOURCE, DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 import { formatDateTime } from "@/lib/format";
 import type { ListKey } from "@/store/filters";
 import type { Filters, Meta } from "@/types";
@@ -100,6 +100,10 @@ export function PageFrame({
           CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · Source:{" "}
           <a href={DATA_SOURCE.url} target="_blank" rel="noreferrer noopener" title={DATA_SOURCE.long} style={{ textDecoration: "underline" }}>
             {DATA_SOURCE.short}
+          </a>{" "}
+          and{" "}
+          <a href={ANNEXURE_SOURCE.url} target="_blank" rel="noreferrer noopener" title={ANNEXURE_SOURCE.long} style={{ textDecoration: "underline" }}>
+            {ANNEXURE_SOURCE.short}
           </a>{" "}
           · {UNITS_NOTE}
         </span>

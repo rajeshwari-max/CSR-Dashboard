@@ -71,9 +71,12 @@ export function ExecutiveDashboard() {
       <KpiRow kpis={kpis} meta={meta.data} isLoading={summary.isLoading} />
       {/* Feedback asked whether "CSR spent" covers evaluation too; answer it on the page, not only in a tooltip. */}
       <p className="muted" style={{ fontSize: 12.5, margin: "-6px 0 26px", lineHeight: 1.5 }}>
-        <strong style={{ color: "var(--text)" }}>What “CSR spent” covers:</strong> money spent on implementing CSR
-        projects, as companies file it project by project on the MCA portal. Administrative overheads and impact
-        assessment (evaluation) costs are reported separately in each company&apos;s CSR annexure and are not included.
+        <strong style={{ color: "var(--text)" }}>Data sources:</strong> CSR spent, projects and locations come from
+        project-wise filings on the MCA National CSR Portal (csr.gov.in). Obligation, unspent CSR, administrative
+        overheads, impact assessment and implementing partners come from each company&apos;s annual-report CSR annexure
+        (annual reports filed on NSE) and are shown on{" "}
+        <a href="/policy-insights" style={{ textDecoration: "underline" }}>Policy Insights</a> and{" "}
+        <a href="/ngo-analysis" style={{ textDecoration: "underline" }}>Implementation Analysis</a>.
       </p>
 
       <MiniLabel>Trend &amp; distribution analysis</MiniLabel>

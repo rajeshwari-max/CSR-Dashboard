@@ -10,7 +10,7 @@ import { useShell } from "@/components/shell/app-shell";
 import { ApiRequestError } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import type { Filters, Meta } from "@/types";
-import { DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
+import { ANNEXURE_SOURCE, DATA_SOURCE, UNITS_NOTE } from "@/lib/data-source";
 
 interface PageFrameProps {
   title: string;
@@ -96,6 +96,10 @@ export function PageFrame({
           CMS CSR Intelligence · {meta ? `${meta.rowCount.toLocaleString("en-IN")} projects` : "loading…"} · Source:{" "}
           <a href={DATA_SOURCE.url} target="_blank" rel="noreferrer noopener" title={DATA_SOURCE.long} style={{ textDecoration: "underline" }}>
             {DATA_SOURCE.short}
+          </a>{" "}
+          and{" "}
+          <a href={ANNEXURE_SOURCE.url} target="_blank" rel="noreferrer noopener" title={ANNEXURE_SOURCE.long} style={{ textDecoration: "underline" }}>
+            {ANNEXURE_SOURCE.short}
           </a>{" "}
           · {UNITS_NOTE}
         </span>

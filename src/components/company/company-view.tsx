@@ -167,6 +167,11 @@ export function CompanyView({ companyId }: { companyId: string }) {
                     label="Avg net profit"
                     value={company?.averageNetProfit ? formatCrore(company.averageNetProfit) : "Not disclosed"}
                   />
+                  <ProfileRow
+                    icon={Target}
+                    label="2% of average net profit"
+                    value={kpis?.obligation ? formatCrore(kpis.obligation) : "Not disclosed"}
+                  />
 
                   <div className="flex flex-wrap gap-2 pt-1">
                     {REPORT_LINKS.map(({ key, label }) => {

@@ -1,5 +1,4 @@
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual as cryptoTimingSafeEqual } from "node:crypto";
-import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -18,30 +17,12 @@ export function authDataDir(): string {
 }
 function usersFile() { return path.join(authDataDir(), "users.json"); }
 
-/** Canonical account states shared by the API, the admin page and login. */
-export type AccountStatus = "pending" | "approved" | "rejected" | "inactive";
-export type ReviewDecision = "approved" | "rejected" | "inactive";
-export const REVIEW_DECISIONS: readonly ReviewDecision[] = ["approved", "rejected", "inactive"];
-
 interface StoredUser {
   id: string; name: string; email: string; passwordHash: string; salt: string; createdAt: string;
+  // Older production rows may still carry these fields. Authentication ignores them.
   status?: string; reviewedAt?: string;
 }
-export interface AuthUser { id: string; name: string; email: string; status: AccountStatus; createdAt: string; reviewedAt?: string }
-
-/**
- * Accounts created before the approval workflow existed carry no status and were
- * already allowed in, so a missing status stays "approved". Any other unrecognised
- * value (e.g. "disabled") is treated as inactive, never as approved.
- */
-export function normalizeStatus(value: unknown): AccountStatus {
-  if (value === undefined || value === null || value === "") return "approved";
-  const status = String(value).trim().toLowerCase();
-  if (status === "approved" || status === "active") return "approved";
-  if (status === "pending") return "pending";
-  if (status === "rejected") return "rejected";
-  return "inactive";
-}
+export interface AuthUser { id: string; name: string; email: string; createdAt: string }
 
 function normalizeEmail(email: string) { return email.trim().toLowerCase(); }
 function findByEmail(users: StoredUser[], email: string) { const wanted = normalizeEmail(email); return users.find((candidate) => normalizeEmail(candidate.email) === wanted); }
@@ -66,8 +47,7 @@ async function writeUsers(users: StoredUser[]) {
 
 /**
  * Every read-modify-write of users.json runs through this queue. Without it, an
- * an administrator update racing a registration could overwrite the file with a
- * stale copy and silently undo the approval.
+ * concurrent registrations could otherwise overwrite the file with a stale copy.
  */
 let queue: Promise<unknown> = Promise.resolve();
 function withUsers<T>(task: (users: StoredUser[]) => Promise<T>): Promise<T> {
@@ -78,10 +58,10 @@ function withUsers<T>(task: (users: StoredUser[]) => Promise<T>): Promise<T> {
 
 async function passwordHash(password: string, salt: string): Promise<Buffer> { return await scrypt(password, salt, 64) as Buffer; }
 function publicUser(user: StoredUser): AuthUser {
-  return { id: user.id, name: user.name, email: user.email, status: normalizeStatus(user.status), createdAt: user.createdAt, reviewedAt: user.reviewedAt };
+  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt };
 }
 
-/** Returns the account when the password matches, whatever its status; callers decide whether that status may sign in. */
+/** Returns the account when the supplied email and password match. */
 export async function authenticateUser(email: string, password: string): Promise<AuthUser | null> {
   const user = findByEmail(await readUsers(), email);
   if (!user || !user.salt || !user.passwordHash) return null;
@@ -96,32 +76,10 @@ export async function registerUser(input: { name: string; email: string; passwor
   if (input.password.length < 10 || input.password.length > 128) throw new Error("Password must contain 10 to 128 characters.");
   const salt = randomBytes(16).toString("hex"); const hash = (await passwordHash(input.password, salt)).toString("hex");
   return withUsers(async (users) => {
-    if (findByEmail(users, email)) throw new Error("An account already exists for this email.");
-    const user: StoredUser = { id: randomBytes(16).toString("hex"), name, email, salt, passwordHash: hash, createdAt: new Date().toISOString(), status: "approved" };
+    if (findByEmail(users, email)) throw new Error("This email is already registered. Please sign in with the password created during registration.");
+    const user: StoredUser = { id: randomBytes(16).toString("hex"), name, email, salt, passwordHash: hash, createdAt: new Date().toISOString() };
     users.push(user); await writeUsers(users); return publicUser(user);
   });
 }
 
-export async function listUsers(): Promise<AuthUser[]> { return (await readUsers()).map(publicUser).sort((a, b) => b.createdAt.localeCompare(a.createdAt)); }
 export async function findUserById(id: string): Promise<AuthUser | null> { const user = (await readUsers()).find((candidate) => candidate.id === id); return user ? publicUser(user) : null; }
-
-/** Persists an administrator decision. Re-saving the same decision is a no-op (changed: false). */
-export async function reviewUser(id: string, status: ReviewDecision): Promise<{ user: AuthUser; previousStatus: AccountStatus; changed: boolean } | null> {
-  return withUsers(async (users) => {
-    const user = users.find((candidate) => candidate.id === id); if (!user) return null;
-    const previousStatus = normalizeStatus(user.status);
-    if (previousStatus === status && user.status === status) return { user: publicUser(user), previousStatus, changed: false };
-    user.status = status; user.reviewedAt = new Date().toISOString();
-    await writeUsers(users);
-    return { user: publicUser(user), previousStatus, changed: previousStatus !== status };
-  });
-}
-
-/** Non-secret facts an administrator can use to confirm production storage is persistent. */
-export async function storageDiagnostics(): Promise<{ authDataDir: string; usersFileExists: boolean; writable: boolean; separateVolume: boolean | null }> {
-  const dir = authDataDir(); let usersFileExists = false; let writable = false; let separateVolume: boolean | null = null;
-  try { await fs.access(usersFile()); usersFileExists = true; } catch { /* not created yet */ }
-  try { await fs.mkdir(dir, { recursive: true }); await fs.access(dir, fsConstants.W_OK); writable = true; } catch { /* reported below */ }
-  try { const [data, app] = await Promise.all([fs.stat(dir), fs.stat(process.cwd())]); separateVolume = data.dev !== app.dev; } catch { /* unknown */ }
-  return { authDataDir: dir, usersFileExists, writable, separateVolume };
-}

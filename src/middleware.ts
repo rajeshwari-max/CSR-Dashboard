@@ -4,10 +4,19 @@ import { SESSION_COOKIE, sessionToken, timingSafeEqual } from "@/lib/auth-sessio
 
 /** Password-backed session gate with a first-party login window. */
 export async function middleware(request: NextRequest) {
-  const password = process.env.APP_PASSWORD;
-  if (!password) return NextResponse.next();
-
   const pathname = request.nextUrl.pathname;
+  const authEnabled = process.env.AUTH_ENABLED === "true";
+  if (!authEnabled) {
+    if (pathname === "/login") return NextResponse.redirect(new URL("/", request.url));
+    if (pathname.startsWith("/api/auth/")) return NextResponse.json({ error: "Authentication is currently disabled." }, { status: 404 });
+    return NextResponse.next();
+  }
+
+  const password = process.env.APP_PASSWORD;
+  if (!password) {
+    return NextResponse.json({ error: "Authentication is enabled but the server secret is not configured." }, { status: 503 });
+  }
+
   const publicRoute =
     pathname === "/login" ||
     pathname === "/api/auth/login" ||

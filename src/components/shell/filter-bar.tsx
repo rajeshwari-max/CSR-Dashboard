@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Filter, RotateCcw, Target, X } from "lucide-react";
+import { ChevronDown, Filter, RotateCcw, Search, Target, X } from "lucide-react";
 
 import { activeFilterCount } from "@/lib/query";
 import { useFilterStore, type ListKey } from "@/store/filters";
@@ -99,6 +99,8 @@ export function FilterBar({
         <Filter width={12} height={12} />
         Filters
       </span>
+
+      <FilterSearch meta={meta} filters={filters} />
 
       {!hide.includes("states") && !hide.includes("districts") ? (
         <div className="pos-rel">
@@ -527,6 +529,129 @@ function AspirationalPopover({
           Clear
         </button>
       </div>
+    </div>
+  );
+}
+
+type Suggestion = { group: string; label: string; hint?: string; apply: () => void };
+
+const SUGGEST_GROUPS = ["Company", "State", "District", "Sector", "Domain", "Implementing agency"];
+
+/**
+ * Search box in the filter bar. Typing suggests matching companies, states,
+ * districts, sectors, Schedule VII domains and implementing agencies; picking
+ * one applies that filter. Enter (or "Search all projects") filters every
+ * project whose company, project name, location, sector, domain or agency
+ * contains the text.
+ */
+function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }) {
+  const setValues = useFilterStore((state) => state.setValues);
+  const setSearch = useFilterStore((state) => state.setSearch);
+  const [text, setText] = React.useState(filters.search);
+  const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState(0);
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => setText(filters.search), [filters.search]);
+  React.useEffect(() => {
+    const close = (event: MouseEvent) => {
+      if (!wrapRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
+  const suggestions = React.useMemo<Suggestion[]>(() => {
+    const needle = text.trim().toLowerCase();
+    if (!meta || needle.length < 2) return [];
+    const rank = (name: string) => name.toLowerCase().indexOf(needle);
+    const pick = <T,>(items: T[], name: (item: T) => string, limit: number) =>
+      items
+        .filter((item) => rank(name(item)) >= 0)
+        .sort((a, b) => rank(name(a)) - rank(name(b)) || name(a).localeCompare(name(b)))
+        .slice(0, limit);
+    const done = () => {
+      setText("");
+      setSearch("");
+      setOpen(false);
+    };
+    return [
+      ...pick(meta.companies, (c) => c.name, 5).map((c) => ({ group: "Company", label: c.name, hint: c.sector, apply: () => { setValues("companies", [c.id]); done(); } })),
+      ...pick(meta.states, (x) => x, 3).map((x) => ({ group: "State", label: x, apply: () => { setValues("states", [x]); setValues("districts", []); done(); } })),
+      ...pick(meta.districts, (x) => x, 3).map((x) => {
+        const state = Object.entries(meta.districtsByState ?? {}).find(([, list]) => list.includes(x))?.[0];
+        return { group: "District", label: x, hint: state, apply: () => { if (state) setValues("states", [state]); setValues("districts", [x]); done(); } };
+      }),
+      ...pick(meta.sectors, (x) => x, 3).map((x) => ({ group: "Sector", label: x, apply: () => { setValues("sectors", [x]); done(); } })),
+      ...pick(meta.themes, (x) => x, 3).map((x) => ({ group: "Domain", label: x, apply: () => { setValues("themes", [x]); done(); } })),
+      ...pick(meta.ngos ?? [], (x) => x, 3).map((x) => ({ group: "Implementing agency", label: x, apply: () => { setSearch(x); setText(x); setOpen(false); } })),
+    ];
+  }, [meta, setSearch, setValues, text]);
+
+  const runSearch = () => {
+    setSearch(text.trim());
+    setOpen(false);
+  };
+  const items: Suggestion[] = text.trim()
+    ? [...suggestions, { group: "", label: `Search all projects for “${text.trim()}”`, apply: runSearch }]
+    : [];
+  React.useEffect(() => setActive(0), [text]);
+
+  return (
+    <div className="pos-rel" ref={wrapRef}>
+      <div className={`select-chip${filters.search ? " active" : ""}`} style={{ gap: 6, paddingRight: 6, cursor: "text" }}>
+        <Search width={13} height={13} style={{ flex: "none" }} />
+        <input
+          type="text"
+          value={text}
+          placeholder="Search companies, projects, places…"
+          aria-label="Search the dashboard"
+          autoComplete="off"
+          disabled={!meta}
+          onChange={(event) => { setText(event.target.value); setOpen(true); }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") { event.preventDefault(); setActive((i) => Math.min(i + 1, items.length - 1)); }
+            else if (event.key === "ArrowUp") { event.preventDefault(); setActive((i) => Math.max(i - 1, 0)); }
+            else if (event.key === "Enter") { event.preventDefault(); (items[active] ?? { apply: runSearch }).apply(); }
+            else if (event.key === "Escape") setOpen(false);
+          }}
+          style={{ border: 0, outline: "none", background: "transparent", width: 210, fontSize: 12.5, color: "inherit" }}
+        />
+        {text || filters.search ? (
+          <button type="button" aria-label="Clear search" onClick={() => { setText(""); setSearch(""); }} style={{ display: "flex", padding: 2 }}>
+            <X width={12} height={12} />
+          </button>
+        ) : null}
+      </div>
+      {open && items.length ? (
+        <div
+          role="listbox"
+          style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 60, width: 380, maxHeight: 380, overflowY: "auto", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 10, boxShadow: "0 12px 40px -12px rgb(15 23 42 / 0.28)", padding: 6 }}
+        >
+          {items.map((item, index) => {
+            const first = item.group && items.findIndex((x) => x.group === item.group) === index;
+            return (
+              <React.Fragment key={`${item.group}|${item.label}`}>
+                {first ? <div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", color: "var(--text-soft)", padding: "8px 8px 4px" }}>{SUGGEST_GROUPS.includes(item.group) ? item.group : ""}</div> : null}
+                {!item.group ? <div style={{ borderTop: "1px solid var(--border)", margin: "4px 0" }} /> : null}
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={index === active}
+                  onMouseEnter={() => setActive(index)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => item.apply()}
+                  style={{ display: "flex", width: "100%", alignItems: "baseline", justifyContent: "space-between", gap: 10, padding: "7px 8px", borderRadius: 6, textAlign: "left", fontSize: 12.5, background: index === active ? "var(--surface-2)" : "transparent", fontWeight: item.group ? 500 : 650 }}
+                >
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.label}</span>
+                  {item.hint ? <span style={{ flex: "none", fontSize: 11, color: "var(--text-soft)" }}>{item.hint}</span> : null}
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }

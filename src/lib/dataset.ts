@@ -634,7 +634,10 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
     const index = row.id ? data.companyIdToIndex.get(row.id) : undefined;
     if (index === undefined) continue;
     const company = data.companies[index];
-    const obligation = company.csrObligation ?? company.twoPercentNetProfit;
+    const obligation =
+      company.csrObligation ??
+      company.twoPercentNetProfit ??
+      (company.averageNetProfit != null ? round(company.averageNetProfit * 0.02) : null);
     if (!obligation || obligation <= 0) continue;
     complianceBase += 1;
     // 5% tolerance absorbs rounding in the source filings.
@@ -948,7 +951,10 @@ export function buildCompanyDetail(companyId: string, base?: Partial<Filters>): 
   );
   const sectorRank = sectorRanking.findIndex((row) => row.id === companyId);
 
-  const obligation = company.csrObligation ?? company.twoPercentNetProfit;
+  const obligation =
+    company.csrObligation ??
+    company.twoPercentNetProfit ??
+    (company.averageNetProfit != null ? round(company.averageNetProfit * 0.02) : null);
   const latestYearSpend = summary.kpis.latestYearSpend;
   const topProjects = Array.from(sortRows(rows, "spent", "desc").subarray(0, 25)).map(hydrateRow);
 
@@ -993,7 +999,10 @@ export function buildComparison(companyIds: string[], base?: Partial<Filters>): 
     const filters = scopedFilters([id], base);
     const rows = selectRows(filters);
     const summary = buildSummary(filters, 0);
-    const obligation = company.csrObligation ?? company.twoPercentNetProfit;
+    const obligation =
+      company.csrObligation ??
+      company.twoPercentNetProfit ??
+      (company.averageNetProfit != null ? round(company.averageNetProfit * 0.02) : null);
     const byYear: Record<string, number> = {};
     for (const point of summary.trend) byYear[point.year] = point.spend;
 
