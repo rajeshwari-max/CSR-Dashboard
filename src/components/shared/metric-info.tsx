@@ -6,7 +6,7 @@ import { Info } from "lucide-react";
 import { dashboardMetadata, type DashboardMetricMeta } from "@/lib/dashboard-metadata";
 import { cn } from "@/lib/utils";
 
-const POPOVER_WIDTH = 336;
+const POPOVER_WIDTH = 300;
 const GAP = 8;
 const MARGIN = 12;
 
@@ -52,9 +52,6 @@ export function MetricInfo({ title, meta, className }: { title: string; meta?: D
         <span className="metric-info-popover" role="tooltip" style={{ top: position.top, left: position.left, width: position.width }} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
           <strong>{title}</strong>
           <span>{details.description}</span>
-          {details.calculation ? <span><b>Calculation:</b> {details.calculation}</span> : null}
-          {details.unit ? <span><b>Unit:</b> {details.unit}</span> : null}
-          {details.source ? <span><b>Source:</b> {details.source}</span> : null}
         </span>,
         document.body,
       )
