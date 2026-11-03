@@ -40,7 +40,7 @@ export function YearTrendChart({ data }: { data: TrendPoint[] }) {
             name.startsWith("Amount spent") ? [formatCrore(value), name] : [formatNumber(value), name]
           }
         />
-        <Legend iconType="circle" iconSize={8} />
+        <Legend iconType="circle" iconSize={8} verticalAlign="top" height={30} />
         <Bar
           yAxisId="left"
           dataKey="spend"

@@ -128,7 +128,7 @@ export function SectorAnalysisView() {
               <XAxis dataKey="year" {...AXIS_PROPS} label={xTitle("Financial year", -14)} />
               <YAxis {...AXIS_PROPS} width={64} tickFormatter={(value: number) => formatCompact(value)} label={yTitle("CSR amount spent (₹ crore)")} />
               <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
-              <Legend iconType="circle" iconSize={8} />
+              <Legend iconType="circle" iconSize={8} verticalAlign="top" height={30} />
               {sectors.slice(0, 6).map((sector, index) => (
                 <Line
                   key={sector.name}

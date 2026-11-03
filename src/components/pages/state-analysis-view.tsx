@@ -176,7 +176,7 @@ export function StateAnalysisView() {
               tick={{ fontSize: 12.5, fill: "var(--text)" }}
             />
             <Tooltip content={<ChartTip money />} cursor={TOOLTIP_STYLES.cursor} />
-            <Legend iconType="circle" iconSize={9} wrapperStyle={{ fontSize: 12.5 }} />
+            <Legend iconType="circle" iconSize={9} verticalAlign="top" height={30} wrapperStyle={{ fontSize: 12.5 }} />
             <Bar
               dataKey="previous"
               name={years.at(-2) ?? "Previous FY"}

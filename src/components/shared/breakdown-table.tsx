@@ -124,8 +124,8 @@ export function BreakdownTable({
                   {showBars ? (
                     <span
                       aria-hidden
-                      className="absolute inset-y-1 left-0 -z-0 rounded-r bg-primary/10"
-                      style={{ width: `${Math.max(2, (row.value / peak) * 100)}%` }}
+                      className="absolute inset-y-1 left-0 -z-0 rounded-r"
+                      style={{ width: `${Math.max(2, (row.value / peak) * 100)}%`, background: "color-mix(in srgb, var(--c1) 12%, transparent)" }}
                     />
                   ) : null}
                   <span className="relative z-10 line-clamp-1 text-[13px] font-medium">{row.name}</span>

@@ -79,7 +79,7 @@ export function SpendTrend({
           label={{ value: "Projects (count)", angle: 90, position: "insideRight", style: { fontSize: 10, fill: "var(--text-soft)", textAnchor: "middle" } }}
         />
         <Tooltip content={<ChartTip />} />
-        <Legend iconType="circle" iconSize={7} />
+        <Legend iconType="circle" iconSize={7} verticalAlign="top" height={30} />
         {hasForecast ? (
           <>
             <Area

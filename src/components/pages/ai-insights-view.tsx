@@ -186,7 +186,7 @@ export function AiInsightsView() {
                 {...TOOLTIP_STYLES}
                 formatter={(value: number, name: string) => [formatCrore(value), name]}
               />
-              <Legend iconType="circle" iconSize={8} />
+              <Legend iconType="circle" iconSize={8} verticalAlign="top" height={30} />
               <Area
                 dataKey="upper"
                 name="Confidence band"

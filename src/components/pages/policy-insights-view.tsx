@@ -112,7 +112,7 @@ export function PolicyInsightsView() {
                 <span className="numeric text-[13px] font-semibold">{formatCrore(row.value)} · {formatShare(row.share)}</span>
               </div>
               <span className="mt-1 block h-1.5 overflow-hidden rounded-full bg-muted">
-                <span className="block h-full rounded-full bg-primary/80" style={{ width: `${Math.max(2, (row.value / ownershipMax) * 100)}%` }} />
+                <span className="block h-full rounded-full" style={{ width: `${Math.max(2, (row.value / ownershipMax) * 100)}%`, background: "var(--c1)" }} />
               </span>
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {formatNumber(row.companies ?? 0)} companies · {formatNumber(row.count ?? 0)} projects · Largest: {companiesLine(row.topCompanies)}

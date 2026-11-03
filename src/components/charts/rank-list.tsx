@@ -43,11 +43,11 @@ export function RankList({ data, limit = 10, onSelect, emptyMessage = "Nothing t
             <div className="mt-1 flex items-center gap-2 pl-6">
               <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                 <span
-                  className="block h-full rounded-full bg-primary/80"
-                  style={{ width: `${Math.max(2, (row.value / max) * 100)}%` }}
+                  className="block h-full rounded-full"
+                  style={{ width: `${Math.max(2, (row.value / max) * 100)}%`, background: index % 2 ? "var(--c2)" : "var(--c1)" }}
                 />
               </span>
-              <span className="numeric w-24 shrink-0 text-right text-[11px] text-muted-foreground">
+              <span className="numeric shrink-0 whitespace-nowrap text-right text-[11px] text-muted-foreground">
                 {formatShare(row.share)} · {row.count ?? 0} proj
               </span>
             </div>
