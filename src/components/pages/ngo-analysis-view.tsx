@@ -56,19 +56,21 @@ export function NgoAnalysisView() {
     >
       <SectionLabel>Organisations receiving CSR funds</SectionLabel>
       {partners ? (
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <div className={`grid grid-cols-1 gap-5 ${partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
           <OrgCard
             title={partners.amount > 0 ? "Implementing Agencies Awarded the Most CSR Funds" : "Implementing Agencies Named by the Most Companies"}
             description={`From companies\u2019 CSR annexures (${partners.records.toLocaleString("en-IN")} rows) · ${partners.implementers.toLocaleString("en-IN")} ${partners.implementers === 1 ? "agency" : "agencies"}`}
             rows={partners.top}
             empty="No implementation rows in the uploaded partner data for this selection."
           />
+          {partners.evaluators.length ? (
           <OrgCard
-            title="Agencies Engaged for M&E and Impact Assessment"
-            description={`Rows uploaded with Role = M&E · ${partners.evaluatorCount} ${partners.evaluatorCount === 1 ? "agency" : "agencies"}`}
-            rows={partners.evaluators}
-            empty="CSR annexures do not name M&E agencies. Add them (from companies' impact assessment reports) with Role = M&E in the partners template."
-          />
+              title="Agencies Engaged for M&E and Impact Assessment"
+              description={`Rows uploaded with Role = M&E · ${partners.evaluatorCount} ${partners.evaluatorCount === 1 ? "agency" : "agencies"}`}
+              rows={partners.evaluators}
+              empty="CSR annexures do not name M&E agencies. Add them (from companies' impact assessment reports) with Role = M&E in the partners template."
+            />
+          ) : null}
         </div>
       ) : null}
       <Card className="border-dashed p-4 text-[13px] leading-relaxed text-muted-foreground">

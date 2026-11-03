@@ -207,14 +207,12 @@ export function PolicyInsightsView() {
       <SectionLabel>Unspent CSR and impact assessment</SectionLabel>
       {p?.financials ? (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className={`grid grid-cols-2 gap-4 ${p.financials.toScheduleVIIFund > 0 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`${formatNumber(p.financials.companies)} companies uploaded`} />
             <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatCrore(p.financials.toUnspentAccount)} to Unspent CSR Accounts`} />
-            <Stat
-              label="Transferred to Schedule VII Funds"
-              value={p.financials.toScheduleVIIFund > 0 ? formatCrore(p.financials.toScheduleVIIFund) : "—"}
-              sub={p.financials.toScheduleVIIFund > 0 ? "e.g. PM CARES, Swachh Bharat Kosh" : "Not in the uploaded rows yet (column K of the template)"}
-            />
+            {p.financials.toScheduleVIIFund > 0 ? (
+              <Stat label="Transferred to Schedule VII Funds" value={formatCrore(p.financials.toScheduleVIIFund)} sub="e.g. PM CARES, Swachh Bharat Kosh" />
+            ) : null}
             <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`${formatNumber(p.financials.impactApplicable)} filings applicable · ${formatNumber(p.financials.impactReports)} reports linked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
@@ -255,7 +253,7 @@ export function PolicyInsightsView() {
       {p?.partners ? (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={`${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number`} />
+            <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={p.partners.evaluatorCount > 0 ? `${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number` : `${formatNumber(p.partners.registered)} with a CSR-1 registration number`} />
             {p.partners.amount > 0 ? (
               <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
             ) : (
@@ -272,19 +270,21 @@ export function PolicyInsightsView() {
               <Stat label="Registered Agencies" value={formatNumber(p.partners.registered)} sub="with a CSR-1 registration number (MCA)" />
             )}
           </div>
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-            <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations awarded funds to implement CSR projects: amount, funding companies and states" : "Agencies named by the most companies in their CSR annexures (annexures do not give per-agency amounts or states)"} height={360} isEmpty={!p.partners.top.length}>
+          <div className={`grid grid-cols-1 gap-5 ${p.partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
+            <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations awarded funds to implement CSR projects: amount, funding companies and states" : "Agencies named by the most companies in their CSR annexures"} height={360} isEmpty={!p.partners.top.length}>
               <PartnerList rows={p.partners.top} />
             </ChartCard>
+            {p.partners.evaluators.length ? (
             <ChartCard
-              title="M&E and Impact Assessment Agencies"
-              description="Organisations engaged for monitoring, evaluation or impact assessment (rows with Role = M&E)"
-              height={360}
-              isEmpty={!p.partners.evaluators.length}
-              emptyMessage="CSR annexures do not name M&E agencies. Add them with Role = M&E from companies' impact assessment reports."
-            >
-              <PartnerList rows={p.partners.evaluators} />
-            </ChartCard>
+                title="M&E and Impact Assessment Agencies"
+                description="Organisations engaged for monitoring, evaluation or impact assessment (rows with Role = M&E)"
+                height={360}
+                isEmpty={!p.partners.evaluators.length}
+                emptyMessage="CSR annexures do not name M&E agencies. Add them with Role = M&E from companies' impact assessment reports."
+              >
+                <PartnerList rows={p.partners.evaluators} />
+              </ChartCard>
+            ) : null}
           </div>
         </>
       ) : (
