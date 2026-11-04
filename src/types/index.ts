@@ -367,6 +367,11 @@ export interface ChatResponse {
   answer: string;
   facts: Record<string, unknown>;
   model: string | null;
+  /** "deterministic" = built-in engine (free); "llm" = answered by the model (uses API credits). */
+  source?: "deterministic" | "llm";
+  /** True when the model was wanted but the daily limit was reached. */
+  limited?: boolean;
+  cached?: boolean;
 }
 
 export interface ApiError {

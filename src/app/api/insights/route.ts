@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { buildFactPack, buildInsights } from "@/lib/insights";
 import { getDataset } from "@/lib/dataset";
 import { cached } from "@/lib/cache";
-import { llmAvailable, llmModel, narrateInsights } from "@/lib/llm";
+import { cachedLlm, llmAvailable, llmModel, narrateInsights } from "@/lib/llm";
 import { describeFilters, paramsToFilters } from "@/lib/query";
 import { CACHE_HEADERS, handleRouteError } from "../_lib";
 
@@ -28,7 +28,10 @@ export async function GET(request: Request) {
     let narrative: string | null = null;
     if (params.get("narrate") === "1" && llmAvailable()) {
       try {
-        narrative = await narrateInsights(buildFactPack(filters, scope));
+        const result = await cachedLlm(`narrate:${getDataset().generatedAt}:${llmModel()}:${params.toString()}`, () =>
+          narrateInsights(buildFactPack(filters, scope)),
+        );
+        narrative = result?.text ?? "Today's AI limit has been reached; the briefing will be available again after midnight.";
       } catch (error) {
         console.error("[insights] LLM narration failed", error);
       }

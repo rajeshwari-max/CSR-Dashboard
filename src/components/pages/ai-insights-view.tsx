@@ -41,6 +41,15 @@ import { cn } from "@/lib/utils";
 import { useFilterStore } from "@/store/filters";
 import type { ChatResponse, InsightSeverity, InsightsResponse } from "@/types";
 
+interface ChatMessage {
+  role: "user" | "assistant";
+  text: string;
+  source?: "deterministic" | "llm";
+  model?: string | null;
+  cached?: boolean;
+  limited?: boolean;
+}
+
 const SEVERITY_STYLES: Record<InsightSeverity, string> = {
   positive: "border-success/30 bg-success/5",
   neutral: "border-border bg-card",
@@ -71,7 +80,7 @@ export function AiInsightsView() {
   const insights = useApi<InsightsResponse>(`/api/insights?${filterQuery}${narrate ? "&narrate=1" : ""}`);
 
   const [question, setQuestion] = React.useState("");
-  const [thread, setThread] = React.useState<{ role: "user" | "assistant"; text: string }[]>([]);
+  const [thread, setThread] = React.useState<ChatMessage[]>([]);
   const [asking, setAsking] = React.useState(false);
 
   const ask = async (text: string) => {
@@ -82,7 +91,10 @@ export function AiInsightsView() {
     setAsking(true);
     try {
       const response = await postJson<ChatResponse>("/api/chat", { question: trimmed, query: filterQuery });
-      setThread((current) => [...current, { role: "assistant", text: response.answer }]);
+      setThread((current) => [
+        ...current,
+        { role: "assistant", text: response.answer, source: response.source, model: response.model, cached: response.cached, limited: response.limited },
+      ]);
     } catch {
       setThread((current) => [
         ...current,
@@ -406,7 +418,7 @@ export function AiInsightsView() {
             <CardTitle>Natural Language Search</CardTitle>
             <CardDescription>
               {data?.llm.available
-                ? `Verified queries use the built-in engine; broader questions use ${data.llm.model}`
+                ? `Answered free by the built-in engine first; ${data.llm.model} steps in automatically for questions it can't answer reliably (explanations, comparisons, partners, unspent CSR)`
                 : "Answered by the built-in deterministic query engine using the current selection"}
             </CardDescription>
           </div>
@@ -438,6 +450,13 @@ export function AiInsightsView() {
                   )}
                 >
                   <p className="whitespace-pre-wrap">{message.text}</p>
+                  {message.role === "assistant" && message.source ? (
+                    <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+                      {message.source === "llm"
+                        ? `Answered by ${message.model ?? "the AI model"} · ${message.cached ? "saved answer, no extra cost" : "uses API credits"}`
+                        : "Built-in engine · no API cost"}
+                    </p>
+                  ) : null}
                 </div>
               ))
             )}

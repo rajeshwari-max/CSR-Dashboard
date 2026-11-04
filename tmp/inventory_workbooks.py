@@ -34,4 +34,4 @@ for file in FILES:
     wb.close()
     result.append(item)
 
-print(json.dumps(result, ensure_ascii=False, indent=2))
+print(json.dumps(result, ensure_ascii=True, indent=2))
