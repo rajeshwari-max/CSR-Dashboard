@@ -13,6 +13,8 @@ import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import type { PolicyInsights } from "@/lib/policy";
 import { useFilterStore } from "@/store/filters";
 import { Download } from "lucide-react";
+import { MetricInfo } from "@/components/shared/metric-info";
+import { canScopeAnnexureFinancials } from "@/lib/annexure-scope";
 
 const shortYear = (year: string) => year.replace(/^FY\s*/, "FY");
 const companiesLine = (list: { name: string; value: number }[]) =>
@@ -60,9 +62,24 @@ function RankBars({ rows, limit = 5 }: { rows: { name: string; value: number }[]
 const AXIS_LABEL = { fontSize: 11, fill: "var(--text-soft)" } as const;
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  const descriptions: Record<string, string> = {
+    "CSR Spent in Aspirational Districts": "Project spending in NITI Aayog's aspirational districts over the selected years. Compare its share with the total CSR spent in this view.",
+    "Population Share of These Districts": "Reference population share for all 112 aspirational districts; a benchmark, not a CSR spending target.",
+    "Aspirational Districts Reached": "Number of official aspirational districts named in the selected project filings, out of 112.",
+    "Largest Contributor": "Company with the highest reported project spending in aspirational districts in this view.",
+    "Prescribed CSR Obligation": "Sum of the prescribed CSR obligation reported in company annexures for the selected years.",
+    "Unspent CSR": "Sum of amounts reported as unspent in company annexures for the selected years. This is not a single-year outstanding balance.",
+    "Impact Assessment": "Amount reported for impact assessments in the selected company annexures; separate from project spending.",
+    "Implementing Agencies": "Distinct organisations named as project implementers in company annexures.",
+    "Amount Routed through Them": "Sum of amounts assigned to named partner rows where an amount is disclosed.",
+    "Companies Naming Partners": "Distinct companies that name at least one partner in the selected annexures.",
+    "Largest Partner": "Implementing organisation with the largest disclosed amount in the selected partner rows.",
+    "Most-used Partner": "Implementing organisation named by the most companies where partner amounts are unavailable.",
+    "State with Most Partners": "State with the highest count of distinct named partner organisations in the selected annexures.",
+  };
   return (
     <div className="kpi-card">
-      <div className="kpi-label">{label}</div>
+      <div className="kpi-label metric-title"><span>{label}</span><MetricInfo title={label} meta={{ description: descriptions[label] ?? sub ?? label }} /></div>
       <div className="kpi-value" title={value}>{value}</div>
       {sub ? <div className="kpi-sub"><span className="truncate1">{sub}</span></div> : null}
     </div>
@@ -75,6 +92,7 @@ export function PolicyInsightsView() {
   const meta = useMeta();
   const policy = useApi<PolicyInsights>(`/api/policy?${filterQuery}`);
   const p = policy.data;
+  const annexureScopeSupported = canScopeAnnexureFinancials(filters);
   const ownershipMax = Math.max(1, ...(p?.ownership ?? []).map((row) => row.value));
 
   return (
@@ -202,15 +220,15 @@ export function PolicyInsightsView() {
       </div>
       <p className="text-[12px] text-muted-foreground">Found from words in project names (e.g. “relief”, “COVID”, “preparedness”, “divyang”, “disability”), so treat these as close estimates; one project can carry more than one tag.</p>
 
-      <SectionLabel>Unspent CSR and impact assessment</SectionLabel>
-      {p?.financials ? (
+      <div id="unspent-csr" className="scroll-mt-32"><SectionLabel>Unspent CSR and impact assessment</SectionLabel></div>
+      <p className="mb-4 text-[12px] text-muted-foreground">These figures come from company CSR annexures for {p?.years.length ? `${p.years[0]}${p.years.length > 1 ? ` to ${p.years[p.years.length - 1]}` : ""}` : "the selected years"}. Amounts add annual filings; the unspent total is not one current outstanding balance.</p>
+      {!annexureScopeSupported ? (
+        <p className="mb-5 rounded-lg border px-4 py-3 text-[12.5px] text-muted-foreground">Unspent CSR is reported for whole companies, so it cannot be split by location, project theme, implementation mode, search text, aspirational status or project amount. Clear those filters to see a reliable company and year total.</p>
+      ) : p?.financials ? (
         <>
-          <div className={`grid grid-cols-2 gap-4 ${p.financials.toScheduleVIIFund > 0 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`${formatNumber(p.financials.companies)} companies uploaded`} />
-            <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatNumber(p.financials.unspentCompanies)} companies · ${formatCrore(p.financials.toUnspentAccount)} to Unspent CSR Accounts`} />
-            {p.financials.toScheduleVIIFund > 0 ? (
-              <Stat label="Transferred to Schedule VII Funds" value={formatCrore(p.financials.toScheduleVIIFund)} sub="e.g. PM CARES, Swachh Bharat Kosh" />
-            ) : null}
+            <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatNumber(p.financials.unspentCompanies)} companies with unspent CSR`} />
             <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`${formatNumber(p.financials.impactApplicable)} filings applicable · ${formatNumber(p.financials.impactReports)} reports linked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">

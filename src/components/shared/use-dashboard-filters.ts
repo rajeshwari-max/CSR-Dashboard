@@ -50,7 +50,8 @@ export function useDashboardFilters() {
     if (!ready) return;
     if (lastPushed.current === filterQuery) return;
     lastPushed.current = filterQuery;
-    router.replace(filterQuery ? `${pathname}?${filterQuery}` : pathname, { scroll: false });
+    const anchor = window.location.hash;
+    router.replace(`${filterQuery ? `${pathname}?${filterQuery}` : pathname}${anchor}`, { scroll: false });
   }, [filterQuery, pathname, ready, router]);
 
   const scope = React.useMemo(() => describeFilters(filters), [filters]);

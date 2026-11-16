@@ -302,7 +302,7 @@ export function ExploreDataView() {
                 <CardTitle>{indicator.label} by {unitInfo.label}</CardTitle>
                 <CardDescription>
                   {labels === "high" ? `The 5 ${unitInfo.plural.toLowerCase()} with the highest value. ` : labels === "low" ? `The 5 ${unitInfo.plural.toLowerCase()} with the lowest value above zero. ` : ""}
-                  Each box is sized by {indicator.label.toLowerCase()} ({indicator.unit}); bigger boxes are larger values. Click a box to filter the dashboard.
+                  Each box is sized by {indicator.label.toLowerCase()} ({indicator.unit}); bigger boxes mean more reported activity. Compare box sizes to spot concentration, then click a box to filter the dashboard. The colours distinguish boxes; they do not show another measure.
                 </CardDescription>
               </div>
             </CardHeader>

@@ -17,6 +17,8 @@ import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { InsightsResponse, SummaryResponse } from "@/types";
 import { ExplainedTitle } from "@/components/shared/metric-info";
+import type { PolicyInsights } from "@/lib/policy";
+import { canScopeAnnexureFinancials } from "@/lib/annexure-scope";
 
 /**
  * Executive Dashboard — structure taken verbatim from the draft:
@@ -31,8 +33,14 @@ export function ExecutiveDashboard() {
 
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=5`);
   const insights = useApi<InsightsResponse>(`/api/insights?${filterQuery}`);
+  const policy = useApi<PolicyInsights>(`/api/policy?${filterQuery}`);
 
   const kpis = summary.data?.kpis ?? null;
+  const annexureScopeSupported = canScopeAnnexureFinancials(filters);
+  const annexureYears = policy.data?.years ?? [];
+  const annexurePeriod = annexureYears.length
+    ? `${annexureYears[0]}${annexureYears.length > 1 ? ` – ${annexureYears[annexureYears.length - 1]}` : ""}`
+    : "selected years";
   const states = summary.data?.byState ?? [];
   const mappedStates = states.filter(
     (row) => !["Pan India", "Not Specified", "District Not Classified Elsewhere"].includes(row.name),
@@ -69,11 +77,21 @@ export function ExecutiveDashboard() {
     >
       <MiniLabel>Key performance indicators</MiniLabel>
       <KpiRow kpis={kpis} meta={meta.data} isLoading={summary.isLoading} />
+      <Link href={`/policy-insights?${filterQuery}#unspent-csr`} className="card hoverable" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, marginBottom: 26, padding: "18px 22px", textDecoration: "none" }}>
+        <div>
+          <div className="kpi-label" style={{ marginBottom: 5 }}>Unspent CSR reported in company annexures · {annexurePeriod}</div>
+          <div className="muted" style={{ fontSize: 12.5 }}>Sum of annual unspent amounts, not one current balance. Open Policy Insights for the yearly breakdown and company list.</div>
+        </div>
+        <div style={{ flexShrink: 0, textAlign: "right" }}>
+          <div className="kpi-value" style={{ fontSize: 25 }}>{!annexureScopeSupported ? "—" : policy.isLoading ? "Loading…" : policy.error ? "Could not load" : policy.data?.financials ? formatCrore(policy.data.financials.unspent) : "Unavailable"}</div>
+          <div className="muted" style={{ fontSize: 12 }}>{!annexureScopeSupported ? "Clear project or location filters · View details →" : policy.data?.financials ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · View details →` : "Annexure data required"}</div>
+        </div>
+      </Link>
       {/* Feedback asked whether "CSR spent" covers evaluation too; answer it on the page, not only in a tooltip. */}
       <p className="muted" style={{ fontSize: 12.5, margin: "-6px 0 26px", lineHeight: 1.5 }}>
         <strong style={{ color: "var(--text)" }}>Data sources:</strong> CSR spent, projects and locations come from
-        project-wise filings on the MCA National CSR Portal (csr.gov.in). Obligation, unspent CSR, administrative
-        overheads, impact assessment and implementing partners come from each company&apos;s annual-report CSR annexure
+        project-wise filings on the MCA National CSR Portal (csr.gov.in). Obligation, unspent CSR,
+        impact assessment and implementing partners come from each company&apos;s annual-report CSR annexure
         (annual reports filed on NSE) and are shown on{" "}
         <a href="/policy-insights" style={{ textDecoration: "underline" }}>Policy Insights</a> and{" "}
         <a href="/ngo-analysis" style={{ textDecoration: "underline" }}>Implementation Analysis</a>.
