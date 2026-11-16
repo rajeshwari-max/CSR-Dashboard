@@ -153,7 +153,7 @@ export function ExploreDataView() {
   const [indicatorKey, setIndicatorKey] = React.useState("spend");
   const [xKey, setXKey] = React.useState("projects");
   const [yKey, setYKey] = React.useState("spend");
-  const [labels, setLabels] = React.useState<LabelMode>("high");
+  const [labels, setLabels] = React.useState<LabelMode>("all");
   const [reportCols, setReportCols] = React.useState<string[]>(["spend", "projects", "companies", "avg", "yoy"]);
   const [reportMode, setReportMode] = React.useState<"indicators" | "years">("indicators");
   const [reportRows, setReportRows] = React.useState(20);
@@ -194,9 +194,12 @@ export function ExploreDataView() {
     .map((row) => ({ row, v: indicator.get(row) }))
     .filter((x): x is { row: Row; v: number } => x.v !== null && Number.isFinite(x.v));
   const sorted = [...valued].sort((a, b) => b.v - a.v);
-  const highSet = new Set(sorted.slice(0, 5).map((x) => x.row.name));
-  const lowSet = new Set(sorted.slice(-5).map((x) => x.row.name));
-  const showLabel = (name: string) => labels === "all" || (labels === "high" ? highSet.has(name) : lowSet.has(name));
+  // "Show" filter for Regional comparison: Top 5 / Bottom 5 narrow the boxes to just those
+  // regions (bottom 5 were too small to see or label when drawn among all of them).
+  const positive = sorted.filter((x) => x.v > 0);
+  const compared =
+    labels === "high" ? positive.slice(0, 5) : labels === "low" ? positive.slice(-5).reverse() : positive.slice(0, unit === "district" ? 80 : 60);
+  const showLabel = () => true;
   const filterKey = ({ state: "states", district: "districts", sector: "sectors", theme: "themes" } as const)[unit];
 
   const loading = breakdown.isLoading || meta.isLoading;
@@ -253,7 +256,7 @@ export function ExploreDataView() {
             </div>
             {view === "comparison" || view === "correlation" ? (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Display labels</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Show</span>
                 <Segmented value={labels} options={[{ key: "all", label: "All" }, { key: "high", label: "Top 5" }, { key: "low", label: "Bottom 5" }]} onChange={setLabels} />
               </div>
             ) : null}
@@ -298,6 +301,7 @@ export function ExploreDataView() {
               <div>
                 <CardTitle>{indicator.label} by {unitInfo.label}</CardTitle>
                 <CardDescription>
+                  {labels === "high" ? `The 5 ${unitInfo.plural.toLowerCase()} with the highest value. ` : labels === "low" ? `The 5 ${unitInfo.plural.toLowerCase()} with the lowest value above zero. ` : ""}
                   Each box is sized by {indicator.label.toLowerCase()} ({indicator.unit}); bigger boxes are larger values. Click a box to filter the dashboard.
                 </CardDescription>
               </div>
@@ -308,7 +312,7 @@ export function ExploreDataView() {
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <Treemap
-                    data={sorted.slice(0, unit === "district" ? 80 : 60).filter((x) => x.v > 0).map(({ row, v }) => ({ name: row.name, size: v }))}
+                    data={compared.map(({ row, v }) => ({ name: row.name, size: v }))}
                     dataKey="size"
                     nameKey="name"
                     stroke="var(--surface)"
@@ -456,15 +460,36 @@ function CompareNode({ x = 0, y = 0, width = 0, height = 0, index = 0, name = ""
   );
 }
 
+/** Plain-English reading of a correlation, for readers who don't use r every day. */
+function interpret(r: number, x: Indicator, y: Indicator, unitLabel: string) {
+  const a = Math.abs(r);
+  const shared = Math.round(r * r * 100);
+  const lc = (text: string) => (/^[A-Z]{2,}/.test(text) ? text : text.charAt(0).toLowerCase() + text.slice(1));
+  const xl = lc(x.label);
+  const yl = lc(y.label);
+  if (a < 0.2) return `Knowing a region's ${xl} tells you little about its ${yl}: the dots show no clear pattern.`;
+  const direction = r > 0 ? `${unitLabel} with higher ${xl} usually also have higher ${yl}` : `${unitLabel} with higher ${xl} usually have lower ${yl}`;
+  return `${direction.charAt(0).toUpperCase()}${direction.slice(1)}. About ${shared}% of the differences in ${yl} line up with ${xl}.`;
+}
+
 function CorrelationCard({ rows, x, y, unitLabel, labelMode }: { rows: Row[]; x: Indicator; y: Indicator; unitLabel: string; labelMode: LabelMode }) {
   const points = rows
     .map((row) => ({ name: row.name, x: x.get(row), y: y.get(row), size: row.value }))
     .filter((p): p is { name: string; x: number; y: number; size: number } => p.x !== null && p.y !== null && Number.isFinite(p.x) && Number.isFinite(p.y));
   const r = pearson(points);
   const byY = [...points].sort((a, b) => b.y - a.y);
-  const high = new Set(byY.slice(0, 5).map((p) => p.name));
-  const low = new Set(byY.slice(-5).map((p) => p.name));
-  const labelled = points.map((p) => ({ ...p, label: labelMode === "all" || (labelMode === "high" ? high.has(p.name) : low.has(p.name)) ? p.name : "" }));
+  // Top 5 / Bottom 5 (by the Y-axis value) are highlighted and labelled; the other dots stay,
+  // faded, because r is measured across all of them. "All" labels every dot up to 40 regions.
+  const focus =
+    labelMode === "high" ? new Set(byY.slice(0, 5).map((p) => p.name))
+    : labelMode === "low" ? new Set(byY.slice(-5).map((p) => p.name))
+    : new Set(byY.slice(0, 10).map((p) => p.name));
+  // Names are drawn on the chart only for the high end, where dots are spread out; the low
+  // end bunches near zero, so its names are listed under the chart instead of overlapping.
+  const onChartLabels = labelMode !== "low";
+  const highlighted = points.filter((p) => focus.has(p.name)).map((p) => ({ ...p, label: onChartLabels ? p.name : "" }));
+  const focusList = byY.filter((p) => focus.has(p.name));
+  const others = points.filter((p) => !focus.has(p.name)).map((p) => ({ ...p, label: "" }));
   return (
     <>
       <SectionLabel>Correlation</SectionLabel>
@@ -473,12 +498,26 @@ function CorrelationCard({ rows, x, y, unitLabel, labelMode }: { rows: Row[]; x:
           <div>
             <CardTitle>{y.label} vs {x.label}</CardTitle>
             <CardDescription>
-              Each dot is one of {points.length} {unitLabel}; dot size shows CSR spent.{" "}
-              {r !== null ? <>Correlation r = <strong>{r.toFixed(2)}</strong>, a {strength(r)}.</> : "Not enough points to measure a relationship."}
+              Each dot is one of {points.length} {unitLabel}; dot size shows CSR spent.
+              {labelMode === "high" ? " Highlighted: the 5 highest on the Y axis." : labelMode === "low" ? " Highlighted: the 5 lowest on the Y axis." : " Named: the 10 highest on the Y axis."}
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="h-[520px] pb-5">
+        <CardContent className="flex flex-col gap-3 pb-5">
+          {r !== null ? (
+            <div className="rounded-lg border px-3 py-2 text-[12.5px]" style={{ background: "var(--surface-2)" }}>
+              <p>
+                <strong>How to read this: r = {r.toFixed(2)}, a {strength(r)}.</strong> {interpret(r, x, y, unitLabel)}
+              </p>
+              <p className="mt-1 text-muted-foreground">
+                r runs from −1 to +1: near +1 the dots rise together in a line, near 0 there is no pattern, near −1 one falls as the other rises.
+                It shows that the two move together, not that one causes the other, and one very large region can pull it up, so hover the dots far from the rest.
+              </p>
+            </div>
+          ) : (
+            <p className="text-[12.5px] text-muted-foreground">Not enough points to measure a relationship.</p>
+          )}
+          <div className="h-[480px]">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart margin={{ top: 16, right: 24, bottom: 28, left: 24 }}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -499,11 +538,20 @@ function CorrelationCard({ rows, x, y, unitLabel, labelMode }: { rows: Row[]; x:
                   );
                 }}
               />
-              <Scatter data={labelled} fill="var(--c1)" fillOpacity={0.75} stroke="var(--c2)">
+              <Scatter data={others} fill="var(--text-soft)" fillOpacity={0.25} />
+              <Scatter data={highlighted} fill="var(--c1)" fillOpacity={0.8} stroke="var(--c2)">
                 <LabelList dataKey="label" position="top" style={{ fontSize: 10.5, fill: "var(--text)" }} />
               </Scatter>
             </ScatterChart>
           </ResponsiveContainer>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[12px]">
+            {focusList.map((p) => (
+              <span key={p.name} className="rounded-full border px-2.5 py-1">
+                <strong>{p.name}</strong> · {x.format(p.x)} · {y.format(p.y)}
+              </span>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </>

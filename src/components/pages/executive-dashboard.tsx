@@ -150,11 +150,11 @@ export function ExecutiveDashboard() {
             </div>
             <span className="card-badge">Across India</span>
           </div>
-          <div style={{ height: 190 }}>
+          <div style={{ height: 260 }}>
             {summary.isLoading ? (
               <div className="skeleton" style={{ height: "100%" }} />
             ) : (
-              <IndiaMap data={states} selected={filters.states} onSelect={(name) => toggleValue("states", name)} />
+              <IndiaMap data={states} selected={filters.states} onSelect={(name) => toggleValue("states", name)} showUnmapped={false} />
             )}
           </div>
           <div className="row" style={{ justifyContent: "space-between", marginTop: 12, gap: 8 }}>

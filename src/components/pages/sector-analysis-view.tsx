@@ -225,6 +225,9 @@ export function SectorAnalysisView() {
         </Card>
       </div>
 
+      <SectionLabel>Sector drill-down</SectionLabel>
+      <SectorDrilldown sectors={sectors.map((row) => row.name).filter((name) => name !== "Unclassified")} filterQuery={filterQuery} />
+
       <SectionLabel>All sectors</SectionLabel>
       <Card>
         <CardContent className="px-0 pt-4">
@@ -340,4 +343,133 @@ function wrapLabel(text: string, width: number, maxLines: number): string[] {
     return kept;
   }
   return lines.map((line) => truncate(line, width + 1));
+}
+
+/**
+ * Drill-down for one sector: which companies make up its CSR spent, and how
+ * each company's amount moved year by year. One breakdown call (by company,
+ * scoped to the sector) gives both the ranking and the per-year series.
+ */
+function SectorDrilldown({ sectors, filterQuery }: { sectors: string[]; filterQuery: string }) {
+  const [picked, setPicked] = React.useState<string>("");
+  const sector = picked && sectors.includes(picked) ? picked : sectors[0] ?? "";
+  const query = React.useMemo(() => {
+    const params = new URLSearchParams(filterQuery);
+    params.delete("sectors");
+    if (sector) params.set("sectors", sector);
+    return params.toString();
+  }, [filterQuery, sector]);
+  const drill = useApi<BreakdownResponse>(sector ? `/api/breakdown?dimension=company&limit=30&${query}` : null);
+  const byYear = useApi<BreakdownResponse>(sector ? `/api/breakdown?dimension=year&${query}` : null);
+
+  const years = drill.data?.years ?? [];
+  const byName = new Map((drill.data?.series ?? []).map((item) => [item.name, item.values]));
+  const companies = (drill.data?.rows ?? []).slice(0, 15);
+  const yearSpend = new Map((byYear.data?.rows ?? []).map((row) => [row.name, row.value]));
+  const yearTotals = years.map((year) => ({ year, spend: yearSpend.get(year) ?? 0 }));
+  const max = Math.max(1, ...companies.flatMap((row) => years.map((year) => byName.get(row.name)?.[year] ?? 0)));
+
+  const download = () => {
+    const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+    const lines = [
+      ["Company", "Total (₹ crore)", ...years.map((y) => `${y} (₹ crore)`)].map(esc).join(","),
+      ...(drill.data?.rows ?? []).slice(0, 30).map((row) =>
+        [esc(row.name), String(row.value), ...years.map((y) => String(byName.get(row.name)?.[y] ?? 0))].join(","),
+      ),
+    ];
+    const url = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `sector-${sector.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-companies-by-year.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="min-w-0">
+          <CardTitle>Sector Figures by Company and Financial Year</CardTitle>
+          <CardDescription>
+            Pick a sector to see which companies make up its CSR spent and how each moved year by year (₹ crore). Darker cells are larger amounts.
+          </CardDescription>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <select
+            value={sector}
+            onChange={(event) => setPicked(event.target.value)}
+            className="rounded-md border bg-[var(--surface)] px-2.5 py-1.5 text-[13px] font-medium"
+            aria-label="Sector"
+          >
+            {sectors.map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+          <button type="button" className="btn btn-outline btn-sm" onClick={download} disabled={!companies.length}>
+            Download
+          </button>
+        </div>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        {drill.isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        ) : !companies.length ? (
+          <p className="text-sm text-muted-foreground">No projects for this sector in the current selection.</p>
+        ) : (
+          <>
+            <div className="h-[200px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={yearTotals} margin={{ top: 22, right: 12, bottom: 18, left: 12 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="year" {...AXIS_PROPS} label={xTitle("Financial year", -14)} />
+                  <YAxis {...AXIS_PROPS} width={64} tickFormatter={(value: number) => formatCompact(value)} label={yTitle("₹ crore")} />
+                  <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => [formatCrore(value), `${sector}, all companies`]} />
+                  <Bar dataKey="spend" fill="var(--c1)" radius={[6, 6, 0, 0]} maxBarSize={48}>
+                    <LabelList dataKey="spend" position="top" formatter={(value: number) => Math.round(value).toLocaleString("en-IN")} style={{ fontSize: 11, fill: "var(--text)" }} />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="overflow-x-auto rounded-lg border">
+              <table className="w-full border-collapse text-[12.5px]">
+                <thead>
+                  <tr style={{ background: "var(--surface-2)" }}>
+                    <th className="px-3 py-2 text-left font-semibold">Company</th>
+                    <th className="px-3 py-2 text-right font-semibold">Total</th>
+                    {years.map((year) => (
+                      <th key={year} className="px-3 py-2 text-right font-semibold">{year.replace(/^FY\s*/, "FY ")}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {companies.map((row) => (
+                    <tr key={row.name} className="border-t">
+                      <td className="max-w-[280px] truncate px-3 py-1.5 font-medium" title={row.name}>{row.name}</td>
+                      <td className="numeric px-3 py-1.5 text-right font-semibold">{formatCrore(row.value)}</td>
+                      {years.map((year) => {
+                        const v = byName.get(row.name)?.[year] ?? 0;
+                        const t = v / max;
+                        return (
+                          <td
+                            key={year}
+                            className="numeric px-3 py-1.5 text-right"
+                            style={v > 0 ? { background: `color-mix(in srgb, var(--c1) ${Math.round(8 + t * 70)}%, transparent)`, color: t > 0.55 ? "#fff" : undefined } : undefined}
+                          >
+                            {v > 0 ? formatCrore(v) : "—"}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Bars: total CSR spent by all {sector} companies each year. Table: top 15 companies by CSR spent; Download gives the top 30.
+            </p>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
 }

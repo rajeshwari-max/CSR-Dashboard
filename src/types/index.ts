@@ -147,6 +147,8 @@ export interface Kpis {
   themeCount: number;
   aspirationalSpend: number;
   aspirationalShare: number;
+  /** Distinct NITI Aayog aspirational districts reached by projects in view. */
+  aspirationalDistrictCount: number;
   /**
    * Share of companies that met their disclosed CSR obligation in the latest
    * year in view. Only companies that actually disclose an obligation are

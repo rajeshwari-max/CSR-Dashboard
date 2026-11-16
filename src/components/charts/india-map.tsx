@@ -58,9 +58,11 @@ interface IndiaMapProps {
   formatValue?: (value: number) => string;
   /** Legend title, e.g. "Projects reported". Defaults to amount spent. */
   metricLabel?: string;
+  /** List Pan India / unspecified amounts under the map. Off where the page already shows them. */
+  showUnmapped?: boolean;
 }
 
-export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel }: IndiaMapProps) {
+export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel, showUnmapped = true }: IndiaMapProps) {
   const fmt = formatValue ?? formatCrore;
   const isSpend = !formatValue;
   const [hover, setHover] = React.useState<{ name: string; x: number; y: number } | null>(null);
@@ -100,7 +102,7 @@ export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel }:
   const hovered = hover ? byMapName.get(hover.name) : null;
 
   return (
-    <div ref={wrapperRef} className="relative flex h-full flex-col gap-3 lg:flex-row">
+    <div ref={wrapperRef} className="relative flex h-full flex-col gap-2">
       <div className="relative min-h-0 flex-1">
         <svg
           viewBox={indiaMap.viewBox}
@@ -173,30 +175,25 @@ export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel }:
         ) : null}
       </div>
 
-      <div className="flex shrink-0 flex-col justify-between gap-3 lg:w-44">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{metricLabel ?? "Amount spent intensity"}</p>
-          <div className="mt-2 h-2 w-full rounded-full" style={{ background: "linear-gradient(90deg,#f4edf7,#ddc8e4,#b882c7,#82419a,#542566)" }} />
-          <div className="numeric mt-1 flex justify-between text-[10px] text-muted-foreground">
-            <span>{fmt(0)}</span>
-            <span>{fmt(max)}</span>
-          </div>
+      {/* Legend and off-map amounts sit in one slim row under the map, so the map keeps the full width. */}
+      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold uppercase tracking-wide">{metricLabel ?? "Amount spent"}</span>
+          <span className="numeric">{fmt(0)}</span>
+          <span className="h-2 w-24 rounded-full" style={{ background: "linear-gradient(90deg,#f4edf7,#ddc8e4,#b882c7,#82419a,#542566)" }} />
+          <span className="numeric">{fmt(max)}</span>
         </div>
-
-        {unmapped.length ? (
-          <div className="space-y-1.5">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Not state-attributed
-            </p>
+        {showUnmapped && unmapped.length ? (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span>Not on map:</span>
             {unmapped.map((row) => (
               <button
                 key={row.name}
                 type="button"
                 onClick={() => onSelect?.(row.name)}
-                className="flex w-full items-center justify-between gap-2 rounded-lg border border-border px-2 py-1.5 text-left text-[11px] transition-colors hover:bg-accent/60"
+                className="numeric rounded-full border border-border px-2 py-0.5 transition-colors hover:bg-[var(--surface-2)]"
               >
-                <span className="truncate text-muted-foreground">{row.name}</span>
-                <span className="numeric shrink-0 font-semibold">{fmt(row.value)}</span>
+                {row.name} {fmt(row.value)}
               </button>
             ))}
           </div>

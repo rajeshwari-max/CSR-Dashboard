@@ -143,7 +143,19 @@ export function buildPolicyInsights(filters: Filters) {
   const fin = (financialStore?.records ?? []).filter(keep);
   const sumOf = (key: string, list = fin) => round(list.reduce((s, r) => s + num(r[key]), 0));
   const unspentByCompany = new Map<string, number>();
-  for (const r of fin) unspentByCompany.set(r.company, (unspentByCompany.get(r.company) ?? 0) + num(r.unspent));
+  const unspentByCompanyYear = new Map<string, Record<string, number>>();
+  for (const r of fin) {
+    unspentByCompany.set(r.company, (unspentByCompany.get(r.company) ?? 0) + num(r.unspent));
+    if (num(r.unspent) > 0) {
+      const perYear = unspentByCompanyYear.get(r.company) ?? {};
+      perYear[r.year] = round((perYear[r.year] ?? 0) + num(r.unspent));
+      unspentByCompanyYear.set(r.company, perYear);
+    }
+  }
+  const unspentList = [...unspentByCompany.entries()]
+    .filter(([, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, value]) => ({ name, value: round(value), byYear: unspentByCompanyYear.get(name) ?? {} }));
   const financials = financialStore
     ? {
         uploadedAt: financialStore.uploadedAt,
@@ -159,7 +171,10 @@ export function buildPolicyInsights(filters: Filters) {
           const list = fin.filter((r) => r.year === year);
           return { year, obligation: sumOf("obligation", list), totalSpent: sumOf("totalSpent", list), unspent: sumOf("unspent", list), toUnspentAccount: sumOf("toUnspentAccount", list), impact: sumOf("impact", list) };
         }),
-        topUnspent: [...unspentByCompany.entries()].filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([name, value]) => ({ name, value: round(value) })),
+        topUnspent: unspentList.slice(0, 10).map(({ name, value }) => ({ name, value })),
+        /** Companies with any unspent CSR in view, and the full list for download. */
+        unspentCompanies: unspentList.length,
+        unspentList,
       }
     : null;
 

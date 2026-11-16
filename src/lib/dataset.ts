@@ -12,7 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { cleanDataset, focusBits, OWNERSHIP_CLASSES, type CleanupReport } from "@/lib/data-cleanup";
+import { cleanDataset, focusBits, officialAspirationalDistrict, OWNERSHIP_CLASSES, type CleanupReport } from "@/lib/data-cleanup";
 import { displayCompanyName } from "@/lib/format";
 import { REPORTING_START_YEAR } from "@/types";
 import type {
@@ -586,6 +586,9 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
   let spentRows = 0;
   let aspirationalSpend = 0;
   const districts = new Set<number>();
+  // Counted against NITI Aayog's official list of 112, so spelling variants
+  // ("Mysore" / "Mysuru") count once and the total can't exceed 112.
+  const aspirationalDistricts = new Set<string>();
   const projectSizeDistribution = [
     { label: "< ₹0.1 Cr", min: 0, max: 0.1, projects: 0, spend: 0 },
     { label: "₹0.1–0.5 Cr", min: 0.1, max: 0.5, projects: 0, spend: 0 },
@@ -609,7 +612,13 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
         bucket.spend += value;
       }
     }
-    if (data.districtIdx[row] >= 0) districts.add(data.districtIdx[row]);
+    if (data.districtIdx[row] >= 0) {
+      districts.add(data.districtIdx[row]);
+      if (data.aspirational[row] && data.stateIdx[row] >= 0) {
+        const official = officialAspirationalDistrict(data.states[data.stateIdx[row]], data.districts[data.districtIdx[row]]);
+        if (official) aspirationalDistricts.add(official);
+      }
+    }
   }
 
   /*
@@ -729,6 +738,7 @@ export function buildSummary(filters: Filters, topN = 12): SummaryResponse {
     themeCount: byTheme.rows.length,
     aspirationalSpend: round(aspirationalSpend),
     aspirationalShare: totalSpend > 0 ? aspirationalSpend / totalSpend : 0,
+    aspirationalDistrictCount: aspirationalDistricts.size,
     complianceRate: complianceBase > 0 ? round((complianceMet / complianceBase) * 100) : null,
     complianceBase,
     complianceMet,

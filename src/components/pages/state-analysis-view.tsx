@@ -92,7 +92,7 @@ export function StateAnalysisView() {
           error={summary.error}
           isEmpty={!states.length}
         >
-          <IndiaMap data={states} selected={filters.states} onSelect={(name) => toggleValue("states", name)} />
+          <IndiaMap data={states} selected={filters.states} onSelect={(name) => toggleValue("states", name)} showUnmapped={false} />
         </ChartCard>
 
         <div className="flex flex-col gap-5">

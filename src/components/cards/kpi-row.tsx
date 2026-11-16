@@ -10,10 +10,11 @@ import {
   IndianRupee,
   Minus,
   MapPinned,
+  Target,
   Users,
 } from "lucide-react";
 
-import { formatCrore, formatNumber, formatSignedPercent } from "@/lib/format";
+import { formatCrore, formatNumber, formatShare, formatSignedPercent } from "@/lib/format";
 import type { Kpis, Meta } from "@/types";
 import { MetricInfo } from "@/components/shared/metric-info";
 import { useFilterStore } from "@/store/filters";
@@ -146,10 +147,17 @@ export function KpiRow({
           icon: MapPinned,
           tip: "Distinct districts reached by projects that include a recorded district location.",
         },
+    {
+      label: "Aspirational Districts Reached by CSR Projects",
+      value: `${formatNumber(kpis.aspirationalDistrictCount ?? 0)} of 112`,
+      sub: `${formatCrore(kpis.aspirationalSpend)} spent · ${formatShare(kpis.aspirationalShare)} of total`,
+      icon: Target,
+      tip: "NITI Aayog's 112 aspirational districts that received at least one reported CSR project, and the CSR amount spent in them, for the current selection.",
+    },
   ];
 
   return (
-    <div className="kpi-row">
+    <div className={`kpi-row${cards.length === 5 ? " five" : ""}`}>
       {cards.map((card, index) => {
         const dimmed = Boolean(card.unavailable) && !beneficiaries;
         const Icon = card.icon;

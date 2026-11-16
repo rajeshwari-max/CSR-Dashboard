@@ -12,11 +12,28 @@ import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import type { PolicyInsights } from "@/lib/policy";
 import { useFilterStore } from "@/store/filters";
+import { Download } from "lucide-react";
 
 const shortYear = (year: string) => year.replace(/^FY\s*/, "FY");
 const companiesLine = (list: { name: string; value: number }[]) =>
   list.length ? list.map((c) => `${c.name} (${formatCrore(c.value)})`).join(" · ") : "—";
 const FIN_LABELS: Record<string, string> = { obligation: "Obligation", totalSpent: "Spent", unspent: "Unspent" };
+
+/** Every company with unspent CSR in view, as a CSV: total plus one column per year. */
+function downloadUnspent(list: { name: string; value: number; byYear: Record<string, number> }[], years: string[]) {
+  const cols = years.filter((year) => list.some((row) => row.byYear[year]));
+  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const lines = [
+    ["#", "Company", "Total unspent CSR (₹ crore)", ...cols.map((y) => `${y} (₹ crore)`)].map(esc).join(","),
+    ...list.map((row, i) => [String(i + 1), esc(row.name), String(row.value), ...cols.map((y) => String(row.byYear[y] ?? ""))].join(",")),
+  ];
+  const url = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "unspent-csr-companies.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 /** Small ranked list with proportional bars (used instead of plain text lists). */
 function RankBars({ rows, limit = 5 }: { rows: { name: string; value: number }[]; limit?: number }) {
@@ -190,7 +207,7 @@ export function PolicyInsightsView() {
         <>
           <div className={`grid grid-cols-2 gap-4 ${p.financials.toScheduleVIIFund > 0 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`${formatNumber(p.financials.companies)} companies uploaded`} />
-            <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatCrore(p.financials.toUnspentAccount)} to Unspent CSR Accounts`} />
+            <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatNumber(p.financials.unspentCompanies)} companies · ${formatCrore(p.financials.toUnspentAccount)} to Unspent CSR Accounts`} />
             {p.financials.toScheduleVIIFund > 0 ? (
               <Stat label="Transferred to Schedule VII Funds" value={formatCrore(p.financials.toScheduleVIIFund)} sub="e.g. PM CARES, Swachh Bharat Kosh" />
             ) : null}
@@ -211,7 +228,20 @@ export function PolicyInsightsView() {
                 </BarChart>
               </ResponsiveContainer>
             </ChartCard>
-            <ChartCard title="Companies with the Largest Unspent CSR" description="Unspent CSR, total over the years in view (₹ crore)" height={320} isEmpty={!p.financials.topUnspent.length} emptyMessage="No unspent amounts in the uploaded rows.">
+            <ChartCard
+              title="Companies with the Largest Unspent CSR"
+              description={`${formatNumber(p.financials.unspentCompanies)} companies have unspent CSR in this view; top 10 shown (₹ crore, total over the years in view)`}
+              height={320}
+              isEmpty={!p.financials.topUnspent.length}
+              emptyMessage="No unspent amounts in the uploaded rows."
+              action={
+                p.financials.unspentList.length ? (
+                  <button type="button" className="btn btn-outline btn-sm" onClick={() => downloadUnspent(p.financials!.unspentList, p.years)}>
+                    <Download width={13} height={13} /> Full list
+                  </button>
+                ) : null
+              }
+            >
               <div className="h-full overflow-y-auto"><RankBars rows={p.financials.topUnspent} limit={10} /></div>
             </ChartCard>
           </div>
