@@ -51,6 +51,8 @@ interface Indicator {
   /** null = not available for this row */
   get: (row: Row) => number | null;
   stateOnly?: boolean;
+  /** One plain sentence: what the number means. */
+  meaning: string;
 }
 
 interface Row extends NamedValue {
@@ -58,15 +60,43 @@ interface Row extends NamedValue {
 }
 
 const INDICATORS: Indicator[] = [
-  { key: "spend", label: "CSR spent", unit: "₹ crore", format: (v) => formatCrore(v), get: (r) => r.value },
-  { key: "projects", label: "CSR projects", unit: "projects", format: (v) => formatNumber(v), get: (r) => r.count ?? 0 },
-  { key: "companies", label: "Companies funding", unit: "companies", format: (v) => formatNumber(v), get: (r) => r.companies ?? 0 },
-  { key: "avg", label: "Average spent per project", unit: "₹ crore per project", format: (v) => formatCrore(v), get: (r) => (r.count ? r.value / r.count : null) },
-  { key: "latest", label: "CSR spent in latest year", unit: "₹ crore", format: (v) => formatCrore(v), get: (r) => r.latest ?? null },
-  { key: "yoy", label: "Growth on previous year", unit: "%", format: (v) => formatSignedPercent(v), get: (r) => (typeof r.yoyGrowthPct === "number" ? r.yoyGrowthPct : null) },
-  { key: "share", label: "Share of CSR spent", unit: "%", format: (v) => `${v.toFixed(1)}%`, get: (r) => (typeof r.share === "number" ? r.share * 100 : null) },
-  { key: "districts", label: "Districts reached", unit: "districts", format: (v) => formatNumber(v), get: (r) => r.districts ?? null, stateOnly: true },
+  { key: "spend", label: "CSR spent", unit: "₹ crore", format: (v) => formatCrore(v), get: (r) => r.value, meaning: "Total CSR money spent on projects in each region over the selected years." },
+  { key: "projects", label: "CSR projects", unit: "projects", format: (v) => formatNumber(v), get: (r) => r.count ?? 0, meaning: "How many CSR projects companies reported there. More projects can mean wider reach, even with less money." },
+  { key: "companies", label: "Companies funding", unit: "companies", format: (v) => formatNumber(v), get: (r) => r.companies ?? 0, meaning: "How many different companies funded at least one project there. Higher means funding is not dependent on one or two companies." },
+  { key: "avg", label: "Average spent per project", unit: "₹ crore per project", format: (v) => formatCrore(v), get: (r) => (r.count ? r.value / r.count : null), meaning: "CSR spent divided by projects. High values mean a few large projects; low values mean many small ones." },
+  { key: "latest", label: "CSR spent in latest year", unit: "₹ crore", format: (v) => formatCrore(v), get: (r) => r.latest ?? null, meaning: "CSR spent in the most recent financial year only, to see where money is going now." },
+  { key: "yoy", label: "Growth on previous year", unit: "%", format: (v) => formatSignedPercent(v), get: (r) => (typeof r.yoyGrowthPct === "number" ? r.yoyGrowthPct : null), meaning: "Change in CSR spent from the previous year to the latest year. Positive is rising, negative is falling; small bases can show big %." },
+  { key: "share", label: "Share of CSR spent", unit: "%", format: (v) => `${v.toFixed(1)}%`, get: (r) => (typeof r.share === "number" ? r.share * 100 : null), meaning: "Each region's slice of all CSR spent in the selection. Shows how concentrated the money is." },
+  { key: "districts", label: "Districts reached", unit: "districts", format: (v) => formatNumber(v), get: (r) => r.districts ?? null, stateOnly: true, meaning: "How many districts in the state received at least one CSR project. Shows how widely money spreads inside a state." },
 ];
+
+/** What each view shows, how to read it, and what it is useful for — shown under the controls. */
+const VIEW_GUIDE: Record<View, { title: string; what: string; read: string; use: string }> = {
+  map: {
+    title: "Map",
+    what: "India coloured by the chosen indicator, one shade per state.",
+    read: "Darker violet = higher value, lighter = lower. Hover a state for its exact figure; the lists beside the map rank the highest and lowest.",
+    use: "Spot geographic gaps at a glance: states that get little CSR, or regions where money clusters. Click a state to filter every page to it.",
+  },
+  comparison: {
+    title: "Regional comparison",
+    what: "Every region drawn as a box whose size matches its value, so you see each one's share of the whole.",
+    read: "Bigger box = larger value. A few huge boxes mean the money is concentrated; many similar boxes mean it is spread evenly. Top 5 / Bottom 5 zoom in on the ends.",
+    use: "Show how unevenly CSR is distributed and pick out the regions or sectors that lead or lag — useful for targeting and for pitch decks.",
+  },
+  correlation: {
+    title: "Correlation",
+    what: "Each region as a dot, placed by two indicators at once (X across, Y up). Dot size shows CSR spent.",
+    read: "Dots rising left-to-right = the two move together (r near +1). No pattern = unrelated (r near 0). Dots far from the rest are outliers worth checking.",
+    use: "Test a hunch, e.g. do states with more projects get more money, or do some get big budgets from few companies? It shows association, not cause.",
+  },
+  report: {
+    title: "Make your own report",
+    what: "A heat-map table: regions as rows, your chosen indicators (or years) as columns.",
+    read: "Within each column, darker = higher. Read across a row to see a region's full profile; read down a column to rank regions on one measure.",
+    use: "Build a custom comparison for a client or proposal, then Download CSV to use it in Excel or a deck.",
+  },
+};
 
 const NON_REGION = new Set(["Pan India", "Not Specified", "District Not Classified Elsewhere", "Not Mentioned"]);
 
@@ -261,6 +291,11 @@ export function ExploreDataView() {
               </div>
             ) : null}
           </div>
+          <ViewGuide
+            guide={VIEW_GUIDE[view]}
+            indicators={view === "correlation" ? [indicatorOf(xKey), indicatorOf(yKey)] : view === "report" ? [] : [indicator]}
+            unitPlural={unitInfo.plural.toLowerCase()}
+          />
         </CardContent>
       </Card>
 
@@ -394,6 +429,39 @@ export function ExploreDataView() {
         Source: project-wise CSR filings, MCA National CSR Portal (csr.gov.in). Pan-India and unspecified locations are left out of regional views.
       </p>
     </PageFrame>
+  );
+}
+
+/** "About this view" strip: what it shows, how to read it, how it helps, plus what the indicator means. */
+function ViewGuide({ guide, indicators, unitPlural }: { guide: (typeof VIEW_GUIDE)[View]; indicators: Indicator[]; unitPlural: string }) {
+  const blocks = [
+    { heading: "What it shows", text: guide.what },
+    { heading: "How to read it", text: guide.read },
+    { heading: "How it helps", text: guide.use },
+  ];
+  return (
+    <div className="rounded-lg border px-4 py-3" style={{ background: "color-mix(in srgb, var(--c1) 5%, var(--surface))" }}>
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide" style={{ color: "var(--c1)" }}>
+        About this view: {guide.title} · comparing {unitPlural}
+      </p>
+      <div className="grid gap-3 md:grid-cols-3">
+        {blocks.map((block) => (
+          <div key={block.heading}>
+            <p className="text-[12px] font-semibold">{block.heading}</p>
+            <p className="text-[12.5px] leading-relaxed text-muted-foreground">{block.text}</p>
+          </div>
+        ))}
+      </div>
+      {indicators.length ? (
+        <div className="mt-2.5 border-t pt-2 text-[12px] text-muted-foreground">
+          {indicators.map((item, index) => (
+            <p key={`${item.key}-${index}`}>
+              <strong className="text-[var(--text)]">{indicators.length > 1 ? (index === 0 ? "X axis · " : "Y axis · ") : ""}{item.label} ({item.unit}):</strong> {item.meaning}
+            </p>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
