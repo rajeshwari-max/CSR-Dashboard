@@ -144,15 +144,10 @@ export function AiInsightsView() {
               <TrendingUp className="size-4 text-primary" />
               What the data says
             </CardTitle>
-            <CardDescription>
-              Every figure below is computed directly from the fact table — no model involved
-            </CardDescription>
           </div>
           {data?.llm.available ? (
             <Badge variant="outline">{data.llm.model}</Badge>
-          ) : (
-            <Badge variant="muted">Deterministic</Badge>
-          )}
+          ) : null}
         </CardHeader>
         <CardContent className="space-y-2.5">
           {insights.isLoading ? (
@@ -233,7 +228,7 @@ export function AiInsightsView() {
           <CardHeader>
             <div>
               <CardTitle>Projection Detail</CardTitle>
-              <CardDescription>Linear fit over annual totals</CardDescription>
+              <CardDescription>Estimated next-year CSR spent</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
@@ -245,14 +240,6 @@ export function AiInsightsView() {
                   : "—"}
               </span>
             </div>
-            <div className="flex items-baseline justify-between">
-              <span className="text-xs text-muted-foreground">Goodness of fit (R²)</span>
-              <span className="numeric text-[13px] font-semibold">{data?.forecast.r2?.toFixed(3) ?? "—"}</span>
-            </div>
-            <p className="rounded-lg bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
-              <strong className="text-foreground">Projected means estimated, not reported.</strong>{" "}
-              {data?.forecast.caveat}
-            </p>
           </CardContent>
         </Card>
       </div>
@@ -419,7 +406,7 @@ export function AiInsightsView() {
             <CardDescription>
               {data?.llm.available
                 ? `Answered free by the built-in engine first; ${data.llm.model} steps in automatically for questions it can't answer reliably (explanations, comparisons, partners, unspent CSR)`
-                : "Answered by the built-in deterministic query engine using the current selection"}
+                : "Answers use the current filter selection"}
             </CardDescription>
           </div>
         </CardHeader>

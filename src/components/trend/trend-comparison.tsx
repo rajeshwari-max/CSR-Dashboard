@@ -204,11 +204,6 @@ export function TrendComparison({ filterQuery }: { filterQuery: string }) {
               })}
             </tbody>
           </table>
-          <p className="muted" style={{ fontSize: 11.5, marginTop: 8 }}>
-            Top 15 by total amount spent in the current selection. “Change over period” runs from the first year with spending
-            to the latest year. The number of companies filing changes from year to year, so read changes alongside the
-            company counts in the table below.
-          </p>
         </div>
       ) : null}
     </div>

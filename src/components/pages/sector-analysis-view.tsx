@@ -464,9 +464,6 @@ function SectorDrilldown({ sectors, filterQuery }: { sectors: string[]; filterQu
                 </tbody>
               </table>
             </div>
-            <p className="text-[11px] text-muted-foreground">
-              Bars: total CSR spent by all {sector} companies each year. Table: top 15 companies by CSR spent; Download gives the top 30.
-            </p>
           </>
         )}
       </CardContent>

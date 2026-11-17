@@ -103,7 +103,7 @@ export function buildForecast(trend: TrendPoint[]) {
     points,
     method:
       trend.length >= 3
-        ? "Ordinary least squares on annual totals"
+        ? "Trend of annual totals"
         : "Linear extrapolation (fewer than 3 years of history)",
     caveat:
       trend.length < 4
@@ -419,24 +419,9 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
       severity: noSpend > rows.length * 0.05 ? "warning" : "neutral",
     },
     {
-      label: "Duplicate rows removed at ingest (dataset)",
-      value: Number(stats.duplicates_removed ?? 0).toLocaleString("en-IN"),
-      severity: "neutral",
-    },
-    {
-      label: "Sector backfilled at ingest (dataset)",
-      value: Number(stats.sector_backfilled ?? 0).toLocaleString("en-IN"),
-      severity: "neutral",
-    },
-    {
       label: "Unclassified sector rows",
       value: unclassifiedSector.toLocaleString("en-IN"),
       severity: unclassifiedSector > 0 ? "warning" : "positive",
-    },
-    {
-      label: "Project outlay column",
-      value: "Repeats company totals in part of FY 2020-21 — not summable",
-      severity: "warning",
     },
   ];
 

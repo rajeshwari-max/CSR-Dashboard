@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
@@ -64,7 +64,7 @@ const AXIS_LABEL = { fontSize: 11, fill: "var(--text-soft)" } as const;
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   const descriptions: Record<string, string> = {
     "CSR Spent in Aspirational Districts": "Project spending in NITI Aayog's aspirational districts over the selected years. Compare its share with the total CSR spent in this view.",
-    "Population Share of These Districts": "Reference population share for all 112 aspirational districts; a benchmark, not a CSR spending target.",
+    "Companies Funding Them": "Companies with at least one CSR project in an aspirational district in this view.",
     "Aspirational Districts Reached": "Number of official aspirational districts named in the selected project filings, out of 112.",
     "Largest Contributor": "Company with the highest reported project spending in aspirational districts in this view.",
     "Prescribed CSR Obligation": "CSR obligation companies reported in their annual-report CSR annexures for the selected years.",
@@ -160,13 +160,13 @@ export function PolicyInsightsView() {
       <SectionLabel>Aspirational districts</SectionLabel>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Stat label="CSR Spent in Aspirational Districts" value={formatCrore(p?.aspirational.total ?? 0)} sub={`${formatShare(p?.aspirational.share ?? 0)} of spent in view`} />
-        <Stat label="Population Share of These Districts" value={`Over ${formatShare(p?.aspirational.populationShare ?? 0)}`} sub="Of India’s population (NITI concept note)" />
-        <Stat label="Aspirational Districts Reached" value={`${formatNumber(p?.aspirational.districtsReached ?? 0)} of ${p?.aspirational.officialCount ?? 112}`} sub="Named in project filings" />
+        <Stat label="Companies Funding Them" value={formatNumber(p?.aspirational.companies ?? 0)} sub="With projects in aspirational districts" />
+        <Stat label="Aspirational Districts Reached" value={`${formatNumber(p?.aspirational.districtsReached ?? 0)} of ${p?.aspirational.officialCount ?? 112}`} sub="Received at least one CSR project" />
         <Stat label="Largest Contributor" value={p?.aspirational.topCompanies[0]?.name ?? "—"} sub={p?.aspirational.topCompanies[0] ? formatCrore(p.aspirational.topCompanies[0].value) : undefined} />
       </div>
       <ChartCard
         title="Share of CSR Spent Reaching Aspirational Districts"
-        description="Share of each year's CSR spent that went to NITI Aayog's 112 aspirational districts, against their share of India's population (dashed line)"
+        description="Share of each year's CSR spent that went to NITI Aayog's 112 aspirational districts"
         height={300}
         isLoading={policy.isLoading}
         error={policy.error}
@@ -178,7 +178,6 @@ export function PolicyInsightsView() {
             <XAxis dataKey="label" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -14, style: AXIS_LABEL }} />
             <YAxis {...AXIS_PROPS} unit="%" domain={[0, 16]} label={{ value: "% of CSR spent", angle: -90, position: "insideLeft", offset: 0, style: AXIS_LABEL }} />
             <Tooltip {...TOOLTIP_STYLES} formatter={(value: number, _name: string, item: { payload?: { spend?: number } }) => [`${value}% (${formatCrore(item.payload?.spend ?? 0)})`, "Share of spent"]} />
-            <ReferenceLine y={Math.round((p?.aspirational.populationShare ?? 0.15) * 100)} stroke="var(--text-soft)" strokeDasharray="5 4" label={{ value: "Population share", position: "insideTopRight", fontSize: 11, fill: "var(--text-soft)" }} />
             <Bar dataKey="pct" fill="var(--c2)" radius={[6, 6, 0, 0]} maxBarSize={52} />
           </BarChart>
         </ResponsiveContainer>
@@ -217,7 +216,6 @@ export function PolicyInsightsView() {
           </Card>
         ))}
       </div>
-      <p className="text-[12px] text-muted-foreground">Found from words in project names (e.g. “relief”, “COVID”, “preparedness”, “divyang”, “disability”), so treat these as close estimates; one project can carry more than one tag.</p>
 
       <div id="unspent-csr" className="scroll-mt-32"><SectionLabel>Unspent CSR and impact assessment</SectionLabel></div>
       {!annexureScopeSupported ? (

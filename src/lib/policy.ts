@@ -120,6 +120,7 @@ export function buildPolicyInsights(filters: Filters) {
     districtsReached: aspDistricts.size,
     byYear: years.map((year) => ({ year, spend: round(aspByYear.get(year) ?? 0), share: (aspByYear.get(year) ?? 0) / (yearSpend.get(year) || 1) })),
     topCompanies: topCompanies(aspRows, 5),
+    companies: new Set(aspRows.map((row) => data.companyIdx[row])).size,
   };
 
   // 4. focus tags from project names ---------------------------------------------------

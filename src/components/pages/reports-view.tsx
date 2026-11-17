@@ -119,7 +119,6 @@ export function ReportsView() {
           <Figure label="Projects" value={formatNumber(summary.data?.filteredRows ?? 0)} />
           <Figure label="Total amount spent" value={formatCrore(kpis?.totalSpend ?? 0)} />
           <Figure label="Companies" value={formatNumber(kpis?.companyCount ?? 0)} />
-          <Figure label="Years" value={meta.data?.years.join(", ") ?? "—"} />
         </CardContent>
       </Card>
 

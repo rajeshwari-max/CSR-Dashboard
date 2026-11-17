@@ -115,10 +115,6 @@ export function StateAnalysisView() {
                   muted
                 />
               ))}
-              <p className="pt-1 text-xs text-muted-foreground">
-                Rows filed as &ldquo;Pan India&rdquo; or with no state cannot be mapped, so the choropleth covers{" "}
-                {formatShare(totalMapped / Math.max(1, summary.data?.kpis.totalSpend ?? 1))} of amount spent in this view.
-              </p>
             </CardContent>
           </Card>
 

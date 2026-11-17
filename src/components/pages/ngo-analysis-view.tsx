@@ -73,11 +73,6 @@ export function NgoAnalysisView() {
           ) : null}
         </div>
       ) : null}
-      <Card className="border-dashed p-4 text-[13px] leading-relaxed text-muted-foreground">
-        <strong className="text-foreground">Source.</strong> Agency names and CSR-1 registration numbers are taken from the
-        Annexure on CSR activities in each company&apos;s annual report (filed on NSE). The MCA National CSR Portal
-        (csr.gov.in) records only the delivery channel, shown below.
-      </Card>
 
       <SectionLabel>Delivery channel</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
