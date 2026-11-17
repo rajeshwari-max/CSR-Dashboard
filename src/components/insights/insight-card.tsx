@@ -50,7 +50,7 @@ export function AiInsightCard({
         <div className="card-head">
           <div>
             <ExplainedTitle title="Automated Data Insights" />
-            <div className="muted">Formula-driven · current selection</div>
+            <div className="muted">Current selection</div>
           </div>
           <span className="card-badge purple">
             <Sparkles width={9} height={9} style={{ marginRight: 3, display: "inline" }} />

@@ -67,11 +67,11 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
     "Population Share of These Districts": "Reference population share for all 112 aspirational districts; a benchmark, not a CSR spending target.",
     "Aspirational Districts Reached": "Number of official aspirational districts named in the selected project filings, out of 112.",
     "Largest Contributor": "Company with the highest reported project spending in aspirational districts in this view.",
-    "Prescribed CSR Obligation": "Sum of the prescribed CSR obligation reported in company annexures for the selected years.",
-    "Unspent CSR": "Sum of amounts reported as unspent in company annexures for the selected years. This is not a single-year outstanding balance.",
+    "Prescribed CSR Obligation": "CSR obligation companies reported in their annual-report CSR annexures for the selected years.",
+    "Unspent CSR": "CSR amount companies reported as unspent in their CSR annexures for the selected years.",
     "Impact Assessment": "Amount reported for impact assessments in the selected company annexures; separate from project spending.",
     "Implementing Agencies": "Distinct organisations named as project implementers in company annexures.",
-    "Amount Routed through Them": "Sum of amounts assigned to named partner rows where an amount is disclosed.",
+    "Amount Routed through Them": "CSR amount companies reported as routed through named partners.",
     "Companies Naming Partners": "Distinct companies that name at least one partner in the selected annexures.",
     "Largest Partner": "Implementing organisation with the largest disclosed amount in the selected partner rows.",
     "Most-used Partner": "Implementing organisation named by the most companies where partner amounts are unavailable.",
@@ -154,7 +154,6 @@ export function PolicyInsightsView() {
               </p>
             </button>
           ))}
-          <p className="px-2 text-[11px] text-muted-foreground">Ownership from public shareholding (list kept in src/lib/reference/ownership.json). Public sector banks file few project lines in this register.</p>
         </div>
       </ChartCard>
 
@@ -221,7 +220,6 @@ export function PolicyInsightsView() {
       <p className="text-[12px] text-muted-foreground">Found from words in project names (e.g. “relief”, “COVID”, “preparedness”, “divyang”, “disability”), so treat these as close estimates; one project can carry more than one tag.</p>
 
       <div id="unspent-csr" className="scroll-mt-32"><SectionLabel>Unspent CSR and impact assessment</SectionLabel></div>
-      <p className="mb-4 text-[12px] text-muted-foreground">These figures come from company CSR annexures for {p?.years.length ? `${p.years[0]}${p.years.length > 1 ? ` to ${p.years[p.years.length - 1]}` : ""}` : "the selected years"}. Amounts add annual filings; the unspent total is not one current outstanding balance.</p>
       {!annexureScopeSupported ? (
         <p className="mb-5 rounded-lg border px-4 py-3 text-[12.5px] text-muted-foreground">Unspent CSR is reported for whole companies, so it cannot be split by location, project theme, implementation mode, search text, aspirational status or project amount. Clear those filters to see a reliable company and year total.</p>
       ) : p?.financials ? (

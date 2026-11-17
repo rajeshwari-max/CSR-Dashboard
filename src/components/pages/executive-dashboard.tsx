@@ -79,12 +79,11 @@ export function ExecutiveDashboard() {
       <KpiRow kpis={kpis} meta={meta.data} isLoading={summary.isLoading} />
       <Link href={`/policy-insights?${filterQuery}#unspent-csr`} className="card hoverable" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, marginBottom: 26, padding: "18px 22px", textDecoration: "none" }}>
         <div>
-          <div className="kpi-label" style={{ marginBottom: 5 }}>Unspent CSR reported in company annexures · {annexurePeriod}</div>
-          <div className="muted" style={{ fontSize: 12.5 }}>Sum of annual unspent amounts, not one current balance. Open Policy Insights for the yearly breakdown and company list.</div>
+          <div className="kpi-label" style={{ marginBottom: 5 }}>Unspent CSR · {annexurePeriod}</div>
         </div>
         <div style={{ flexShrink: 0, textAlign: "right" }}>
           <div className="kpi-value" style={{ fontSize: 25 }}>{!annexureScopeSupported ? "—" : policy.isLoading ? "Loading…" : policy.error ? "Could not load" : policy.data?.financials ? formatCrore(policy.data.financials.unspent) : "Unavailable"}</div>
-          <div className="muted" style={{ fontSize: 12 }}>{!annexureScopeSupported ? "Clear project or location filters · View details →" : policy.data?.financials ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · View details →` : "Annexure data required"}</div>
+          <div className="muted" style={{ fontSize: 12 }}>{!annexureScopeSupported ? "Not available for location filters" : policy.data?.financials ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · View details →` : "No annexure data"}</div>
         </div>
       </Link>
       {/* Feedback asked whether "CSR spent" covers evaluation too; answer it on the page, not only in a tooltip. */}

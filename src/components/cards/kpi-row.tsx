@@ -43,7 +43,7 @@ export function describeKpiPeriod(reportingYears: string[], selectedYears: strin
     : years.length === 1
       ? "Only year"
       : earlierYears.length
-        ? `Default ${years.length} years`
+        ? `${years.length} years`
         : `All ${years.length} years`;
   return { range, tag, filtered, count: years.length };
 }
@@ -143,7 +143,7 @@ export function KpiRow({
           // a "Beneficiaries Reached" column is uploaded.
           label: "Districts Reached by Reported CSR Projects",
           value: formatNumber(kpis.districtCount),
-          sub: "States and UTs across India",
+          sub: "With a recorded district location",
           icon: MapPinned,
           tip: "Distinct districts reached by projects that include a recorded district location.",
         },

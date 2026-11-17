@@ -2,16 +2,9 @@
 
 import * as React from "react";
 import {
-  CartesianGrid,
-  LabelList,
   ResponsiveContainer,
-  Scatter,
-  ScatterChart,
   Tooltip,
   Treemap,
-  XAxis,
-  YAxis,
-  ZAxis,
 } from "recharts";
 import { Download } from "lucide-react";
 
@@ -27,13 +20,13 @@ import type { BreakdownResponse, Dimension, NamedValue } from "@/types";
 
 /**
  * "Indicator Explorer", modelled on the NITI for States Data Explorer: pick an
- * indicator, then view it four ways — Map, Regional Comparison, Correlation and
+ * indicator, then view it three ways — Map, Regional Comparison and
  * Make your own report (heat map). Built on the same /api/breakdown group-by as
  * the other pages, so every filter in the bar applies.
  */
 
 type Unit = "state" | "sector" | "theme" | "district";
-type View = "map" | "comparison" | "correlation" | "report";
+type View = "map" | "comparison" | "report";
 type LabelMode = "all" | "high" | "low";
 
 const UNITS: { key: Unit; label: string; plural: string }[] = [
@@ -84,12 +77,6 @@ const VIEW_GUIDE: Record<View, { title: string; what: string; read: string; use:
     read: "Bigger box = larger value. A few huge boxes mean the money is concentrated; many similar boxes mean it is spread evenly. Top 5 / Bottom 5 zoom in on the ends.",
     use: "Show how unevenly CSR is distributed and pick out the regions or sectors that lead or lag — useful for targeting and for pitch decks.",
   },
-  correlation: {
-    title: "Correlation",
-    what: "Each region as a dot, placed by two indicators at once (X across, Y up). Dot size shows CSR spent.",
-    read: "Dots rising left-to-right = the two move together (r near +1). No pattern = unrelated (r near 0). Dots far from the rest are outliers worth checking.",
-    use: "Test a hunch, e.g. do states with more projects get more money, or do some get big budgets from few companies? It shows association, not cause.",
-  },
   report: {
     title: "Make your own report",
     what: "A heat-map table: regions as rows, your chosen indicators (or years) as columns.",
@@ -118,28 +105,6 @@ function heat(t: number) {
   const r = c - i;
   const mix = stops[i].map((v, k) => Math.round(v + (stops[i + 1][k] - v) * r));
   return { background: `rgb(${mix.join(" ")})`, color: t > 0.55 ? "#fff" : "var(--text)" };
-}
-
-function pearson(points: { x: number; y: number }[]) {
-  const n = points.length;
-  if (n < 3) return null;
-  const mx = points.reduce((s, p) => s + p.x, 0) / n;
-  const my = points.reduce((s, p) => s + p.y, 0) / n;
-  let sxy = 0;
-  let sxx = 0;
-  let syy = 0;
-  for (const p of points) {
-    sxy += (p.x - mx) * (p.y - my);
-    sxx += (p.x - mx) ** 2;
-    syy += (p.y - my) ** 2;
-  }
-  return sxx && syy ? sxy / Math.sqrt(sxx * syy) : null;
-}
-
-function strength(r: number) {
-  const a = Math.abs(r);
-  const word = a >= 0.7 ? "strong" : a >= 0.4 ? "moderate" : a >= 0.2 ? "weak" : "no clear";
-  return `${word}${a >= 0.2 ? (r > 0 ? " positive" : " negative") : ""} relationship`;
 }
 
 function Segmented<T extends string>({ value, options, onChange }: { value: T; options: { key: T; label: string }[]; onChange: (value: T) => void }) {
@@ -181,8 +146,6 @@ export function ExploreDataView() {
   const [unit, setUnit] = React.useState<Unit>("state");
   const [view, setView] = React.useState<View>("map");
   const [indicatorKey, setIndicatorKey] = React.useState("spend");
-  const [xKey, setXKey] = React.useState("projects");
-  const [yKey, setYKey] = React.useState("spend");
   const [labels, setLabels] = React.useState<LabelMode>("all");
   const [reportCols, setReportCols] = React.useState<string[]>(["spend", "projects", "companies", "avg", "yoy"]);
   const [reportMode, setReportMode] = React.useState<"indicators" | "years">("indicators");
@@ -196,10 +159,8 @@ export function ExploreDataView() {
   const available = React.useMemo(() => INDICATORS.filter((indicator) => !indicator.stateOnly || unit === "state"), [unit]);
   React.useEffect(() => {
     if (!available.some((i) => i.key === indicatorKey)) setIndicatorKey("spend");
-    if (!available.some((i) => i.key === xKey)) setXKey("projects");
-    if (!available.some((i) => i.key === yKey)) setYKey("spend");
     setReportCols((cols) => cols.filter((c) => available.some((i) => i.key === c)));
-  }, [available, indicatorKey, xKey, yKey]);
+  }, [available, indicatorKey]);
   React.useEffect(() => {
     if (unit !== "state" && view === "map") setView("comparison");
   }, [unit, view]);
@@ -249,14 +210,13 @@ export function ExploreDataView() {
   const viewOptions: { key: View; label: string }[] = [
     ...(unit === "state" ? [{ key: "map" as View, label: "Map" }] : []),
     { key: "comparison", label: "Regional comparison" },
-    { key: "correlation", label: "Correlation" },
     { key: "report", label: "Make your own report" },
   ];
 
   return (
     <PageFrame
       title="Indicator Explorer"
-      subtitle={`Pick an indicator and view it four ways · ${scope}`}
+      subtitle={`Pick an indicator and view it three ways · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -269,14 +229,8 @@ export function ExploreDataView() {
         <CardContent className="flex flex-col gap-4 pt-5">
           <div className="flex flex-wrap items-end gap-4">
             <Picker label="Compare by" value={unit} options={UNITS.map((u) => ({ key: u.key, label: u.plural }))} onChange={(v) => setUnit(v as Unit)} />
-            {view !== "correlation" && view !== "report" ? (
+            {view !== "report" ? (
               <Picker label="Indicator" value={indicatorKey} options={available.map((i) => ({ key: i.key, label: `${i.label} (${i.unit})` }))} onChange={setIndicatorKey} />
-            ) : null}
-            {view === "correlation" ? (
-              <>
-                <Picker label="X axis" value={xKey} options={available.map((i) => ({ key: i.key, label: `${i.label} (${i.unit})` }))} onChange={setXKey} />
-                <Picker label="Y axis" value={yKey} options={available.map((i) => ({ key: i.key, label: `${i.label} (${i.unit})` }))} onChange={setYKey} />
-              </>
             ) : null}
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -284,7 +238,7 @@ export function ExploreDataView() {
               <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Visualise by</span>
               <Segmented value={view} options={viewOptions} onChange={setView} />
             </div>
-            {view === "comparison" || view === "correlation" ? (
+            {view === "comparison" ? (
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Show</span>
                 <Segmented value={labels} options={[{ key: "all", label: "All" }, { key: "high", label: "Top 5" }, { key: "low", label: "Bottom 5" }]} onChange={setLabels} />
@@ -293,7 +247,7 @@ export function ExploreDataView() {
           </div>
           <ViewGuide
             guide={VIEW_GUIDE[view]}
-            indicators={view === "correlation" ? [indicatorOf(xKey), indicatorOf(yKey)] : view === "report" ? [] : [indicator]}
+            indicators={view === "report" ? [] : [indicator]}
             unitPlural={unitInfo.plural.toLowerCase()}
           />
         </CardContent>
@@ -343,7 +297,7 @@ export function ExploreDataView() {
             </CardHeader>
             <CardContent className="h-[520px] pb-5">
               {indicator.key === "yoy" ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">Growth can be negative, so it cannot be shown as box sizes. Use Correlation or Make your own report for this indicator.</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">Growth can be negative, so it cannot be shown as box sizes. Use Make your own report for this indicator.</p>
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <Treemap
@@ -364,15 +318,6 @@ export function ExploreDataView() {
         </>
       ) : null}
 
-      {view === "correlation" ? (
-        <CorrelationCard
-          rows={rows}
-          x={indicatorOf(xKey)}
-          y={indicatorOf(yKey)}
-          unitLabel={unitInfo.plural.toLowerCase()}
-          labelMode={labels}
-        />
-      ) : null}
 
       {view === "report" ? (
         <>
@@ -525,104 +470,6 @@ function CompareNode({ x = 0, y = 0, width = 0, height = 0, index = 0, name = ""
         </>
       ) : null}
     </g>
-  );
-}
-
-/** Plain-English reading of a correlation, for readers who don't use r every day. */
-function interpret(r: number, x: Indicator, y: Indicator, unitLabel: string) {
-  const a = Math.abs(r);
-  const shared = Math.round(r * r * 100);
-  const lc = (text: string) => (/^[A-Z]{2,}/.test(text) ? text : text.charAt(0).toLowerCase() + text.slice(1));
-  const xl = lc(x.label);
-  const yl = lc(y.label);
-  if (a < 0.2) return `Knowing a region's ${xl} tells you little about its ${yl}: the dots show no clear pattern.`;
-  const direction = r > 0 ? `${unitLabel} with higher ${xl} usually also have higher ${yl}` : `${unitLabel} with higher ${xl} usually have lower ${yl}`;
-  return `${direction.charAt(0).toUpperCase()}${direction.slice(1)}. About ${shared}% of the differences in ${yl} line up with ${xl}.`;
-}
-
-function CorrelationCard({ rows, x, y, unitLabel, labelMode }: { rows: Row[]; x: Indicator; y: Indicator; unitLabel: string; labelMode: LabelMode }) {
-  const points = rows
-    .map((row) => ({ name: row.name, x: x.get(row), y: y.get(row), size: row.value }))
-    .filter((p): p is { name: string; x: number; y: number; size: number } => p.x !== null && p.y !== null && Number.isFinite(p.x) && Number.isFinite(p.y));
-  const r = pearson(points);
-  const byY = [...points].sort((a, b) => b.y - a.y);
-  // Top 5 / Bottom 5 (by the Y-axis value) are highlighted and labelled; the other dots stay,
-  // faded, because r is measured across all of them. "All" labels every dot up to 40 regions.
-  const focus =
-    labelMode === "high" ? new Set(byY.slice(0, 5).map((p) => p.name))
-    : labelMode === "low" ? new Set(byY.slice(-5).map((p) => p.name))
-    : new Set(byY.slice(0, 10).map((p) => p.name));
-  // Names are drawn on the chart only for the high end, where dots are spread out; the low
-  // end bunches near zero, so its names are listed under the chart instead of overlapping.
-  const onChartLabels = labelMode !== "low";
-  const highlighted = points.filter((p) => focus.has(p.name)).map((p) => ({ ...p, label: onChartLabels ? p.name : "" }));
-  const focusList = byY.filter((p) => focus.has(p.name));
-  const others = points.filter((p) => !focus.has(p.name)).map((p) => ({ ...p, label: "" }));
-  return (
-    <>
-      <SectionLabel>Correlation</SectionLabel>
-      <Card>
-        <CardHeader>
-          <div>
-            <CardTitle>{y.label} vs {x.label}</CardTitle>
-            <CardDescription>
-              Each dot is one of {points.length} {unitLabel}; dot size shows CSR spent.
-              {labelMode === "high" ? " Highlighted: the 5 highest on the Y axis." : labelMode === "low" ? " Highlighted: the 5 lowest on the Y axis." : " Named: the 10 highest on the Y axis."}
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3 pb-5">
-          {r !== null ? (
-            <div className="rounded-lg border px-3 py-2 text-[12.5px]" style={{ background: "var(--surface-2)" }}>
-              <p>
-                <strong>How to read this: r = {r.toFixed(2)}, a {strength(r)}.</strong> {interpret(r, x, y, unitLabel)}
-              </p>
-              <p className="mt-1 text-muted-foreground">
-                r runs from −1 to +1: near +1 the dots rise together in a line, near 0 there is no pattern, near −1 one falls as the other rises.
-                It shows that the two move together, not that one causes the other, and one very large region can pull it up, so hover the dots far from the rest.
-              </p>
-            </div>
-          ) : (
-            <p className="text-[12.5px] text-muted-foreground">Not enough points to measure a relationship.</p>
-          )}
-          <div className="h-[480px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart margin={{ top: 16, right: 24, bottom: 28, left: 24 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" name={x.label} {...AXIS_PROPS} tickFormatter={(v: number) => x.format(v)} label={{ value: `${x.label} (${x.unit})`, position: "insideBottom", offset: -16, style: { fontSize: 11, fill: "var(--text-soft)" } }} />
-              <YAxis type="number" dataKey="y" name={y.label} {...AXIS_PROPS} width={78} tickFormatter={(v: number) => y.format(v)} label={{ value: `${y.label} (${y.unit})`, angle: -90, position: "insideLeft", offset: -12, style: { fontSize: 11, fill: "var(--text-soft)" } }} />
-              <ZAxis type="number" dataKey="size" range={[40, 420]} />
-              <Tooltip
-                {...TOOLTIP_STYLES}
-                content={({ payload }) => {
-                  const p = payload?.[0]?.payload as { name: string; x: number; y: number } | undefined;
-                  if (!p) return null;
-                  return (
-                    <div style={{ ...TOOLTIP_STYLES.contentStyle, padding: "8px 10px" }}>
-                      <p style={{ fontWeight: 600 }}>{p.name}</p>
-                      <p>{x.label}: {x.format(p.x)}</p>
-                      <p>{y.label}: {y.format(p.y)}</p>
-                    </div>
-                  );
-                }}
-              />
-              <Scatter data={others} fill="var(--text-soft)" fillOpacity={0.25} />
-              <Scatter data={highlighted} fill="var(--c1)" fillOpacity={0.8} stroke="var(--c2)">
-                <LabelList dataKey="label" position="top" style={{ fontSize: 10.5, fill: "var(--text)" }} />
-              </Scatter>
-            </ScatterChart>
-          </ResponsiveContainer>
-          </div>
-          <div className="flex flex-wrap gap-2 text-[12px]">
-            {focusList.map((p) => (
-              <span key={p.name} className="rounded-full border px-2.5 py-1">
-                <strong>{p.name}</strong> · {x.format(p.x)} · {y.format(p.y)}
-              </span>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </>
   );
 }
 

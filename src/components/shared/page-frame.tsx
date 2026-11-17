@@ -30,20 +30,6 @@ interface PageFrameProps {
   children: React.ReactNode;
 }
 
-const PAGE_GUIDANCE: Record<string, string> = {
-  "Company Analysis": "See which companies fund CSR, compare peers, and open a company profile to understand its projects and locations.",
-  "State Analysis": "Compare where CSR projects were reported. Use the state and district views to identify geographic concentration and gaps.",
-  "Sector Analysis": "Compare CSR spending by the reporting companies' BRSR industry sector. A sector describes the funder, not the project's development theme.",
-  "Implementation Analysis": "See whether projects were delivered directly or through agencies, and which named partners appear in company annexures.",
-  "Policy Insights": "Compare this dataset with national CSR totals and examine ownership, aspirational districts, unspent amounts and partners. Use the source notes before comparing figures from different filings.",
-  "Indicator Explorer": "Choose one CSR measure, then compare places or sectors on a map, sized boxes, a correlation chart or a custom table. Larger values show more activity, not necessarily better outcomes.",
-  "Trend Analysis": "Follow CSR spending across financial years and compare changes. Check the selected years before interpreting growth or projections.",
-  "Reports": "Download a report for the current filter selection. Review the selected years and companies before sharing it.",
-  "AI Insights": "Explore patterns and ask questions about the selected CSR data. Check important answers against the linked charts and filings.",
-  "Data Explorer": "Inspect the underlying project records and their source fields. Use filters to verify a chart or find a specific filing.",
-  "Project Analytics": "Review one project's reported amount, location and theme, then use its source details to check the filing.",
-  "Data Upload": "Add new CSR data to the dashboard after checking the columns and source. Review the preview before importing records.",
-};
 
 /** One visual and filter shell for every analytical page. */
 export function PageFrame({
@@ -84,11 +70,6 @@ export function PageFrame({
           </div>
           {actions ? <div className="page-head-actions">{actions}</div> : null}
         </div>
-        {PAGE_GUIDANCE[title] ? (
-          <p className="mb-5 rounded-lg border px-4 py-3 text-[12.5px] leading-relaxed text-muted-foreground" style={{ background: "var(--surface)" }}>
-            <strong style={{ color: "var(--text)" }}>How to use this page: </strong>{PAGE_GUIDANCE[title]}
-          </p>
-        ) : null}
 
         {datasetMissing ? (
           <div className="card empty-state">

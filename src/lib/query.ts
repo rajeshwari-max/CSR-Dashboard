@@ -1,6 +1,6 @@
 /** Filter <-> URLSearchParams conversion shared by client fetchers and route handlers. */
 
-import { EMPTY_FILTERS, REPORTING_START_YEAR, type Filters, type SortDirection, type SortField } from "@/types";
+import { EMPTY_FILTERS, REPORTING_END_YEAR, REPORTING_START_YEAR, type Filters, type SortDirection, type SortField } from "@/types";
 
 export const LIST_KEYS = ["years", "sectors", "states", "districts", "themes", "companies", "modes", "ownership"] as const;
 export type ListKey = (typeof LIST_KEYS)[number];
@@ -90,7 +90,7 @@ export function describeFilters(filters: Filters): string {
   if (filters.years.length) parts.push(filters.years.join(", "));
   // No Year filter means the default reporting years, not every year held:
   // FY 2014-15 to FY 2019-20 are only included when picked.
-  else parts.push(`FY ${REPORTING_START_YEAR}-${String(REPORTING_START_YEAR + 1).slice(2)} onwards (default years)`);
+  else parts.push(`FY ${REPORTING_START_YEAR}-${String(REPORTING_START_YEAR + 1).slice(2)} to FY ${REPORTING_END_YEAR}-${String(REPORTING_END_YEAR + 1).slice(2)}`);
   if (filters.companies.length) parts.push(`${filters.companies.length} companies`);
   if (filters.sectors.length) parts.push(filters.sectors.join(", "));
   if (filters.states.length) parts.push(filters.states.join(", "));

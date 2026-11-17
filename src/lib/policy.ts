@@ -12,6 +12,16 @@ import type { Filters } from "@/types";
 
 const NATIONAL = nationalJson as { source: string; years: Record<string, number> };
 
+/** Annexure names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
+function dedupeName(raw: string): string {
+  const words = raw.trim().split(/\s+/);
+  if (words.length % 2 === 0) {
+    const half = words.length / 2;
+    if (words.slice(0, half).join(" ").toLowerCase() === words.slice(half).join(" ").toLowerCase()) return words.slice(0, half).join(" ");
+  }
+  return raw.trim();
+}
+
 interface Named { name: string; value: number; share?: number; count?: number }
 
 function topCompanies(rows: Iterable<number>, limit = 5): Named[] {
@@ -183,7 +193,7 @@ export function buildPolicyInsights(filters: Filters) {
   const par = (partnerStore?.records ?? []).filter(keep);
   const agencies = new Map<string, { name: string; role: string; value: number; companies: Set<string>; states: Set<string>; registration: string | null }>();
   for (const r of par) {
-    const name = String(r.agency);
+    const name = dedupeName(String(r.agency));
     // Rows uploaded before the Role column existed count as implementation.
     const role = partnerRole(r.role);
     // One agency is often spelt several ways across annexures; its CSR-1 registration

@@ -112,6 +112,8 @@ export interface Filters {
 
 /** Earliest financial year exposed by the application; later years are discovered from each dataset. */
 export const REPORTING_START_YEAR = 2020;
+/** Latest financial year in the data (FY 2024-25). */
+export const REPORTING_END_YEAR = 2024;
 
 export const EMPTY_FILTERS: Filters = {
   years: [],
