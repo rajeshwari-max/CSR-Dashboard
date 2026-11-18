@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { IndiaMap } from "@/components/charts/india-map";
-import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -66,7 +65,7 @@ export function StateAnalysisView() {
 
   return (
     <PageFrame
-      title="State Analysis"
+      title="Explore Geography"
       subtitle={`Geographic distribution of CSR spent · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
@@ -257,12 +256,6 @@ export function StateAnalysisView() {
         </CardContent>
       </Card>
 
-      <ProjectRegisterSection
-        filterQuery={filterQuery}
-        label="Projects behind these states"
-        description="Every disclosed project inside the current geographic scope. Click a state on the map or a row in the tables above to narrow it."
-        scopeSpend={summary.data?.kpis.totalSpend}
-      />
     </PageFrame>
   );
 }

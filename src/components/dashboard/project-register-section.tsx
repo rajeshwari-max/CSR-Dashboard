@@ -5,9 +5,7 @@ import * as React from "react";
 import { ProjectsTable } from "@/components/dashboard/projects-table";
 import { SectionLabel } from "@/components/shared/page-frame";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import type { ProjectsResponse, SortDirection, SortField } from "@/types";
 
 /**
@@ -28,7 +26,6 @@ export function ProjectRegisterSection({
   filterQuery,
   label = "Projects in this view",
   description,
-  scopeSpend,
   defaultPageSize = 25,
 }: {
   filterQuery: string;
@@ -56,30 +53,11 @@ export function ProjectRegisterSection({
     }
   };
 
-  const total = projects.data?.total ?? 0;
-  const spend = projects.data?.totalSpendInView ?? 0;
-  // Mean over the whole filtered set, not just the page on screen. Rows with no
-  // disclosed amount are still counted as projects, so this is spend per
-  // recorded project, not spend per project that disclosed a figure.
-  const average = total > 0 ? spend / total : 0;
-
   return (
     <>
       <SectionLabel>{label}</SectionLabel>
       {description ? <p className="-mt-2 text-xs text-muted-foreground">{description}</p> : null}
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <MiniStat label="Projects" value={formatNumber(total)} />
-        <MiniStat label="Amount spent in view" value={formatCrore(spend)} />
-        <MiniStat label="Average project" value={formatCrore(average)} />
-        <MiniStat
-          label="Share of scope"
-          value={
-            scopeSpend && scopeSpend > 0 ? formatShare(spend / scopeSpend) : formatNumber(pageSize)
-          }
-          hint={scopeSpend && scopeSpend > 0 ? "of amount spent shown above" : "rows per page"}
-        />
-      </div>
 
       <ProjectsTable
         data={projects.data}
@@ -94,16 +72,6 @@ export function ProjectRegisterSection({
         onPageSizeChange={setPageSize}
       />
     </>
-  );
-}
-
-function MiniStat({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  return (
-    <Card className="p-4">
-      <p className="kpi-label">{label}</p>
-      <p className="kpi-value mt-2 text-xl">{value}</p>
-      {hint ? <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p> : null}
-    </Card>
   );
 }
 

@@ -2,6 +2,8 @@
 
 import {
   Landmark,
+  BookOpen,
+  Target,
   Building2,
   Compass,
   Database,
@@ -32,4 +34,6 @@ export const ICONS: Record<string, LucideIcon> = {
   database: Database,
   upload: Upload,
   explore: Compass,
+  book: BookOpen,
+  target: Target,
 };

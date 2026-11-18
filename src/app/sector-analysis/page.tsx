@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { SectorAnalysisView } from "@/components/pages/sector-analysis-view";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
-export const metadata: Metadata = { title: "Sector Analysis · CMS CSR Intelligence" };
+export const metadata: Metadata = { title: "Explore Sectors · CMS CSR Intelligence" };
 export const dynamic = "force-dynamic";
 
 export default function Page() {

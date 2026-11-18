@@ -8,6 +8,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
 import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
+import { MainSection, PolicyInsightsSections } from "@/components/pages/policy-insights-view";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
@@ -70,8 +71,8 @@ export function CompanyAnalysisView() {
 
   return (
     <PageFrame
-      title="Company Analysis"
-      subtitle={`Search, benchmark and compare filers · ${scope}`}
+      title="CSR Insights"
+      subtitle={`Company analysis, CSR spending and unspent CSR · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -84,6 +85,9 @@ export function CompanyAnalysisView() {
       }}
       isRefreshing={summary.isValidating}
     >
+      <MainSection id="company-analysis" title="Company Analysis">
+        Search, benchmark and compare companies, and browse their CSR projects.
+      </MainSection>
       <SectionLabel>Company search and analysis</SectionLabel>
       <div>
         <Card>
@@ -256,8 +260,8 @@ export function CompanyAnalysisView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Companies by BRSR Sector</CardTitle>
-              <CardDescription>Filers and amount spent per BRSR sector in this view</CardDescription>
+              <CardTitle>Companies by Sector</CardTitle>
+              <CardDescription>Filers and amount spent per sector in this view</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -293,6 +297,8 @@ export function CompanyAnalysisView() {
         description="Every disclosed project inside the current scope. Use the Company filter above to narrow it."
         scopeSpend={summary.data?.kpis.totalSpend}
       />
+
+      <PolicyInsightsSections filters={filters} filterQuery={filterQuery} />
     </PageFrame>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Filter, RotateCcw, Search, Target, X } from "lucide-react";
+import { ChevronDown, ExternalLink, Filter, RotateCcw, Search, X } from "lucide-react";
 
 import { activeFilterCount } from "@/lib/query";
 import { useFilterStore, type ListKey } from "@/store/filters";
@@ -20,12 +20,37 @@ interface ChipSpec {
   /** Company chip stores ids but shows names. */
   valueLabel?: (meta: Meta, value: string) => string;
   optionValue?: (meta: Meta) => { value: string; label: string; hint?: string }[];
+  /** Short line at the top of the dropdown. */
+  note?: string;
+  /** What the filter does: shown on hover and at the top of the dropdown. */
+  info?: string;
+  /** Optional "learn more" link shown in the dropdown. */
+  infoLink?: { href: string; label: string };
+  /** Search box placeholder. */
+  placeholder?: string;
+  /** Show option hints on a second line (for longer explanations). */
+  hintBelow?: boolean;
 }
+
+/** Official Government of India explainer of CSR and the Schedule VII activities list. */
+export const SCHEDULE_VII_URL = "https://ies.gov.in/arthapedia/concept/corporate-social-responsibility-csr";
+
+/** What each delivery mode means, shown under it in the Implementing Agency dropdown. */
+const MODE_HINTS: Record<string, string> = {
+  "Directly by company": "The company runs the project itself",
+  "Other implementing agencies": "An external NGO or agency runs it for the company",
+  "Trust / Society / Sec-8 company (own)": "The company's own foundation or trust runs it",
+  "Trust / Society / Sec-8 company (government)": "A government-set-up trust or society runs it",
+  "Not Specified": "The company did not report how it was delivered",
+};
 
 const CHIPS: ChipSpec[] = [
   {
     key: "years",
-    label: "Year",
+    label: "Financial Year",
+    info: "Select the financial year or period for which you want to view CSR expenditure and project information.",
+    note: "Select one or more financial years.",
+    placeholder: "Search years…",
     options: (meta) => [...meta.years, ...(meta.earlierYears ?? [])],
     // FY 2020-21 onwards is the default view; earlier years are opt-in.
     optionValue: (meta) => [
@@ -33,18 +58,38 @@ const CHIPS: ChipSpec[] = [
       ...[...(meta.earlierYears ?? [])].reverse().map((year) => ({ value: year, label: year, hint: "Earlier year, not in default view" })),
     ],
   },
-  { key: "sectors", label: "Sector", options: (meta) => meta.sectors },
+  { key: "sectors", label: "Sector", info: "Filter by the industry sector of the company spending the CSR money (e.g. banking, oil & gas).", placeholder: "e.g. Banking, Oil & Gas, Technology", options: (meta) => meta.sectors },
   {
     key: "companies",
-    label: "Company",
+    label: "Company Name",
+    info: "Find one or more companies to see their CSR spending, projects and locations.",
+    placeholder: "Start typing a company name…",
     options: (meta) => meta.companies.map((company) => company.id),
     optionValue: (meta) =>
       meta.companies.map((company) => ({ value: company.id, label: company.name, hint: company.sector })),
     valueLabel: (meta, value) => meta.companies.find((company) => company.id === value)?.name ?? value,
   },
-  { key: "themes", label: "Domain", options: (meta) => meta.themes },
-  { key: "modes", label: "Implementation", options: (meta) => meta.modes },
-  { key: "ownership", label: "Ownership", options: (meta) => meta.ownerships ?? [] },
+  {
+    key: "themes",
+    label: "Domain",
+    info: "Explore corporate CSR contributions across sectors such as education, healthcare, environment and livelihoods.",
+    infoLink: { href: SCHEDULE_VII_URL, label: "What is Schedule VII?" },
+    options: (meta) => meta.themes,
+  },
+  {
+    key: "modes",
+    label: "Implementing Agency",
+    info: "Filter by how the CSR project was delivered: by the company itself, its foundation, or an external agency.",
+    hintBelow: true,
+    options: (meta) => meta.modes,
+    optionValue: (meta) => meta.modes.map((mode) => ({ value: mode, label: mode, hint: MODE_HINTS[mode] })),
+  },
+  {
+    key: "ownership",
+    label: "Company Ownership",
+    info: "Filter companies by ownership: public sector or private, based on their shareholding.",
+    options: (meta) => meta.ownerships ?? [],
+  },
 ];
 
 /**
@@ -80,6 +125,11 @@ export function FilterBar({
   const setValues = useFilterStore((state) => state.setValues);
   const setRange = useFilterStore((state) => state.setRange);
   const setAspirationalOnly = useFilterStore((state) => state.setAspirationalOnly);
+  // The aspirational-district filter now lives on the Aspirational Districts tab only;
+  // drop the old global flag if an older link or saved view still carries it.
+  React.useEffect(() => {
+    if (filters.aspirationalOnly) setAspirationalOnly(false);
+  }, [filters.aspirationalOnly, setAspirationalOnly]);
   const clearAll = useFilterStore((state) => state.clearAll);
   const barRef = React.useRef<HTMLDivElement>(null);
 
@@ -107,9 +157,10 @@ export function FilterBar({
             className={`select-chip${filters.states.length || filters.districts.length ? " active" : ""}`}
             onClick={() => setOpenChip(openChip === "location" ? null : "location")}
             disabled={!meta}
+            data-tip={openChip === "location" ? undefined : "Filter CSR projects and expenditure by state and district to identify where companies are investing."}
           >
             <span className="truncate1" style={{ maxWidth: 180 }}>
-              {filters.districts[0] ?? filters.states[0] ?? "State & District"}
+              {filters.districts[0] ?? filters.states[0] ?? "Geography"}
             </span>
             <ChevronDown width={12} height={12} />
           </button>
@@ -146,21 +197,36 @@ export function FilterBar({
               : `${chip.label} · ${selected.length}`;
 
         return (
-          <div key={chip.key} className="pos-rel">
+          <div key={chip.key} className="pos-rel" style={chip.key === "themes" ? { display: "inline-flex", alignItems: "center" } : undefined}>
             <button
               type="button"
               className={`select-chip${selected.length ? " active" : ""}`}
               onClick={() => setOpenChip(openChip === chip.key ? null : chip.key)}
               disabled={!meta}
-              data-tip={chip.key === "themes" ? "Schedule VII Category" : undefined}
+              data-tip={openChip === chip.key ? undefined : chip.info}
             >
               <span className="truncate1" style={{ maxWidth: 160 }}>
                 {summary}
               </span>
               <ChevronDown width={12} height={12} />
             </button>
+            {chip.key === "themes" ? (
+              <a
+                href={SCHEDULE_VII_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Opens an official Government of India explainer in a new tab"
+                style={{ display: "inline-flex", alignItems: "center", gap: 3, marginLeft: 6, fontSize: 11.5, fontWeight: 600, color: "var(--c1)", textDecoration: "underline", textUnderlineOffset: 2, verticalAlign: "middle", whiteSpace: "nowrap" }}
+              >
+                What is Schedule VII? <ExternalLink width={11} height={11} />
+              </a>
+            ) : null}
             {openChip === chip.key ? (
               <ChipPopover
+                note={chip.note ?? chip.info}
+                infoLink={chip.infoLink}
+                placeholder={chip.placeholder}
+                hintBelow={chip.hintBelow}
                 options={options}
                 selected={selected}
                 onChange={(values) => setValues(chip.key, values)}
@@ -176,9 +242,10 @@ export function FilterBar({
           type="button"
           className={`select-chip${filters.minSpend !== null || filters.maxSpend !== null ? " active" : ""}`}
           onClick={() => setOpenChip(openChip === "amount" ? null : "amount")}
+          data-tip={openChip === "amount" ? undefined : "Show only projects whose CSR amount falls in a chosen range."}
         >
           <span className="truncate1" style={{ maxWidth: 150 }}>
-            {activeBand(filters)?.label ?? "CSR Amount"}
+            {activeBand(filters)?.label ?? "CSR Spending Range"}
           </span>
           <ChevronDown width={12} height={12} />
         </button>
@@ -235,41 +302,6 @@ export function FilterBar({
 
       <FilterSearch meta={meta} filters={filters} />
 
-      {(meta?.stats.aspirational_rows ?? 0) > 0 ? (
-        <div className="pos-rel">
-          <button
-            type="button"
-            className={`select-chip${filters.aspirationalOnly ? " active" : ""}`}
-            onClick={() => setOpenChip(openChip === "aspirational" ? null : "aspirational")}
-          >
-            <Target width={12} height={12} />
-            Aspirational districts
-            <ChevronDown width={12} height={12} />
-          </button>
-          {openChip === "aspirational" ? (
-            <AspirationalPopover
-              options={meta?.aspirationalDistricts ?? []}
-              selected={filters.districts}
-              allActive={filters.aspirationalOnly && filters.districts.length === 0}
-              onAll={() => {
-                setValues("districts", []);
-                setAspirationalOnly(true);
-                setOpenChip(null);
-              }}
-              onSelect={(district) => {
-                setValues("districts", [district]);
-                setAspirationalOnly(true);
-                setOpenChip(null);
-              }}
-              onClear={() => {
-                setAspirationalOnly(false);
-                setOpenChip(null);
-              }}
-            />
-          ) : null}
-        </div>
-      ) : null}
-
       <div className="spacer" />
 
       {resultCount !== undefined ? (
@@ -278,7 +310,7 @@ export function FilterBar({
 
       <button type="button" className="fb-text" onClick={clearAll} disabled={count === 0}>
         <RotateCcw width={13} height={13} />
-        Reset{count ? ` (${count})` : ""}
+        Clear All Filters{count ? ` (${count})` : ""}
       </button>
     </div>
   );
@@ -305,6 +337,9 @@ function LocationPopover({
 
   return (
     <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
+      <div style={{ padding: "9px 12px 0", fontSize: 11.5, color: "var(--text-soft)", lineHeight: 1.45 }}>
+        Filter CSR projects and expenditure by state and district to identify where companies are investing.
+      </div>
       <div className="cmdk-input-row" style={{ padding: "9px 12px" }}>
         {state ? (
           <button type="button" className="fb-text" onClick={() => { onState(null); setTerm(""); }}>
@@ -372,7 +407,15 @@ function ChipPopover({
   selected,
   onChange,
   onClose,
+  note,
+  infoLink,
+  placeholder,
+  hintBelow,
 }: {
+  note?: string;
+  infoLink?: { href: string; label: string };
+  placeholder?: string;
+  hintBelow?: boolean;
   options: { value: string; label: string; hint?: string }[];
   selected: string[];
   onChange: (values: string[]) => void;
@@ -391,12 +434,23 @@ function ChipPopover({
   }, [options, term]);
 
   return (
-    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 280 }}>
+    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: hintBelow ? 340 : 280 }}>
+      {note ? (
+        <div style={{ padding: "9px 12px 0", fontSize: 11.5, color: "var(--text-soft)", lineHeight: 1.45 }}>
+          {note}
+          {infoLink ? (
+            <>
+              {" "}
+              <a href={infoLink.href} target="_blank" rel="noreferrer" style={{ color: "var(--c1)", textDecoration: "underline" }}>{infoLink.label}</a>
+            </>
+          ) : null}
+        </div>
+      ) : null}
       <div className="cmdk-input-row" style={{ padding: "9px 12px" }}>
         <input
           autoFocus
           value={term}
-          placeholder="Search…"
+          placeholder={placeholder ?? "Search…"}
           onChange={(event) => setTerm(event.target.value)}
           style={{ fontSize: 12.5 }}
         />
@@ -443,10 +497,19 @@ function ChipPopover({
                 >
                   {active ? "✓" : ""}
                 </span>
-                <span className="truncate1" style={{ fontSize: 12.5 }}>
-                  {option.label}
-                </span>
-                {option.hint ? <span className="meta" style={{ marginLeft: "auto" }}>{option.hint}</span> : null}
+                {hintBelow ? (
+                  <span style={{ display: "flex", flexDirection: "column", minWidth: 0, textAlign: "left" }}>
+                    <span className="truncate1" style={{ fontSize: 12.5 }}>{option.label}</span>
+                    {option.hint ? <span style={{ fontSize: 11, color: "var(--text-soft)", whiteSpace: "normal" }}>{option.hint}</span> : null}
+                  </span>
+                ) : (
+                  <>
+                    <span className="truncate1" style={{ fontSize: 12.5 }}>
+                      {option.label}
+                    </span>
+                    {option.hint ? <span className="meta" style={{ marginLeft: "auto" }}>{option.hint}</span> : null}
+                  </>
+                )}
               </button>
             );
           })
@@ -473,7 +536,7 @@ function ChipPopover({
   );
 }
 
-function AspirationalPopover({
+export function AspirationalPopover({
   options,
   selected,
   allActive,

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { NgoAnalysisView } from "@/components/pages/ngo-analysis-view";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
-export const metadata: Metadata = { title: "NGO Analysis · CMS CSR Intelligence" };
+export const metadata: Metadata = { title: "Implementation Partners · CMS CSR Intelligence" };
 export const dynamic = "force-dynamic";
 
 export default function Page() {

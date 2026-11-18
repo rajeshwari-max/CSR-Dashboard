@@ -8,7 +8,7 @@ import { ChevronsLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { ICONS } from "@/components/shell/icons";
-import { NAV } from "@/components/shell/nav";
+import { NAV, NAV_GROUPS } from "@/components/shell/nav";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -28,7 +28,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
   React.useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme === "dark";
 
-  const groups = ["Platform", "Insights & Data"] as const;
+  const groups = NAV_GROUPS;
 
   return (
     <aside className={`sidebar${collapsed ? " collapsed" : ""}${mobileOpen ? " mobile-open" : ""}`}>
@@ -55,7 +55,10 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
                   title={collapsed ? entry.label : undefined}
                 >
                   <Icon className="icon" width={17} height={17} />
-                  <span className="nav-label">{entry.label}</span>
+                  <span className="nav-label">
+                    <span className="nav-title">{entry.label}</span>
+                    <span className="nav-desc">{entry.desc}</span>
+                  </span>
                   {entry.kbd ? <span className="kbd">{entry.kbd}</span> : null}
                 </Link>
               );

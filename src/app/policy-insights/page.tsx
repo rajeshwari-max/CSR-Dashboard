@@ -1,16 +1,6 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { PolicyInsightsView } from "@/components/pages/policy-insights-view";
-import { PageSkeleton } from "@/components/shared/page-skeleton";
-
-export const metadata: Metadata = { title: "Policy Insights · CMS CSR Intelligence" };
-export const dynamic = "force-dynamic";
-
+// Policy Insights is now part of CSR Insights (company-analysis).
 export default function Page() {
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <PolicyInsightsView />
-    </Suspense>
-  );
+  redirect("/company-analysis");
 }

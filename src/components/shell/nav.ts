@@ -1,25 +1,31 @@
-/** Navigation model — mirrors the draft sidebar, in the draft's order. */
+/** Navigation model: three sections (Explore, Analyse, Resources), each item with a short hover description. */
 export interface NavEntry {
   href: string;
   label: string;
   icon: string;
-  group: "Platform" | "Insights & Data";
+  group: "Explore" | "Analyse" | "Resources";
+  /** One line shown under the item on hover. */
+  desc: string;
+  /** Small tag on the right, e.g. "Admin". */
   kbd?: string;
 }
 
+export const NAV_GROUPS = ["Explore", "Analyse", "Resources"] as const;
+
 export const NAV: NavEntry[] = [
-  { href: "/", label: "Executive Dashboard", icon: "grid", group: "Platform", kbd: "1" },
-  { href: "/company-analysis", label: "Company Analysis", icon: "building", group: "Platform", kbd: "2" },
-  { href: "/state-analysis", label: "State Analysis", icon: "map", group: "Platform", kbd: "3" },
-  { href: "/sector-analysis", label: "Sector Analysis", icon: "layers", group: "Platform", kbd: "4" },
-  { href: "/ngo-analysis", label: "Implementation Analysis", icon: "handshake", group: "Platform", kbd: "5" },
-  { href: "/policy-insights", label: "Policy Insights", icon: "policy", group: "Insights & Data" },
-  { href: "/explore-data", label: "Indicator Explorer", icon: "explore", group: "Insights & Data" },
-  { href: "/trend-analysis", label: "Trend Analysis", icon: "trending", group: "Insights & Data", kbd: "7" },
-  { href: "/reports", label: "Reports", icon: "report", group: "Insights & Data", kbd: "8" },
-  { href: "/ai-insights", label: "AI Insights", icon: "sparkles", group: "Insights & Data", kbd: "9" },
-  { href: "/data-explorer", label: "Data Explorer", icon: "database", group: "Insights & Data" },
-  { href: "/data-upload", label: "Data Upload", icon: "upload", group: "Insights & Data" },
+  { href: "/", label: "Overview", icon: "grid", group: "Explore", desc: "India's CSR at a glance" },
+  { href: "/company-analysis", label: "CSR Insights", icon: "building", group: "Explore", desc: "Companies, CSR spending and unspent CSR" },
+  { href: "/state-analysis", label: "Explore Geography", icon: "map", group: "Explore", desc: "CSR by state and district" },
+  { href: "/sector-analysis", label: "Explore Sectors", icon: "layers", group: "Explore", desc: "CSR by industry sector" },
+  { href: "/aspirational-districts", label: "Aspirational Districts", icon: "target", group: "Explore", desc: "CSR reaching NITI Aayog's 112 districts" },
+  { href: "/trend-analysis", label: "Trends & Comparisons", icon: "trending", group: "Analyse", desc: "Year-on-year change and comparisons" },
+  { href: "/ngo-analysis", label: "Implementation Partners", icon: "handshake", group: "Analyse", desc: "How CSR projects are delivered" },
+  { href: "/explore-data", label: "CSR Indicators", icon: "explore", group: "Analyse", desc: "Map and compare CSR indicators" },
+  { href: "/ai-insights", label: "AI-powered Insights", icon: "sparkles", group: "Analyse", desc: "Automated findings and questions" },
+  { href: "/reports", label: "Reports & Downloads", icon: "report", group: "Resources", desc: "PDF, Excel, PowerPoint and CSV" },
+  { href: "/data-explorer", label: "Explore CSR Data", icon: "database", group: "Resources", desc: "Browse every reported project" },
+  { href: "/glossary", label: "Glossary", icon: "book", group: "Resources", desc: "What the CSR terms mean" },
+  { href: "/data-upload", label: "Data Management", icon: "upload", group: "Resources", desc: "Upload and update data", kbd: "Admin" },
 ];
 
 export const BREADCRUMB: Record<string, string> = Object.fromEntries(

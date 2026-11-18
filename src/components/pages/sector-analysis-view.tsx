@@ -22,14 +22,13 @@ import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, colorAt, TOOLTIP_STYLES, xTitle, yTitle } from "@/components/charts/chart-theme";
 import { ChartTip } from "@/components/charts2/chart-tooltip";
 import { SectorPieChart } from "@/components/charts/sector-pie-chart";
-import { ProjectRegisterSection } from "@/components/dashboard/project-register-section";
 import { BreakdownTable } from "@/components/shared/breakdown-table";
 import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useApi } from "@/lib/api";
-import { formatCompact, formatCrore, formatSignedPercent, truncate } from "@/lib/format";
+import { formatCompact, formatCrore, formatNumber, formatShare, formatSignedPercent, truncate } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
 import type { BreakdownResponse, SummaryResponse } from "@/types";
 
@@ -86,8 +85,8 @@ export function SectorAnalysisView() {
 
   return (
     <PageFrame
-      title="Sector Analysis"
-      subtitle={`How CSR spent splits across BRSR sectors · ${scope}`}
+      title="Explore Sectors"
+      subtitle={`How CSR spent splits across sectors · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -103,7 +102,7 @@ export function SectorAnalysisView() {
       <SectionLabel>Sector overview</SectionLabel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartCard
-          title="CSR Spent Share by BRSR Sector"
+          title="CSR Spent Share by Sector"
           description="Top sectors, remainder grouped"
           height={340}
           isLoading={summary.isLoading}
@@ -200,11 +199,32 @@ export function SectorAnalysisView() {
         <Card className="overflow-hidden">
           <CardHeader>
             <div>
-              <CardTitle>Schedule VII Thematic Areas by Total CSR Spent</CardTitle>
-              <CardDescription>Area size represents total amount spent; hover for ₹ crore and use the labels for share of amount spent. Active filters apply.</CardDescription>
+              <CardTitle>CSR Expenditure Across Schedule VII Thematic Areas</CardTitle>
+              <CardDescription>
+                {years.length ? `${years[0]} to ${years[years.length - 1]} · All amounts in ₹ crore. ` : ""}
+                Explore how corporate CSR expenditure is distributed across Schedule VII thematic areas. Larger blocks represent higher expenditure. Hover over any category to view its total spending, share of expenditure and number of reported projects.
+              </CardDescription>
             </div>
-            <Badge variant="outline">{themes.length} categories</Badge>
+            <a href="https://ies.gov.in/arthapedia/concept/corporate-social-responsibility-csr" target="_blank" rel="noreferrer">
+              <Badge variant="outline">{themes.length} Schedule VII Categories</Badge>
+            </a>
           </CardHeader>
+          {themes.length >= 2 ? (
+            <div className="grid grid-cols-1 gap-4 px-6 pb-2 sm:grid-cols-3">
+              {[
+                { label: "Leading category", name: themes[0].name, value: formatCrore(themes[0].value), sub: `${formatShare(themes[0].share)} of total CSR expenditure` },
+                { label: "Second highest", name: themes[1].name, value: formatCrore(themes[1].value), sub: `${formatShare(themes[1].share)} of total CSR expenditure` },
+                { label: "Categories", name: "Schedule VII areas", value: String(themes.length), sub: "with reported CSR expenditure" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-lg border px-4 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{item.label}</p>
+                  <p className="truncate text-[13.5px] font-semibold" title={item.name}>{item.name}</p>
+                  <p className="numeric text-[20px] font-semibold">{item.value}</p>
+                  <p className="text-[11.5px] text-muted-foreground">{item.sub}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
           <CardContent className="h-[420px] pb-5">
             <ResponsiveContainer width="100%" height="100%">
               <Treemap
@@ -217,7 +237,13 @@ export function SectorAnalysisView() {
               >
                 <Tooltip
                   {...TOOLTIP_STYLES}
-                  formatter={(value: number, name: string) => [formatCrore(value), name]}
+                  formatter={(value: number, name: string) => {
+                    const row = themes.find((item) => item.name === name);
+                    return [
+                      row ? `${formatCrore(value)} · ${formatShare(row.share)} · ${formatNumber(row.count ?? 0)} projects` : formatCrore(value),
+                      name,
+                    ];
+                  }}
                 />
               </Treemap>
             </ResponsiveContainer>
@@ -243,12 +269,6 @@ export function SectorAnalysisView() {
         </CardContent>
       </Card>
 
-      <ProjectRegisterSection
-        filterQuery={filterQuery}
-        label="Projects behind these sectors"
-        description="Every disclosed project inside the current sector and Schedule VII scope. Click a slice, a category or a table row above to narrow it."
-        scopeSpend={summary.data?.kpis.totalSpend}
-      />
     </PageFrame>
   );
 }

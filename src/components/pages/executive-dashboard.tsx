@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, RefreshCw, TrendingUp } from "lucide-react";
+import { ArrowUpRight, CircleHelp, RefreshCw, TrendingUp, Wallet, X } from "lucide-react";
 
 import { KpiRow } from "@/components/cards/kpi-row";
 import { RankRows } from "@/components/cards/rank-list";
@@ -21,11 +21,12 @@ import type { PolicyInsights } from "@/lib/policy";
 import { canScopeAnnexureFinancials } from "@/lib/annexure-scope";
 
 /**
- * Executive Dashboard — structure taken verbatim from the draft:
+ * Overview (formerly Executive Dashboard) — structure taken verbatim from the draft:
  *   page-head → KPI row (6) → chart-row (2fr 1fr 1fr) → bottom-row (1fr 1fr 1.2fr).
  * Nothing is added or moved; only the numbers are real.
  */
 export function ExecutiveDashboard() {
+  const [guideOpen, setGuideOpen] = React.useState(false);
   const { filters, filterQuery } = useDashboardFilters();
   const toggleValue = useFilterStore((state) => state.toggleValue);
   const setValues = useFilterStore((state) => state.setValues);
@@ -54,8 +55,8 @@ export function ExecutiveDashboard() {
 
   return (
     <PageFrame
-      title="Executive Dashboard"
-      subtitle="CSR activity reported by India’s top 1,000 companies, FY 2020–21 to FY 2024–25; amounts are in ₹ crore, with broader company coverage planned."
+      title="Overview"
+      subtitle="Explore India's corporate CSR landscape through company-wise spending, projects, sectors, geographical coverage and implementation trends."
       meta={meta.data}
       filters={filters}
       onRefresh={refresh}
@@ -67,43 +68,73 @@ export function ExecutiveDashboard() {
             <RefreshCw width={13} height={13} className={summary.isValidating ? "spin" : undefined} />
             Refresh
           </button>
-          <ExportMenu filterQuery={filterQuery} label="Download" />
+          <ExportMenu filterQuery={filterQuery} label="Download Data / Export Report" />
           <Link href={`/trend-analysis?${filterQuery}`} className="btn btn-gradient btn-sm">
             <TrendingUp width={13} height={13} />
-            Analyse trends
+            Explore CSR Trends
           </Link>
         </>
       }
     >
-      <MiniLabel>Key performance indicators</MiniLabel>
-      <KpiRow kpis={kpis} meta={meta.data} isLoading={summary.isLoading} />
-      <Link href={`/policy-insights?${filterQuery}#unspent-csr`} className="card hoverable" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, marginBottom: 26, padding: "18px 22px", textDecoration: "none" }}>
-        <div>
-          <div className="kpi-label" style={{ marginBottom: 5 }}>Unspent CSR · {annexurePeriod}</div>
+      {guideOpen ? <HowToUse onClose={() => setGuideOpen(false)} /> : null}
+      <div className="card" style={{ padding: "18px 22px", marginBottom: 26 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 8 }}>
+          <div style={{ fontSize: 16, fontWeight: 650 }}>CSR Intelligence Dashboard</div>
+          <button
+            type="button"
+            onClick={() => setGuideOpen(true)}
+            style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5, fontWeight: 600, color: "var(--c1)", textDecoration: "underline", textUnderlineOffset: 3 }}
+          >
+            <CircleHelp width={14} height={14} /> How to use this dashboard · Take a tour
+          </button>
         </div>
-        <div style={{ flexShrink: 0, textAlign: "right" }}>
-          <div className="kpi-value" style={{ fontSize: 25 }}>{!annexureScopeSupported ? "—" : policy.isLoading ? "Loading…" : policy.error ? "Could not load" : policy.data?.financials ? formatCrore(policy.data.financials.unspent) : "Unavailable"}</div>
-          <div className="muted" style={{ fontSize: 12 }}>{!annexureScopeSupported ? "Not available for location filters" : policy.data?.financials ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · View details →` : "No annexure data"}</div>
+        <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: "0 0 6px" }}>
+          Explore India&apos;s CSR landscape through company contributions, CSR expenditure, sectoral priorities, geographical distribution and project implementation.
+        </p>
+        <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: "0 0 12px" }}>
+          Use the filters to identify companies, understand funding patterns, explore districts and sectors, and discover emerging CSR trends.
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {["Company Intelligence", "Geographical Insights", "Sector Trends", "CSR Opportunities"].map((tag) => (
+            <span key={tag} style={{ fontSize: 12, fontWeight: 600, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--c1) 12%, transparent)", color: "var(--c1)" }}>{tag}</span>
+          ))}
         </div>
-      </Link>
-      {/* Feedback asked whether "CSR spent" covers evaluation too; answer it on the page, not only in a tooltip. */}
+      </div>
+
+      <MiniLabel>India&apos;s CSR at a Glance</MiniLabel>
+      <KpiRow
+        kpis={kpis}
+        meta={meta.data}
+        isLoading={summary.isLoading}
+        extra={{
+          label: "Reported Unspent CSR Amount",
+          value: !annexureScopeSupported ? "—" : policy.isLoading ? "…" : policy.data?.financials ? formatCrore(policy.data.financials.unspent) : "—",
+          sub: !annexureScopeSupported
+            ? "Not available for location filters"
+            : policy.data?.financials
+              ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · ${annexurePeriod}`
+              : "No annexure data",
+          icon: Wallet,
+          href: "/company-analysis#unspent-csr",
+          tip: "CSR amount companies reported as unspent in their annual-report CSR annexures. Click for the yearly breakdown and full company list.",
+        }}
+      />
       <p className="muted" style={{ fontSize: 12.5, margin: "-6px 0 26px", lineHeight: 1.5 }}>
-        <strong style={{ color: "var(--text)" }}>Data sources:</strong> CSR spent, projects and locations come from
-        project-wise filings on the MCA National CSR Portal (csr.gov.in). Obligation, unspent CSR,
-        impact assessment and implementing partners come from each company&apos;s annual-report CSR annexure
-        (annual reports filed on NSE) and are shown on{" "}
-        <a href="/policy-insights" style={{ textDecoration: "underline" }}>Policy Insights</a> and{" "}
-        <a href="/ngo-analysis" style={{ textDecoration: "underline" }}>Implementation Analysis</a>.
+        <strong style={{ color: "var(--text)" }}>About the Data: Data Sources:</strong> CSR expenditure, project details and geographical
+        coverage are sourced from project-wise filings on the{" "}
+        <a href="https://www.csr.gov.in" target="_blank" rel="noreferrer" style={{ textDecoration: "underline" }}>MCA National CSR Portal</a>.
+        Information on CSR obligations, unspent amounts, impact assessments and implementing agencies is compiled from
+        companies&apos; annual report CSR annexures filed with the NSE.
       </p>
 
-      <MiniLabel>Trend &amp; distribution analysis</MiniLabel>
+      <MiniLabel>CSR Trends and Distribution</MiniLabel>
       <div className="grid chart-row" style={{ marginBottom: 32 }}>
         <div className="card hoverable">
           <div className="card-head">
             <div>
-              <ExplainedTitle title="CSR Spent and Project Count by Financial Year" />
+              <ExplainedTitle title="CSR Expenditure and Project Trends" />
               <div className="muted">
-                {summary.data?.trend[0]?.year ?? "—"} – {summary.data?.trend.slice(-1)[0]?.year ?? "—"} · amount spent (₹ Cr) and projects reported
+                Understand how corporate CSR expenditure and the number of reported projects have changed over the last five financial years. Select a year in the Financial Year filter to view detailed information.
               </div>
             </div>
             <span className="card-badge">{kpis?.latestYear ?? "—"}</span>
@@ -119,9 +150,9 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <ExplainedTitle title="States Ranked by Total CSR Spent" />
+            <ExplainedTitle title="Which States Receive the Highest CSR Investment?" />
             <Link href={`/state-analysis?${filterQuery}`} className="card-badge">
-              View all
+              View All Results
             </Link>
           </div>
           {summary.isLoading ? (
@@ -138,9 +169,9 @@ export function ExecutiveDashboard() {
 
         <div className="card hoverable">
           <div className="card-head">
-            <ExplainedTitle title="Sectors Ranked by Total CSR Spent" />
+            <ExplainedTitle title="Top Sectors by Share of CSR Expenditure" />
             <Link href={`/sector-analysis?${filterQuery}`} className="card-badge">
-              View all
+              View All Results
             </Link>
           </div>
           {summary.isLoading ? (
@@ -157,7 +188,10 @@ export function ExecutiveDashboard() {
         </div>
       </div>
 
-      <MiniLabel>Geographic &amp; company view</MiniLabel>
+      <MiniLabel>CSR Investment Landscape: Geography, Companies &amp; Insights</MiniLabel>
+      <p className="muted" style={{ fontSize: 13, margin: "-8px 0 16px", lineHeight: 1.5 }}>
+        Explore the geographical distribution of CSR expenditure across India, identify leading corporate contributors and discover key trends, patterns and data insights.
+      </p>
       <div className="grid bottom-row">
         <div className="card hoverable">
           <div className="card-head">
@@ -225,6 +259,68 @@ function MiniStat({ label, value }: { label: string; value: string }) {
       </div>
       <div className="mono truncate1" style={{ fontSize: 13, fontWeight: 700 }}>
         {value}
+      </div>
+    </div>
+  );
+}
+
+/** Short step-by-step walkthrough, opened from "How to use this dashboard". */
+const GUIDE_STEPS: { title: string; text: string }[] = [
+  { title: "Apply filters", text: "Select a financial year, sector, company, state or district to narrow your search." },
+  { title: "Explore company intelligence", text: "Understand individual company CSR spending, sectors, projects and geographical priorities." },
+  { title: "Analyse geographical distribution", text: "Identify states and districts receiving CSR investments." },
+  { title: "Understand sector trends", text: "Compare CSR spending across different development sectors." },
+  { title: "Download reports", text: "Export relevant information for further analysis and planning." },
+];
+
+function HowToUse({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = React.useState(0);
+  const last = step === GUIDE_STEPS.length - 1;
+  React.useEffect(() => {
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Welcome to CSR Intelligence: product tour"
+      onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(20, 10, 30, 0.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+    >
+      <div className="card" onClick={(event) => event.stopPropagation()} style={{ width: "min(480px, 100%)", padding: "22px 24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700 }}>Welcome to CSR Intelligence</div>
+            <div className="muted" style={{ fontSize: 12.5 }}>Product tour · Learn how to explore CSR data and discover useful insights.</div>
+          </div>
+          <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
+            <X width={16} height={16} />
+          </button>
+        </div>
+        <div className="kpi-label" style={{ marginBottom: 6 }}>Step {step + 1} of {GUIDE_STEPS.length}</div>
+        <div style={{ fontSize: 17, fontWeight: 650, marginBottom: 8 }}>{GUIDE_STEPS[step].title}</div>
+        <p className="muted" style={{ fontSize: 13.5, lineHeight: 1.6, minHeight: 44 }}>{GUIDE_STEPS[step].text}</p>
+        <div style={{ display: "flex", gap: 6, margin: "16px 0" }}>
+          {GUIDE_STEPS.map((item, index) => (
+            <button
+              key={item.title}
+              type="button"
+              aria-label={`Step ${index + 1}`}
+              onClick={() => setStep(index)}
+              style={{ height: 6, flex: 1, borderRadius: 999, background: index <= step ? "var(--c1)" : "var(--border)" }}
+            />
+          ))}
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <button type="button" className="btn btn-outline btn-sm" onClick={() => setStep((s) => s - 1)} disabled={step === 0}>
+            Back
+          </button>
+          <button type="button" className="btn btn-gradient btn-sm" onClick={() => (last ? onClose() : setStep((s) => s + 1))}>
+            {last ? "Done" : "Next"}
+          </button>
+        </div>
       </div>
     </div>
   );

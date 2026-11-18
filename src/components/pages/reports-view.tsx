@@ -101,7 +101,7 @@ export function ReportsView() {
 
   return (
     <PageFrame
-      title="Reports"
+      title="Reports & Downloads"
       subtitle={`Everything below is generated from the current filter selection · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}

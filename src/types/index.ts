@@ -325,7 +325,7 @@ export interface Insight {
   /** Numbers the sentence is built from — shown as chips so nothing is unverifiable. */
   evidence: { label: string; value: string }[];
   /** Optional filter to apply when the user clicks "investigate". */
-  action?: { label: string; filters: Partial<Filters> };
+  action?: { label: string; filters: Partial<Filters>; href?: string };
 }
 
 export interface ForecastPoint {

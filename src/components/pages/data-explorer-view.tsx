@@ -26,11 +26,11 @@ type ColumnKey = keyof Pick<
 >;
 
 const COLUMNS: { key: ColumnKey; label: string; sortable?: SortField; align?: "right" }[] = [
-  { key: "company", label: "Company", sortable: "company" },
-  { key: "year", label: "FY", sortable: "year" },
-  { key: "project", label: "CSR Project" },
-  { key: "theme", label: "Category", sortable: "theme" },
-  { key: "sector", label: "Sector", sortable: "sector" },
+  { key: "company", label: "Company Name", sortable: "company" },
+  { key: "year", label: "Financial Year", sortable: "year" },
+  { key: "project", label: "Project Description" },
+  { key: "theme", label: "Schedule VII Thematic Area", sortable: "theme" },
+  { key: "sector", label: "Company Industry Sector", sortable: "sector" },
   { key: "state", label: "State", sortable: "state" },
   { key: "district", label: "District", sortable: "district" },
   { key: "mode", label: "Implementation", sortable: "mode" },
@@ -125,7 +125,7 @@ export function DataExplorerView() {
 
   return (
     <PageFrame
-      title="Data Explorer"
+      title="Explore CSR Data"
       subtitle={`Raw project register · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
@@ -211,7 +211,7 @@ export function DataExplorerView() {
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Filtered Project Register</CardTitle>
+            <CardTitle>CSR Project Explorer</CardTitle>
             <CardDescription>
               {formatNumber(projects.data?.total ?? 0)} rows · {formatCrore(projects.data?.totalSpendInView ?? 0)} in
               view

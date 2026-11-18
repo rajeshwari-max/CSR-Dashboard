@@ -78,7 +78,7 @@ export function TrendView() {
 
   return (
     <PageFrame
-      title="Trend Analysis"
+      title="Trends & Comparisons"
       subtitle={`Year-over-year movement · ${scope || "all companies, all states"}`}
       meta={meta.data}
       filters={filters}

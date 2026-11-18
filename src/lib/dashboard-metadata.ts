@@ -7,6 +7,18 @@ export interface DashboardMetricMeta {
 
 
 export const dashboardMetadata: Record<string, DashboardMetricMeta> = {
+  // Overview page names (CSR DB feedback, 2nd round)
+  "CSR Expenditure and Project Trends": { description: "CSR expenditure (₹ crore) and number of reported projects in each financial year." },
+  "Which States Receive the Highest CSR Investment?": { description: "Compare CSR expenditure across states and explore the districts and projects contributing to the reported totals." },
+  "Top Sectors by Share of CSR Expenditure": { description: "Distribution of reported CSR expenditure across sectors, showing their contribution to total CSR spending. Each % is the sector's share of total CSR expenditure in the selection." },
+  "Where Are Companies Investing Their CSR Funds?": { description: "Explore the distribution of CSR expenditure across development sectors and identify areas receiving greater or lower corporate investment." },
+  "Total CSR Expenditure": { description: "Total CSR expenditure reported by companies during the selected financial years." },
+  "Companies with Reported CSR Data": { description: "Number of companies represented in the selected period." },
+  "Reported CSR Projects": { description: "Total number of CSR projects recorded in the selected period." },
+  "Districts with Reported CSR Projects": { description: "Number of districts with a recorded geographical location for CSR projects." },
+  "Aspirational District Coverage": { description: "Number of aspirational districts with reported CSR project coverage." },
+  "State-wise CSR Expenditure": { description: "States ranked by total CSR spent in the selected period." },
+  "Sector-wise CSR Expenditure": { description: "Industry sectors ranked by CSR spent, with each sector's share of the total." },
   "Compare CSR Spent Over Time": { description: "Year-by-year CSR spent for the leading states, categories, sectors, companies or districts. Select up to six rows to plot them together." },
   "Total CSR Amount Spent for the Selected Period": { description: "Total CSR spent on projects in the selected years, as filed by companies on the MCA portal. Excludes administrative overheads and impact assessment costs." },
   "Companies Reporting in the Selected Period": { description: "Number of companies that reported at least one CSR project in the selected period." },
@@ -18,14 +30,14 @@ export const dashboardMetadata: Record<string, DashboardMetricMeta> = {
   "Sectors Ranked by Total CSR Spent": { description: "Industry sectors ranked by CSR spent, with each sector's share of the total." },
   "Companies Ranked by Total CSR Spent": { description: "Companies ranked by total CSR spent in the selected period." },
   "Geographic Distribution of Total CSR Spent by State": { description: "CSR spent by state; darker shading indicates higher spending. Pan-India projects are not mapped." },
-  "CSR Spent Share by BRSR Sector": { description: "Each industry sector's share of total CSR spent." },
+  "CSR Spent Share by Sector": { description: "Each industry sector's share of total CSR spent." },
   "Total CSR Spent by Sector and Financial Year": { description: "Annual CSR spent for the six highest-spending sectors." },
   "Year-over-Year Change in CSR Spent by Sector": { description: "Change in each sector's CSR spent between the latest two financial years." },
   "Schedule VII Thematic Areas by Total CSR Spent": { description: "CSR spent across Schedule VII development themes, such as education and health." },
   "Companies Ranked by Total CSR Spent in This View": { description: "Companies ranked by CSR spent for the current selection. Select one to see its profile." },
   "CSR Amount Spent by Company and Financial Year": { description: "Annual CSR spent for the companies being compared." },
   "Company Benchmark by Total CSR Spent": { description: "Side-by-side comparison of the selected companies' CSR spent, projects and reach." },
-  "Companies by BRSR Sector": { description: "Number of reporting companies in each industry sector." },
+  "Companies by Sector": { description: "Number of reporting companies in each industry sector." },
   "CSR Spent by Schedule VII Thematic Area": { description: "The selected company's CSR spent across Schedule VII development themes." },
   "States Reached by Reported CSR Projects": { description: "States where the selected company spent on CSR, ranked by amount." },
   "Largest CSR Projects by Amount Spent": { description: "The individual CSR projects with the highest amount spent." },
@@ -65,6 +77,7 @@ export const dashboardMetadata: Record<string, DashboardMetricMeta> = {
   "Fastest-Growing States by CSR Spent": { description: "States with the largest increase in CSR spent over the previous year." },
   "Geographic Coverage Summary": { description: "Reach of CSR spending across states, districts and aspirational districts." },
   "Filtered Project Register": { description: "All CSR projects matching the current filters." },
+  "CSR Project Explorer": { description: "All CSR projects matching the current filters." },
   "National Rank by Total CSR Spent": { description: "The selected company's rank among all companies by total CSR spent." },
   "Latest-Year CSR Spent as a Share of Disclosed Obligation": { description: "Latest-year CSR spent as a percentage of the company's prescribed CSR obligation." },
 };

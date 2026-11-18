@@ -99,7 +99,7 @@ export function DashboardView() {
         <ChartCard
           id="sectors"
           title="Top Sectors"
-          description="Share of amount spent by BRSR sector"
+          description="Share of amount spent by sector"
           height={320}
           isLoading={isLoading}
           error={summary.error}

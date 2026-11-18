@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ResponsiveContainer,
   Tooltip,
@@ -121,7 +122,8 @@ export function ExploreDataView() {
   const toggleValue = useFilterStore((state) => state.toggleValue);
   const meta = useMeta();
 
-  const [unit, setUnit] = React.useState<Unit>("state");
+  const searchParams = useSearchParams();
+  const [unit, setUnit] = React.useState<Unit>(() => (searchParams.get("unit") === "district" ? "district" : "state"));
   const [view, setView] = React.useState<View>("map");
   const [indicatorKey, setIndicatorKey] = React.useState("spend");
   const [labels, setLabels] = React.useState<LabelMode>("all");
@@ -193,7 +195,7 @@ export function ExploreDataView() {
 
   return (
     <PageFrame
-      title="Indicator Explorer"
+      title="CSR Indicators"
       subtitle={`Pick an indicator and view it three ways · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}

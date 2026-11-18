@@ -143,7 +143,7 @@ export function UploadView() {
 
   return (
     <PageFrame
-      title="Data Upload"
+      title="Data Management (admin only)"
       subtitle="Replace or extend the dataset. Every chart, KPI, table, insight and trend re-reads from it automatically."
       meta={meta.data}
       filters={filters}

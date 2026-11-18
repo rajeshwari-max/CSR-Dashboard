@@ -349,7 +349,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
         { label: "Aspirational amount spent", value: CRORE(kpis.aspirationalSpend) },
         { label: "Share", value: SHARE(kpis.aspirationalShare) },
       ],
-      action: { label: "Show aspirational only", filters: { aspirationalOnly: true } },
+      action: { label: "Open Aspirational Districts", filters: {}, href: "/aspirational-districts" },
     });
   }
 
@@ -458,7 +458,7 @@ export function buildInsights(filters: Filters, scopeLabel: string): Omit<Insigh
   if (unclassifiedSector > 0) {
     recommendations.push({
       title: "Classify the remaining Unclassified companies",
-      detail: `${unclassifiedSector.toLocaleString("en-IN")} rows in the current view have no BRSR sector even after backfilling from the per-sector sheets.`,
+      detail: `${unclassifiedSector.toLocaleString("en-IN")} rows in the current view have no sector even after backfilling from the per-sector sheets.`,
       impact: "Improves sector benchmarking accuracy",
     });
   }

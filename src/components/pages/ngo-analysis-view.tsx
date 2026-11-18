@@ -40,7 +40,7 @@ export function NgoAnalysisView() {
 
   return (
     <PageFrame
-      title="Implementation Analysis"
+      title="Implementation Partners"
       subtitle={`How CSR money is delivered · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}

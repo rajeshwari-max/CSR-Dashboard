@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 import { TrendView } from "@/components/trend/trend-view";
 
-export const metadata: Metadata = { title: "Trend Analysis · CMS CSR Intelligence" };
+export const metadata: Metadata = { title: "Trends & Comparisons · CMS CSR Intelligence" };
 export const dynamic = "force-dynamic";
 
 export default function Page() {

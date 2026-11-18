@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
   Area,
   ComposedChart,
@@ -74,6 +75,7 @@ const SUGGESTED = [
 export function AiInsightsView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
   const apply = useFilterStore((state) => state.apply);
+  const router = useRouter();
   const meta = useMeta();
 
   const [narrate, setNarrate] = React.useState(false);
@@ -110,7 +112,7 @@ export function AiInsightsView() {
 
   return (
     <PageFrame
-      title="AI Insights"
+      title="AI-powered Insights"
       subtitle={`Computed from the current selection · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
@@ -282,7 +284,7 @@ export function AiInsightsView() {
                       variant="ghost"
                       size="xs"
                       className="mt-3 self-start"
-                      onClick={() => apply(insight.action!.filters)}
+                      onClick={() => (insight.action!.href ? router.push(insight.action!.href) : apply(insight.action!.filters))}
                     >
                       {insight.action.label}
                       <ArrowRight className="size-3" />

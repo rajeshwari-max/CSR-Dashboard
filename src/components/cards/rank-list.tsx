@@ -67,7 +67,12 @@ export function RankRows({
             </div>
           </div>
           <div className="rank-value">
-            {valueMode === "crore" ? formatCrore(row.value) : formatShare(row.share)}
+            {valueMode === "crore" ? formatCrore(row.value) : (
+              <>
+                {formatShare(row.share)}
+                <span style={{ display: "block", fontSize: 10, fontWeight: 500, color: "var(--text-soft)" }}>of total CSR</span>
+              </>
+            )}
           </div>
         </div>
       ))}

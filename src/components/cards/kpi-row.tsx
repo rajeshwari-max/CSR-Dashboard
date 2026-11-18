@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -58,7 +59,7 @@ export function describeKpiPeriod(reportingYears: string[], selectedYears: strin
  * switch them on. They light up automatically once that column is uploaded.
  */
 
-interface KpiSpec {
+export interface KpiSpec {
   label: string;
   value: string;
   sub: React.ReactNode;
@@ -66,6 +67,8 @@ interface KpiSpec {
   unavailable?: string;
   icon: React.ElementType;
   tip?: string;
+  /** Page the card opens when clicked. */
+  href?: string;
 }
 
 export function KpiRow({
@@ -73,13 +76,17 @@ export function KpiRow({
   meta,
   isLoading,
   onSelect,
+  extra,
 }: {
+  /** Extra card appended to the row (e.g. reported unspent CSR from annexures). */
+  extra?: KpiSpec | null;
   kpis: Kpis | null;
   meta: Meta | null;
   isLoading: boolean;
   onSelect?: (key: string) => void;
 }) {
   const selectedYears = useFilterStore((state) => state.years);
+  const router = useRouter();
   if (isLoading || !kpis) {
     return (
       <div className="kpi-row">
@@ -103,31 +110,34 @@ export function KpiRow({
     : undefined;
   const cards: KpiSpec[] = [
     {
-      label: "Total CSR Amount Spent for the Selected Period",
+      label: "Total CSR Expenditure",
       value: formatCrore(kpis.totalSpend),
       sub:
         kpis.yoyGrowthPct !== null && kpis.previousYear
-          ? `${kpis.latestYear} vs ${kpis.previousYear}`
+          ? "compared to previous year"
           : period && period.count > 1
             ? "Cumulative across the years shown"
             : `${kpis.latestYear ?? "—"}`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
-      tip: "Cumulative CSR amount spent on project implementation across all projects and financial years in the current filter selection. Administrative overheads and impact assessment (evaluation) costs are reported separately by companies and are not included.",
+      href: "/trend-analysis",
+      tip: "Total CSR expenditure reported by companies during the selected financial years. Click for year-wise expenditure, top contributing companies and sectoral distribution.",
     },
     {
-      label: "Companies Reporting in the Selected Period",
+      label: "Companies with Reported CSR Data",
       value: formatNumber(kpis.companyCount),
       sub: `${kpis.sectorCount} sectors`,
       icon: Building2,
-      tip: "Distinct companies with at least one CSR project reported in the current selection.",
+      href: "/company-analysis",
+      tip: "Number of companies represented in the selected period. Click for the company-wise list, ownership and sector distribution.",
     },
     {
-      label: "CSR Projects Reported in the Selected Period",
+      label: "Reported CSR Projects",
       value: formatNumber(kpis.projectCount),
       sub: "Across India",
       icon: FolderKanban,
-      tip: "Total project records reported by the selected companies, years and locations.",
+      href: "/data-explorer",
+      tip: "Total number of CSR projects recorded in the selected period. Click for project details, implementing agencies and locations.",
     },
     beneficiaries
       ? {
@@ -141,23 +151,28 @@ export function KpiRow({
           // No beneficiary column in the dataset, so this slot shows geographic
           // depth instead of a dash. It switches back automatically the moment
           // a "Beneficiaries Reached" column is uploaded.
-          label: "Districts Reached by Reported CSR Projects",
+          label: "Districts with Reported CSR Projects",
           value: formatNumber(kpis.districtCount),
           sub: "With a recorded district location",
           icon: MapPinned,
-          tip: "Distinct districts reached by projects that include a recorded district location.",
+          href: "/explore-data?unit=district",
+          tip: "Number of districts with a recorded geographical location for CSR projects. Click for the district-wise CSR view.",
         },
     {
-      label: "Aspirational Districts Reached by CSR Projects",
+      label: "Aspirational District Coverage",
       value: `${formatNumber(kpis.aspirationalDistrictCount ?? 0)} of 112`,
       sub: `${formatCrore(kpis.aspirationalSpend)} spent · ${formatShare(kpis.aspirationalShare)} of total`,
       icon: Target,
-      tip: "NITI Aayog's 112 aspirational districts that received at least one reported CSR project, and the CSR amount spent in them, for the current selection.",
+      href: "/aspirational-districts",
+      tip: "Number of aspirational districts with reported CSR project coverage. Click for districts covered, expenditure and companies investing in these districts.",
     },
   ];
+  // Primary order (3 × 2): Companies, Total CSR, Projects / Districts, Unspent, Aspirational.
+  const [total, companies, projects, districts, aspirational] = cards;
+  cards.splice(0, cards.length, companies, total, projects, districts, ...(extra ? [extra] : []), aspirational);
 
   return (
-    <div className={`kpi-row${cards.length === 5 ? " five" : ""}`}>
+    <div className={`kpi-row${cards.length === 5 ? " five" : cards.length === 6 ? " six" : ""}`}>
       {cards.map((card, index) => {
         const dimmed = Boolean(card.unavailable) && !beneficiaries;
         const Icon = card.icon;
@@ -168,7 +183,15 @@ export function KpiRow({
             key={card.label}
             className="kpi-card"
             data-hue={index + 1}
-            onClick={() => !dimmed && onSelect?.(card.label)}
+            onClick={() => {
+              if (dimmed) return;
+              if (card.href) {
+                const [path, hash] = card.href.split("#");
+                const query = window.location.search;
+                const join = path.includes("?") ? (query ? `&${query.slice(1)}` : "") : query;
+                router.push(`${path}${join}${hash ? `#${hash}` : ""}`);
+              } else onSelect?.(card.label);
+            }}
             data-tip={
               dimmed
                 ? `Add a "${card.unavailable}" column and re-upload to populate this card`
