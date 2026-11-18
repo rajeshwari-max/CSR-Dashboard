@@ -124,7 +124,7 @@ export function ExecutiveDashboard() {
 
       <MiniLabel>CSR Trends and Distribution</MiniLabel>
       <div className="grid chart-row" style={{ marginBottom: 32 }}>
-        <div className="card hoverable">
+        <div className="card hoverable" style={{ display: "flex", flexDirection: "column" }}>
           <div className="card-head">
             <div>
               <ExplainedTitle title="CSR Expenditure and Project Trends" />
@@ -134,7 +134,7 @@ export function ExecutiveDashboard() {
             </div>
             <span className="card-badge">{kpis?.latestYear ?? "—"}</span>
           </div>
-          <div className="chart-wrap" style={{ height: 230 }}>
+          <div className="chart-wrap" style={{ flex: 1, minHeight: 300, marginTop: 8 }}>
             {summary.isLoading ? (
               <div className="skeleton" style={{ height: "100%" }} />
             ) : (
