@@ -163,7 +163,7 @@ export function IndiaMap({ data, selected, onSelect, formatValue, metricLabel, s
                   {formatCrore(hovered?.value ?? 0)} · {formatNumber(hovered?.count ?? 0)} projects
                 </p>
                 <p className="numeric text-[11px] text-muted-foreground">
-                  {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of filtered amount spent
+                  {formatShare(total ? (hovered?.value ?? 0) / total : 0)} of total CSR spent (selected filters)
                 </p>
               </>
             ) : (

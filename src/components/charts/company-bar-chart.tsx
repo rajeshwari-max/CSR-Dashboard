@@ -27,7 +27,7 @@ export function CompanyBarChart({ data }: { data: NamedValue[] }) {
         <Tooltip
           {...TOOLTIP_STYLES}
           formatter={(value: number, _name: string, item: { payload?: NamedValue }) => [
-            `${formatCrore(value)} · ${formatShare(item?.payload?.share)} of view`,
+            `${formatCrore(value)} · ${formatShare(item?.payload?.share)} of total CSR spent`,
             "CSR amount spent",
           ]}
         />

@@ -68,7 +68,7 @@ export function ProjectAnalyticsView() {
         <Stat
           label="CSR Spent in Aspirational Districts"
           value={formatCrore(kpis?.aspirationalSpend ?? 0)}
-          sub={`${formatShare(kpis?.aspirationalShare ?? 0)} of amount spent in view`}
+          sub={`${formatShare(kpis?.aspirationalShare ?? 0)} of total CSR spent (selected filters)`}
         />
         <Stat
           label="Districts Reached by Reported CSR Projects"

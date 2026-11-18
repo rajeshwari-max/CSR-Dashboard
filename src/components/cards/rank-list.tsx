@@ -60,7 +60,7 @@ export function RankRows({
                 ? `${formatNumber(row.count ?? 0)} projects`
                 : metaMode === "companies"
                   ? `${formatNumber(row.companies ?? 0)} companies`
-                  : formatShare(row.share)}
+                  : `${formatShare(row.share)} of total CSR spent`}
             </div>
             <div className="rank-bar-track">
               <div className="rank-bar-fill" style={{ width: `${Math.max(3, (row.value / peak) * 100)}%` }} />

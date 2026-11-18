@@ -240,7 +240,7 @@ export function SectorAnalysisView() {
                   formatter={(value: number, name: string) => {
                     const row = themes.find((item) => item.name === name);
                     return [
-                      row ? `${formatCrore(value)} · ${formatShare(row.share)} · ${formatNumber(row.count ?? 0)} projects` : formatCrore(value),
+                      row ? `${formatCrore(value)} · ${formatShare(row.share)} of total CSR spent · ${formatNumber(row.count ?? 0)} projects` : formatCrore(value),
                       name,
                     ];
                   }}
@@ -336,7 +336,7 @@ function FundingTreemapNode({
         : null}
       {showValue ? (
         <text x={x + 9} y={y + 23 + lines.length * (fontSize + 3)} fill="#fff" fontSize={Math.min(12, fontSize)} fontWeight={500} {...halo}>
-          {formatCrore(value)} · {(share * 100).toFixed(1)}%
+          {formatCrore(value)} · {(share * 100).toFixed(1)}% of total
           {width > 230 ? ` · ${count.toLocaleString("en-IN")} projects` : ""}
         </text>
       ) : null}

@@ -60,7 +60,7 @@ const INDICATORS: Indicator[] = [
   { key: "avg", label: "Average spent per project", unit: "₹ crore per project", format: (v) => formatCrore(v), get: (r) => (r.count ? r.value / r.count : null), meaning: "CSR spent divided by projects. High values mean a few large projects; low values mean many small ones." },
   { key: "latest", label: "CSR spent in latest year", unit: "₹ crore", format: (v) => formatCrore(v), get: (r) => r.latest ?? null, meaning: "CSR spent in the most recent financial year only, to see where money is going now." },
   { key: "yoy", label: "Growth on previous year", unit: "%", format: (v) => formatSignedPercent(v), get: (r) => (typeof r.yoyGrowthPct === "number" ? r.yoyGrowthPct : null), meaning: "Change in CSR spent from the previous year to the latest year. Positive is rising, negative is falling; small bases can show big %." },
-  { key: "share", label: "Share of CSR spent", unit: "%", format: (v) => `${v.toFixed(1)}%`, get: (r) => (typeof r.share === "number" ? r.share * 100 : null), meaning: "Each region's slice of all CSR spent in the selection. Shows how concentrated the money is." },
+  { key: "share", label: "Share of total CSR spent", unit: "% of total", format: (v) => `${v.toFixed(1)}%`, get: (r) => (typeof r.share === "number" ? r.share * 100 : null), meaning: "Each region's slice of all CSR spent in the selection. Shows how concentrated the money is." },
   { key: "districts", label: "Districts reached", unit: "districts", format: (v) => formatNumber(v), get: (r) => r.districts ?? null, stateOnly: true, meaning: "How many districts in the state received at least one CSR project. Shows how widely money spreads inside a state." },
 ];
 

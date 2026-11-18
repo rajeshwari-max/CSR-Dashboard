@@ -91,14 +91,9 @@ export function ExecutiveDashboard() {
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: "0 0 6px" }}>
           Explore India&apos;s CSR landscape through company contributions, CSR expenditure, sectoral priorities, geographical distribution and project implementation.
         </p>
-        <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: "0 0 12px" }}>
+        <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: 0 }}>
           Use the filters to identify companies, understand funding patterns, explore districts and sectors, and discover emerging CSR trends.
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {["Company Intelligence", "Geographical Insights", "Sector Trends", "CSR Opportunities"].map((tag) => (
-            <span key={tag} style={{ fontSize: 12, fontWeight: 600, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--c1) 12%, transparent)", color: "var(--c1)" }}>{tag}</span>
-          ))}
-        </div>
       </div>
 
       <MiniLabel>India&apos;s CSR at a Glance</MiniLabel>
@@ -211,7 +206,7 @@ export function ExecutiveDashboard() {
           <div className="row" style={{ justifyContent: "space-between", marginTop: 12, gap: 8 }}>
             <MiniStat label="Mapped" value={formatCrore(mappedStates.reduce((sum, row) => sum + row.value, 0))} />
             <MiniStat label="Districts" value={formatNumber(kpis?.districtCount ?? 0)} />
-            <MiniStat label="Aspirational share" value={formatShare(kpis?.aspirationalShare ?? 0)} />
+            <MiniStat label="Share of total CSR spent in aspirational districts" value={formatShare(kpis?.aspirationalShare ?? 0)} />
           </div>
         </div>
 

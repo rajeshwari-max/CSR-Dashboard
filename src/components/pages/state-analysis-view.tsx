@@ -110,7 +110,7 @@ export function StateAnalysisView() {
                 <Row
                   key={row.name}
                   label={row.name}
-                  value={`${formatCrore(row.value)} · ${formatShare(row.share)}`}
+                  value={`${formatCrore(row.value)} · ${formatShare(row.share)} of total CSR spent`}
                   muted
                 />
               ))}

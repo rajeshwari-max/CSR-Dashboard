@@ -49,7 +49,7 @@ export function SectorPieChart({ data, sliceCount = 8, onSelect }: SectorPieChar
         <Tooltip
           {...TOOLTIP_STYLES}
           formatter={(value: number, name: string) => [
-            `${formatCrore(value)} · ${formatShare(total ? value / total : 0)}`,
+            `${formatCrore(value)} · ${formatShare(total ? value / total : 0)} of total CSR spent`,
             name,
           ]}
         />

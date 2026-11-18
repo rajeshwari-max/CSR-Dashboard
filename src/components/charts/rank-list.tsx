@@ -48,7 +48,7 @@ export function RankList({ data, limit = 10, onSelect, emptyMessage = "Nothing t
                 />
               </span>
               <span className="numeric shrink-0 whitespace-nowrap text-right text-[11px] text-muted-foreground">
-                {formatShare(row.share)} · {row.count ?? 0} proj
+                {formatShare(row.share)} of total CSR · {row.count ?? 0} proj
               </span>
             </div>
           </button>

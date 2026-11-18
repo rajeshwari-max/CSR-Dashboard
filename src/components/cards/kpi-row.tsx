@@ -161,7 +161,7 @@ export function KpiRow({
     {
       label: "Aspirational District Coverage",
       value: `${formatNumber(kpis.aspirationalDistrictCount ?? 0)} of 112`,
-      sub: `${formatCrore(kpis.aspirationalSpend)} spent · ${formatShare(kpis.aspirationalShare)} of total`,
+      sub: `${formatCrore(kpis.aspirationalSpend)} spent · ${formatShare(kpis.aspirationalShare)} of total CSR spent`,
       icon: Target,
       href: "/aspirational-districts",
       tip: "Number of aspirational districts with reported CSR project coverage. Click for districts covered, expenditure and companies investing in these districts.",

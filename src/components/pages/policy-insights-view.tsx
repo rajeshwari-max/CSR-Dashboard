@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartCard } from "@/components/charts/chart-card";
 import { AXIS_PROPS, TOOLTIP_STYLES } from "@/components/charts/chart-theme";
@@ -96,6 +96,8 @@ export function MainSection({ id, title, children }: { id?: string; title: strin
   );
 }
 
+const OWNERSHIP_COLORS = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--c4)", "var(--c5)", "var(--c6)", "var(--c7)"];
+
 /**
  * Policy content shown inside CSR Insights, after Company Analysis:
  * Section 2 (CSR Spending Analysis) and Section 3 (Unspent CSR Analysis).
@@ -113,7 +115,6 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
   }, [hasData]);
   const p = policy.data;
   const annexureScopeSupported = canScopeAnnexureFinancials(filters);
-  const ownershipMax = Math.max(1, ...(p?.ownership ?? []).map((row) => row.value));
 
   return (
     <>
@@ -131,7 +132,7 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
         emptyMessage="All-India totals are available for FY 2020-21 to FY 2024-25."
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={(p?.coverage ?? []).map((c) => ({ ...c, label: `${shortYear(c.year)} · ${formatShare(c.share)}` }))} margin={{ top: 8, right: 8, bottom: 22, left: 18 }}>
+          <BarChart data={(p?.coverage ?? []).map((c) => ({ ...c, label: `${shortYear(c.year)} · ${formatShare(c.share)} of all-India` }))} margin={{ top: 8, right: 8, bottom: 22, left: 18 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="label" {...AXIS_PROPS} label={{ value: "Financial year · dashboard share of all-India CSR", position: "insideBottom", offset: -14, style: AXIS_LABEL }} />
             <YAxis {...AXIS_PROPS} tickFormatter={(v: number) => formatNumber(v)} label={{ value: "CSR spent (₹ crore)", angle: -90, position: "insideLeft", offset: -8, style: AXIS_LABEL }} />
@@ -146,27 +147,54 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
       <SectionLabel>Public sector and private companies</SectionLabel>
       <ChartCard
         title="CSR Spent by Company Ownership"
-        description="Click a row to filter the whole dashboard to that ownership class"
-        height={Math.max(240, (p?.ownership.length ?? 3) * 70 + 30)}
+        description="Share of CSR spent by ownership class. Click a slice or a row to filter the whole dashboard to that class."
+        height={Math.max(320, (p?.ownership.length ?? 3) * 64 + 20)}
         isLoading={policy.isLoading}
         error={policy.error}
         isEmpty={!p?.ownership.length}
       >
-        <div className="flex h-full flex-col gap-2 overflow-y-auto">
-          {(p?.ownership ?? []).map((row) => (
-            <button key={row.name} type="button" onClick={() => toggleValue("ownership", row.name)} className="rounded-lg px-2 py-1.5 text-left hover:bg-accent/60">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-[13px] font-semibold">{row.name}</span>
-                <span className="numeric text-[13px] font-semibold">{formatCrore(row.value)} · {formatShare(row.share)}</span>
-              </div>
-              <span className="mt-1 block h-1.5 overflow-hidden rounded-full bg-muted">
-                <span className="block h-full rounded-full" style={{ width: `${Math.max(2, (row.value / ownershipMax) * 100)}%`, background: "var(--c1)" }} />
-              </span>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                {formatNumber(row.companies ?? 0)} companies · {formatNumber(row.count ?? 0)} projects · Largest: {companiesLine(row.topCompanies)}
-              </p>
-            </button>
-          ))}
+        <div className="grid h-full grid-cols-1 gap-4 lg:grid-cols-[minmax(260px,2fr)_3fr]">
+          <div className="h-[280px] lg:h-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={p?.ownership ?? []}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius="48%"
+                  outerRadius="88%"
+                  paddingAngle={1}
+                  stroke="var(--surface)"
+                  onClick={(slice: { name?: string }) => slice?.name && toggleValue("ownership", slice.name)}
+                  className="cursor-pointer"
+                >
+                  {(p?.ownership ?? []).map((row, i) => (
+                    <Cell key={row.name} fill={OWNERSHIP_COLORS[i % OWNERSHIP_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  {...TOOLTIP_STYLES}
+                  formatter={(value: number, _name: string, item: { payload?: { share?: number } }) => [`${formatCrore(value)} · ${formatShare(item?.payload?.share ?? 0)} of total CSR spent`, "CSR spent"]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-col gap-1.5 overflow-y-auto">
+            {(p?.ownership ?? []).map((row, i) => (
+              <button key={row.name} type="button" onClick={() => toggleValue("ownership", row.name)} className="rounded-lg px-2 py-1.5 text-left hover:bg-accent/60">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="flex items-center gap-2 text-[13px] font-semibold">
+                    <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: OWNERSHIP_COLORS[i % OWNERSHIP_COLORS.length] }} />
+                    {row.name}
+                  </span>
+                  <span className="numeric text-[13px] font-semibold">{formatCrore(row.value)} · {formatShare(row.share)} of total CSR spent</span>
+                </div>
+                <p className="mt-0.5 pl-[18px] text-[11px] text-muted-foreground">
+                  {formatNumber(row.companies ?? 0)} companies · {formatNumber(row.count ?? 0)} projects · Largest: {companiesLine(row.topCompanies)}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
       </ChartCard>
 
@@ -182,7 +210,7 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
             </CardHeader>
             <CardContent className="flex flex-col gap-2 text-sm">
               <p className="numeric text-2xl font-bold">{formatCrore(tag.spend)}</p>
-              <p className="text-muted-foreground">{formatShare(tag.share)} of spent in view</p>
+              <p className="text-muted-foreground">{formatShare(tag.share)} of total CSR spent (selected filters)</p>
               <div style={{ height: 120 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={tag.byYear.map((y) => ({ ...y, label: shortYear(y.year).replace(/^FY20/, "FY") }))} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
@@ -303,7 +331,7 @@ export function AspirationalSection({ filterQuery, singleDistrict = false }: { f
     <>
       <SectionLabel>Aspirational districts</SectionLabel>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat label="CSR Spent in Aspirational Districts" value={formatCrore(p?.aspirational.total ?? 0)} sub={`${formatShare(p?.aspirational.share ?? 0)} of spent in view`} />
+        <Stat label="CSR Spent in Aspirational Districts" value={formatCrore(p?.aspirational.total ?? 0)} sub={`${formatShare(p?.aspirational.share ?? 0)} of total CSR spent (selected filters)`} />
         <Stat label="Companies Funding Them" value={formatNumber(p?.aspirational.companies ?? 0)} sub="With projects in aspirational districts" />
         <Stat label="Aspirational Districts Reached" value={`${formatNumber(p?.aspirational.districtsReached ?? 0)} of ${p?.aspirational.officialCount ?? 112}`} sub="Received at least one CSR project" />
         <Stat label="Largest Contributor" value={p?.aspirational.topCompanies[0]?.name ?? "—"} sub={p?.aspirational.topCompanies[0] ? formatCrore(p.aspirational.topCompanies[0].value) : undefined} />
