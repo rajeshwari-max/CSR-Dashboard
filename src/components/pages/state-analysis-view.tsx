@@ -251,7 +251,7 @@ export function StateAnalysisView() {
             limit={40}
             selected={filters.districts}
             onSelect={(name) => toggleValue("districts", name)}
-            columns={["value", "share", "count", "companies", "yoy"]}
+            columns={["value", "count", "companies", "yoy"]}
           />
         </CardContent>
       </Card>

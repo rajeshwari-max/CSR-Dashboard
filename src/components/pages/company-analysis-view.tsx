@@ -131,7 +131,7 @@ export function CompanyAnalysisView() {
                 if (match?.id) setValues("companies", [match.id]);
               }}
               latestLabel={summary.data?.kpis.latestYear ? `CSR Expenditure in ${summary.data.kpis.latestYear.replace(" ", "\u00a0").replace("-", "\u2011")}` : undefined}
-              headers={{ share: "Share of Total CSR Expenditure", unspent: "Unspent CSR" }}
+              headers={{ share: "Share of Total CSR Spent", unspent: "Unspent CSR" }}
               columns={["value", "share", "count", "latest", "yoy", "unspent"]}
               actionLabel="View Profile"
             />
@@ -480,6 +480,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
               label="Schedule VII Thematic Area"
               limit={10}
               showBars
+              headers={{ share: "Share of This Company's CSR" }}
               columns={["value", "share", "count"]}
               showTotal
             />
@@ -501,6 +502,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
               label="State"
               limit={12}
               showBars
+              headers={{ share: "Share of This Company's CSR" }}
               columns={["value", "share", "count"]}
               showTotal
             />

@@ -34,11 +34,12 @@ interface BreakdownTableProps {
 
 const HEADERS: Record<Column, string> = {
   value: "Total CSR Expenditure",
-  // Shares are computed within the dimension: only 44.7% of spend carries a
-  // district, so a district's share is of district-attributed spend, not of
-  // the grand total. Tables where every row carries the full total (e.g.
-  // companies) override this with "Share of Total CSR Expenditure".
-  share: "Share of Table Total",
+  // Each row's share of the table's own total. For companies, sectors, states
+  // (incl. Pan India) and Schedule VII areas every project has a value, so this
+  // equals the share of total CSR spent. Tables where it does not (a single
+  // company, aspirational districts) pass their own header; the district table
+  // drops the column because most spending has no district.
+  share: "Share of Total CSR Spent",
   count: "Projects Reported",
   companies: "Companies",
   latest: "Latest Year",

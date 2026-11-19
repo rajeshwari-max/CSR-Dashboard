@@ -69,7 +69,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
     "Largest Contributor": "The company that spent the most on CSR projects in aspirational districts.",
     "Prescribed CSR Obligation": "The amount companies were required to spend on CSR (2% of average net profit), as stated in their annual CSR reports.",
     "Unspent CSR": "CSR money companies were required to spend but did not spend in the year, as stated in their annual CSR reports.",
-    "Impact Assessment": "Money companies spent on studies that measure the impact of their CSR projects. This is separate from project spending.",
+    "Impact Assessment": "Money companies spent on independent studies that check whether their CSR projects achieved results. Large companies must do this for big projects. It is separate from project spending.",
     "Implementing Agencies": "Organisations (such as NGOs and trusts) that carried out CSR projects for companies, as named in company CSR reports.",
     "Amount Routed through Them": "CSR money companies spent through these organisations.",
     "Companies Naming Partners": "Companies that name at least one implementing organisation in their CSR report.",
@@ -280,7 +280,7 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`Reported by ${formatNumber(p.financials.companies)} companies`} />
             <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatNumber(p.financials.unspentCompanies)} companies with unspent CSR`} />
-            <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`Required in ${formatNumber(p.financials.impactApplicable)} company reports · ${formatNumber(p.financials.impactReports)} impact reports linked`} />
+            <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`Spent by ${formatNumber(p.financials.impactCompanies)} companies to check how well their CSR projects worked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
             <ChartCard title="Required, Spent and Unspent CSR by Year" description="Each year: how much companies had to spend on CSR, how much they spent, and how much was unspent (₹ crore), from company CSR reports" height={320} className="xl:col-span-2" isEmpty={!p.financials.byYear.some((y) => y.obligation || y.totalSpent)}>

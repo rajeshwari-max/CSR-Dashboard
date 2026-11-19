@@ -85,6 +85,7 @@ export function AspirationalDistrictsView() {
             selected={district ? [district] : []}
             onSelect={(name) => setDistrict(district === name ? null : name)}
             latestLabel={years[years.length - 1]}
+            headers={{ share: "Share of CSR in Aspirational Districts" }}
             columns={["value", "share", "count", "companies", "latest", "yoy"]}
           />
         </CardContent>

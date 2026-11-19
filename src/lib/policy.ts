@@ -180,6 +180,8 @@ export function buildPolicyInsights(filters: Filters) {
         overheads: sumOf("overheads"), impact: sumOf("impact"),
         impactApplicable: fin.filter((r) => r.impactApplicable === true).length,
         impactReports: fin.filter((r) => typeof r.impactReport === "string" && r.impactReport).length,
+        /** Companies that spent something on impact assessment in the selected years. */
+        impactCompanies: new Set(fin.filter((r) => num(r.impact) > 0).map((r) => r.companyKey)).size,
         byYear: years.map((year) => {
           const list = fin.filter((r) => r.year === year);
           return { year, obligation: sumOf("obligation", list), totalSpent: sumOf("totalSpent", list), unspent: sumOf("unspent", list), toUnspentAccount: sumOf("toUnspentAccount", list), impact: sumOf("impact", list) };
