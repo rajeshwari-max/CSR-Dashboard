@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -9,7 +9,7 @@ import { formatCrore, formatNumber, formatShare, formatSignedPercent } from "@/l
 import { cn } from "@/lib/utils";
 import type { NamedValue } from "@/types";
 
-type Column = "value" | "share" | "count" | "companies" | "latest" | "yoy";
+type Column = "value" | "share" | "count" | "companies" | "latest" | "yoy" | "unspent";
 
 interface BreakdownTableProps {
   rows: NamedValue[];
@@ -26,18 +26,24 @@ interface BreakdownTableProps {
    * project tally reconciles with the headline figures and with other tables.
    */
   showTotal?: boolean;
+  /** Replace the default column names for this table only. */
+  headers?: Partial<Record<Column, string>>;
+  /** Adds a last column with this link text (e.g. "View Profile"); clicking it calls onSelect. */
+  actionLabel?: string;
 }
 
 const HEADERS: Record<Column, string> = {
-  value: "Amount spent",
+  value: "Total CSR Expenditure",
   // Shares are computed within the dimension: only 44.7% of spend carries a
   // district, so a district's share is of district-attributed spend, not of
-  // the grand total. Naming it "Share of shown" keeps that honest.
-  share: "% of table total",
-  count: "Projects",
+  // the grand total. Tables where every row carries the full total (e.g.
+  // companies) override this with "Share of Total CSR Expenditure".
+  share: "Share of Table Total",
+  count: "Projects Reported",
   companies: "Companies",
-  latest: "Latest FY",
-  yoy: "YoY",
+  latest: "Latest Year",
+  yoy: "Year-on-Year Change",
+  unspent: "Unspent CSR",
 };
 
 export function BreakdownTable({
@@ -50,6 +56,8 @@ export function BreakdownTable({
   showBars = true,
   latestLabel,
   showTotal = false,
+  headers,
+  actionLabel,
 }: BreakdownTableProps) {
   const [sortColumn, setSortColumn] = React.useState<Column>("value");
   const [ascending, setAscending] = React.useState(false);
@@ -62,6 +70,7 @@ export function BreakdownTable({
         case "companies": return row.companies ?? 0;
         case "latest": return row.latest ?? 0;
         case "yoy": return row.yoyGrowthPct ?? Number.NEGATIVE_INFINITY;
+        case "unspent": return row.unspent ?? Number.NEGATIVE_INFINITY;
         default: return row.value;
       }
     };
@@ -82,31 +91,30 @@ export function BreakdownTable({
     <Table>
       <TableHeader>
         <TableRow className="hover:bg-transparent">
-          <TableHead className="w-8">#</TableHead>
-          <TableHead className="min-w-52">{label}</TableHead>
+          <TableHead className="w-12 normal-case">Rank</TableHead>
+          <TableHead className="min-w-52 normal-case">{label}</TableHead>
           {columns.map((column) => (
-            <TableHead key={column} className="text-right">
+            <TableHead key={column} className="h-auto whitespace-normal py-2 text-right leading-tight">
               <button
                 type="button"
                 onClick={() => toggle(column)}
+                title="Click to sort"
                 className={cn(
-                  "inline-flex flex-row-reverse items-center gap-1 hover:text-foreground",
-                  sortColumn === column && "text-foreground",
+                  "inline-block max-w-[9.5rem] text-right hover:text-foreground",
+                  sortColumn === column && "font-semibold text-foreground",
                 )}
               >
-                {column === "latest" ? (latestLabel ?? HEADERS[column]) : HEADERS[column]}
-                {sortColumn === column ? (
-                  ascending ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />
-                ) : null}
+                {headers?.[column] ?? (column === "latest" ? (latestLabel ?? HEADERS[column]) : HEADERS[column])}
               </button>
             </TableHead>
           ))}
+          {actionLabel ? <TableHead className="text-right normal-case">Action</TableHead> : null}
         </TableRow>
       </TableHeader>
       <TableBody>
         {sorted.length === 0 ? (
           <TableRow className="hover:bg-transparent">
-            <TableCell colSpan={columns.length + 2} className="py-12 text-center text-sm text-muted-foreground">
+            <TableCell colSpan={columns.length + 2 + (actionLabel ? 1 : 0)} className="py-12 text-center text-sm text-muted-foreground">
               Nothing matches the current filters.
             </TableCell>
           </TableRow>
@@ -145,6 +153,17 @@ export function BreakdownTable({
                       </TableCell>
                     );
                   }
+                  if (column === "unspent") {
+                    return (
+                      <TableCell key={column} className="numeric whitespace-nowrap text-right text-[13px]">
+                        {row.unspent === null || row.unspent === undefined ? (
+                          <span className="text-xs text-muted-foreground" title="No CSR report available for this company">—</span>
+                        ) : (
+                          formatCrore(row.unspent)
+                        )}
+                      </TableCell>
+                    );
+                  }
                   const value =
                     column === "value" ? formatCrore(row.value)
                     : column === "share" ? formatShare(row.share)
@@ -157,6 +176,14 @@ export function BreakdownTable({
                     </TableCell>
                   );
                 })}
+                {actionLabel ? (
+                  <TableCell className="text-right">
+                    <span className="inline-flex items-center gap-0.5 whitespace-nowrap text-[12.5px] font-semibold" style={{ color: "var(--c1)" }}>
+                      {actionLabel}
+                      <ChevronRight className="size-3.5" />
+                    </span>
+                  </TableCell>
+                ) : null}
               </TableRow>
             );
           })
@@ -179,6 +206,7 @@ export function BreakdownTable({
                 : column === "share" ? "100%"
                 : column === "count" ? formatNumber(sum((row) => row.count ?? 0))
                 : column === "latest" ? formatCrore(sum((row) => row.latest ?? 0))
+                : column === "unspent" ? formatCrore(sum((row) => row.unspent ?? 0))
                 : ""; // companies and YoY do not add up across rows
               return (
                 <TableCell key={column} className="numeric whitespace-nowrap text-right text-[13px]">
@@ -186,6 +214,7 @@ export function BreakdownTable({
                 </TableCell>
               );
             })}
+            {actionLabel ? <TableCell /> : null}
           </TableRow>
         ) : null}
       </TableBody>

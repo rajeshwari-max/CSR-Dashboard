@@ -78,7 +78,7 @@ export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: Topbar
               Reports
             </Link>
             <Link href="/data-explorer" className="menu-item">
-              Saved views
+              CSR Data
             </Link>
             {process.env.NEXT_PUBLIC_AUTH_ENABLED === "true" ? <form action="/api/auth/logout" method="post">
               <button type="submit" className="menu-item" style={{ width: "100%", border: 0 }}>Sign out</button>

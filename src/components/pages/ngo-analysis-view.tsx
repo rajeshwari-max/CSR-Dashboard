@@ -59,7 +59,7 @@ export function NgoAnalysisView() {
         <div className={`grid grid-cols-1 gap-5 ${partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
           <OrgCard
             title={partners.amount > 0 ? "Implementing Agencies Awarded the Most CSR Funds" : "Top 15 Implementing Agencies by Number of Funding Companies"}
-            description={`Each bar shows how many companies named the agency in their CSR annexure. ${partners.implementers.toLocaleString("en-IN")} agencies across ${partners.records.toLocaleString("en-IN")} annexure rows; hover for the CSR-1 registration number.`}
+            description={`Each bar shows how many companies named the agency in their CSR report. ${partners.implementers.toLocaleString("en-IN")} agencies across ${partners.records.toLocaleString("en-IN")} CSR report rows; hover for the CSR-1 registration number.`}
             rows={partners.top}
             empty="No implementation rows in the uploaded partner data for this selection."
           />
@@ -68,7 +68,7 @@ export function NgoAnalysisView() {
               title="Agencies Engaged for M&E and Impact Assessment"
               description={`Rows uploaded with Role = M&E · ${partners.evaluatorCount} ${partners.evaluatorCount === 1 ? "agency" : "agencies"}`}
               rows={partners.evaluators}
-              empty="CSR annexures do not name M&E agencies. Add them (from companies' impact assessment reports) with Role = M&E in the partners template."
+              empty="CSR reports do not name M&E agencies. Add them (from companies' impact assessment reports) with Role = M&E in the partners template."
             />
           ) : null}
         </div>
@@ -169,7 +169,7 @@ export function NgoAnalysisView() {
   );
 }
 
-/** Annexure names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
+/** CSR report names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
 function cleanAgencyName(name: string) {
   const words = name.trim().split(/\s+/);
   if (words.length % 2 === 0) {

@@ -29,8 +29,8 @@ const MODEL_RULES: { pattern: RegExp; reason: string }[] = [
   { pattern: /\b(recommend|suggest|should|advise|advice|opportunit|strategy|strategic|focus on|priorit|what if|plan for)/i, reason: "asks for advice" },
   { pattern: /\b(gap|gaps|underserved|under-served|neglect|need is|needs? (more|most)|low but|high but)/i, reason: "asks about gaps or need" },
   { pattern: /\b(summari[sz]e|overview|key (takeaway|finding|insight)s?|insights?\b|brief me|tell me everything)/i, reason: "asks for a summary" },
-  // Data the engine does not read (annexure financials and partners).
-  { pattern: /\b(unspent|obligation amount|prescribed|transferred to|unspent account|schedule vii fund|overhead|impact assessment)/i, reason: "needs annexure financials" },
+  // Data the engine does not read (CSR report financials and partners).
+  { pattern: /\b(unspent|obligation amount|prescribed|transferred to|unspent account|schedule vii fund|overhead|impact assessment)/i, reason: "needs CSR report financials" },
   { pattern: /\b(ngo|ngos|implementing agenc|agency|agencies|partner|partners|foundation(s)? (they|it) (fund|work))/i, reason: "needs implementing-partner data" },
   // Ownership split is not modelled by the engine.
   { pattern: /\b(psu|psus|public sector|government[- ]owned|state[- ]owned|private (sector|compan)|mnc|multinational|ownership)/i, reason: "needs the ownership split" },
@@ -110,7 +110,7 @@ export const GREETING_REPLY =
 
 /**
  * Fact pack for the model: the standard pack plus the data the engine cannot
- * use (annexure financials, partners, ownership) and a summary for every state
+ * use (CSR report financials, partners, ownership) and a summary for every state
  * or company the question names, so comparisons are answered from real figures.
  */
 export function buildChatFactPack(question: string, filters: Filters, scope: string) {
@@ -125,7 +125,7 @@ export function buildChatFactPack(question: string, filters: Filters, scope: str
     if (policy.financials) {
       const f = policy.financials;
       pack.annexureFinancials = {
-        source: "Companies' annual-report CSR annexures (NSE filings)",
+        source: "Companies' annual CSR reports (NSE filings)",
         companies: f.companies, obligation: f.obligation, totalSpent: f.totalSpent, unspent: f.unspent,
         toUnspentAccount: f.toUnspentAccount, overheads: f.overheads, impactAssessmentSpend: f.impact,
         byYear: f.byYear, topUnspentCompanies: f.topUnspent,
@@ -134,13 +134,13 @@ export function buildChatFactPack(question: string, filters: Filters, scope: str
     if (policy.partners) {
       const p = policy.partners;
       pack.implementingPartners = {
-        source: "Companies' annual-report CSR annexures (NSE filings)",
+        source: "Companies' annual CSR reports (NSE filings)",
         agencies: p.implementers, companies: p.companies,
         topAgenciesByCompanies: p.top.map((a) => ({ name: a.name, companies: a.companies, registration: a.registration })),
       };
     }
   } catch {
-    // Annexure data is optional; the pack stays valid without it.
+    // CSR report data is optional; the pack stays valid without it.
   }
 
   const entities: Record<string, unknown>[] = [];

@@ -19,7 +19,7 @@ import { canScopeAnnexureFinancials } from "@/lib/annexure-scope";
 const shortYear = (year: string) => year.replace(/^FY\s*/, "FY");
 const companiesLine = (list: { name: string; value: number }[]) =>
   list.length ? list.map((c) => `${c.name} (${formatCrore(c.value)})`).join(" · ") : "—";
-const FIN_LABELS: Record<string, string> = { obligation: "Obligation", totalSpent: "Spent", unspent: "Unspent" };
+const FIN_LABELS: Record<string, string> = { obligation: "Required (obligation)", totalSpent: "Spent", unspent: "Unspent" };
 
 /** Every company with unspent CSR in view, as a CSV: total plus one column per year. */
 function downloadUnspent(list: { name: string; value: number; byYear: Record<string, number> }[], years: string[]) {
@@ -63,19 +63,19 @@ const AXIS_LABEL = { fontSize: 11, fill: "var(--text-soft)" } as const;
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   const descriptions: Record<string, string> = {
-    "CSR Spent in Aspirational Districts": "Project spending in NITI Aayog's aspirational districts over the selected years. Compare its share with the total CSR spent in this view.",
-    "Companies Funding Them": "Companies with at least one CSR project in an aspirational district in this view.",
-    "Aspirational Districts Reached": "Number of official aspirational districts named in the selected project filings, out of 112.",
-    "Largest Contributor": "Company with the highest reported project spending in aspirational districts in this view.",
-    "Prescribed CSR Obligation": "CSR obligation companies reported in their annual-report CSR annexures for the selected years.",
-    "Unspent CSR": "CSR amount companies reported as unspent in their CSR annexures for the selected years.",
-    "Impact Assessment": "Amount reported for impact assessments in the selected company annexures; separate from project spending.",
-    "Implementing Agencies": "Distinct organisations named as project implementers in company annexures.",
-    "Amount Routed through Them": "CSR amount companies reported as routed through named partners.",
-    "Companies Naming Partners": "Distinct companies that name at least one partner in the selected annexures.",
-    "Largest Partner": "Implementing organisation with the largest disclosed amount in the selected partner rows.",
-    "Most-used Partner": "Implementing organisation named by the most companies where partner amounts are unavailable.",
-    "State with Most Partners": "State with the highest count of distinct named partner organisations in the selected annexures.",
+    "CSR Spent in Aspirational Districts": "CSR money spent on projects in NITI Aayog's aspirational districts in the selected years.",
+    "Companies Funding Them": "Companies with at least one CSR project in an aspirational district.",
+    "Aspirational Districts Reached": "How many of the 112 official aspirational districts received at least one CSR project.",
+    "Largest Contributor": "The company that spent the most on CSR projects in aspirational districts.",
+    "Prescribed CSR Obligation": "The amount companies were required to spend on CSR (2% of average net profit), as stated in their annual CSR reports.",
+    "Unspent CSR": "CSR money companies were required to spend but did not spend in the year, as stated in their annual CSR reports.",
+    "Impact Assessment": "Money companies spent on studies that measure the impact of their CSR projects. This is separate from project spending.",
+    "Implementing Agencies": "Organisations (such as NGOs and trusts) that carried out CSR projects for companies, as named in company CSR reports.",
+    "Amount Routed through Them": "CSR money companies spent through these organisations.",
+    "Companies Naming Partners": "Companies that name at least one implementing organisation in their CSR report.",
+    "Largest Partner": "The implementing organisation that received the most CSR money.",
+    "Most-used Partner": "The implementing organisation that works with the most companies.",
+    "State with Most Partners": "The state with the most implementing organisations named in company CSR reports.",
   };
   return (
     <div className="kpi-card">
@@ -119,12 +119,12 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
   return (
     <>
       <MainSection id="csr-spending" title="CSR Spending Analysis">
-        How total CSR spending compares with all-India CSR, splits by company ownership and focus area, and flows through implementing partners.
+        How the CSR spending in this dashboard compares with all of India, how it splits between public and private companies and across focus areas, and which organisations carry out the projects.
       </MainSection>
-      <SectionLabel>Coverage of all-India CSR</SectionLabel>
+      <SectionLabel>Share of all-India CSR covered</SectionLabel>
       <ChartCard
-        title="Dashboard Companies against All-India CSR Spent"
-        description={p?.filtered ? "Filters are applied, so the violet bars show only part of the data" : "CSR spent each year (₹ crore): all companies in India vs the companies in this dashboard. The % under each year is the dashboard's share. Source: MCA data quoted in NITI Aayog's CSR concept note (Table 1)."}
+        title="CSR Spent by Dashboard Companies Compared with All of India"
+        description={p?.filtered ? "Filters are applied, so the purple bars show only part of the data." : "CSR spent each year (₹ crore) by all companies in India and by the companies in this dashboard. The % under each year is the dashboard's share of all-India CSR. Source: MCA figures quoted in NITI Aayog's CSR concept note (Table 1)."}
         height={330}
         isLoading={policy.isLoading}
         error={policy.error}
@@ -144,10 +144,10 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
         </ResponsiveContainer>
       </ChartCard>
 
-      <SectionLabel>Public sector and private companies</SectionLabel>
+      <SectionLabel>Public and private companies</SectionLabel>
       <ChartCard
-        title="CSR Spent by Company Ownership"
-        description="Share of CSR spent by ownership class. Click a slice or a row to filter the whole dashboard to that class."
+        title="CSR Expenditure by Company Ownership"
+        description="How much CSR money came from private companies, PSUs, public sector banks and insurers. Click a slice or a row to filter the dashboard."
         height={Math.max(320, (p?.ownership.length ?? 3) * 64 + 20)}
         isLoading={policy.isLoading}
         error={policy.error}
@@ -198,14 +198,14 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
         </div>
       </ChartCard>
 
-      <SectionLabel>Focus areas the Schedule VII head cannot show</SectionLabel>
+      <SectionLabel>Focus areas found in project descriptions</SectionLabel>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         {(p?.focus ?? []).map((tag) => (
           <Card key={tag.id}>
             <CardHeader>
               <div className="min-w-0">
                 <CardTitle>{tag.label}</CardTitle>
-                <CardDescription>{formatNumber(tag.projects)} projects · {formatNumber(tag.companies)} companies</CardDescription>
+                <CardDescription>{formatNumber(tag.projects)} projects reported · {formatNumber(tag.companies)} companies</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-2 text-sm">
@@ -222,43 +222,43 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
                 </ResponsiveContainer>
               </div>
               <p className="text-[11px] text-muted-foreground">CSR spent by financial year (₹ crore)</p>
-              <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Largest contributors</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Top contributing companies</p>
               <RankBars rows={tag.topCompanies} limit={3} />
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <SectionLabel>Implementing partners (NGOs)</SectionLabel>
+      <SectionLabel>Implementing partners (NGOs and other organisations)</SectionLabel>
       {p?.partners ? (
         <>
           <div className={`grid grid-cols-2 gap-4 ${p.partners.byState.length ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
-            <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={p.partners.evaluatorCount > 0 ? `${formatNumber(p.partners.evaluatorCount)} M&E / impact assessment agencies · ${formatNumber(p.partners.registered)} with a CSR-1 number` : `${formatNumber(p.partners.registered)} with a CSR-1 registration number`} />
+            <Stat label="Implementing Agencies" value={formatNumber(p.partners.implementers)} sub={p.partners.evaluatorCount > 0 ? `${formatNumber(p.partners.evaluatorCount)} monitoring and impact assessment agencies · ${formatNumber(p.partners.registered)} registered with MCA (CSR-1)` : `${formatNumber(p.partners.registered)} registered with MCA (CSR-1)`} />
             {p.partners.amount > 0 ? (
-              <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`${formatNumber(p.partners.records)} project rows uploaded`} />
+              <Stat label="Amount Routed through Them" value={formatCrore(p.partners.amount)} sub={`From ${formatNumber(p.partners.records)} reported projects`} />
             ) : (
-              <Stat label="Companies Naming Partners" value={formatNumber(p.partners.companies)} sub={`${formatNumber(p.partners.records)} company-year-agency rows from CSR annexures`} />
+              <Stat label="Companies Naming Partners" value={formatNumber(p.partners.companies)} sub={`From ${formatNumber(p.partners.records)} entries in company CSR reports`} />
             )}
             <Stat
               label={p.partners.amount > 0 ? "Largest Partner" : "Most-used Partner"}
               value={p.partners.top[0]?.name ?? "—"}
-              sub={p.partners.top[0] ? (p.partners.amount > 0 ? formatCrore(p.partners.top[0].value) : `${p.partners.top[0].companies} funding companies`) : undefined}
+              sub={p.partners.top[0] ? (p.partners.amount > 0 ? formatCrore(p.partners.top[0].value) : `Works with ${p.partners.top[0].companies} companies`) : undefined}
             />
             {p.partners.byState.length ? (
-              <Stat label="State with Most Partners" value={p.partners.byState[0].name} sub={`${p.partners.byState[0].agencies} agencies`} />
+              <Stat label="State with Most Partners" value={p.partners.byState[0].name} sub={`${p.partners.byState[0].agencies} implementing agencies`} />
             ) : null}
           </div>
           <div className={`grid grid-cols-1 gap-5 ${p.partners.evaluators.length ? "xl:grid-cols-2" : ""}`}>
-            <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations awarded funds to implement CSR projects: amount, funding companies and states" : "Agencies named by the most companies in their CSR annexures"} height={360} isEmpty={!p.partners.top.length}>
+            <ChartCard title="Largest Implementing Partners" description={p.partners.amount > 0 ? "Organisations that received the most CSR money to carry out projects, with the number of companies and states" : "Organisations named by the most companies in their CSR reports"} height={360} isEmpty={!p.partners.top.length}>
               <PartnerList rows={p.partners.top} />
             </ChartCard>
             {p.partners.evaluators.length ? (
             <ChartCard
-                title="M&E and Impact Assessment Agencies"
-                description="Organisations engaged for monitoring, evaluation or impact assessment (rows with Role = M&E)"
+                title="Monitoring and Impact Assessment Agencies"
+                description="Organisations hired to monitor CSR projects or measure their impact"
                 height={360}
                 isEmpty={!p.partners.evaluators.length}
-                emptyMessage="CSR annexures do not name M&E agencies. Add them with Role = M&E from companies' impact assessment reports."
+                emptyMessage="Company CSR reports do not name monitoring or impact assessment agencies yet."
               >
                 <PartnerList rows={p.partners.evaluators} />
               </ChartCard>
@@ -270,20 +270,20 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
       )}
 
       <MainSection id="unspent-csr-section" title="Unspent CSR Analysis">
-        CSR obligation, spending and unspent amounts reported in companies&apos; annual-report CSR annexures.
+        How much companies were required to spend on CSR, how much they spent, and how much was left unspent, as stated in their annual CSR reports.
       </MainSection>
       <div id="unspent-csr" style={{ scrollMarginTop: 190 }}><SectionLabel>Unspent CSR and impact assessment</SectionLabel></div>
       {!annexureScopeSupported ? (
-        <p className="mb-5 rounded-lg border px-4 py-3 text-[12.5px] text-muted-foreground">Unspent CSR is reported for whole companies, so it cannot be split by location, project theme, implementation mode, search text, aspirational status or project amount. Clear those filters to see a reliable company and year total.</p>
+        <p className="mb-5 rounded-lg border px-4 py-3 text-[12.5px] text-muted-foreground">Unspent CSR is reported for each company as a whole, so it cannot be split by location, Schedule VII area, implementing agency, search text, aspirational district or project amount. Clear those filters to see correct totals.</p>
       ) : p?.financials ? (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-            <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`${formatNumber(p.financials.companies)} companies uploaded`} />
+            <Stat label="Prescribed CSR Obligation" value={formatCrore(p.financials.obligation)} sub={`Reported by ${formatNumber(p.financials.companies)} companies`} />
             <Stat label="Unspent CSR" value={formatCrore(p.financials.unspent)} sub={`${formatNumber(p.financials.unspentCompanies)} companies with unspent CSR`} />
-            <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`${formatNumber(p.financials.impactApplicable)} filings applicable · ${formatNumber(p.financials.impactReports)} reports linked`} />
+            <Stat label="Impact Assessment" value={formatCrore(p.financials.impact)} sub={`Required in ${formatNumber(p.financials.impactApplicable)} company reports · ${formatNumber(p.financials.impactReports)} impact reports linked`} />
           </div>
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-            <ChartCard title="CSR Obligation, Spent and Unspent by Year" description="Prescribed CSR obligation, amount spent and unspent amount each year (₹ crore), from company CSR annexures" height={320} className="xl:col-span-2" isEmpty={!p.financials.byYear.some((y) => y.obligation || y.totalSpent)}>
+            <ChartCard title="Required, Spent and Unspent CSR by Year" description="Each year: how much companies had to spend on CSR, how much they spent, and how much was unspent (₹ crore), from company CSR reports" height={320} className="xl:col-span-2" isEmpty={!p.financials.byYear.some((y) => y.obligation || y.totalSpent)}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={p.financials.byYear.map((y) => ({ ...y, label: shortYear(y.year) }))} margin={{ top: 8, right: 8, bottom: 22, left: 18 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -299,10 +299,10 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
             </ChartCard>
             <ChartCard
               title="Companies with the Largest Unspent CSR"
-              description={`${formatNumber(p.financials.unspentCompanies)} companies have unspent CSR in this view; top 10 shown (₹ crore, total over the years in view)`}
+              description={`${formatNumber(p.financials.unspentCompanies)} companies have unspent CSR in your selection. The top 10 are shown (₹ crore, total for the selected years).`}
               height={320}
               isEmpty={!p.financials.topUnspent.length}
-              emptyMessage="No unspent amounts in the uploaded rows."
+              emptyMessage="No unspent CSR reported for this selection."
               action={
                 p.financials.unspentList.length ? (
                   <button type="button" className="btn btn-outline btn-sm" onClick={() => downloadUnspent(p.financials!.unspentList, p.years)}>
@@ -316,7 +316,7 @@ export function PolicyInsightsSections({ filters, filterQuery }: { filters: Filt
           </div>
         </>
       ) : (
-        <p className="text-sm text-muted-foreground">No annexure data loaded yet.</p>
+        <p className="text-sm text-muted-foreground">No company CSR report data loaded yet.</p>
       )}
 
     </>
@@ -356,7 +356,7 @@ export function AspirationalSection({ filterQuery, singleDistrict = false }: { f
         </ResponsiveContainer>
       </ChartCard>
       )}
-      <ChartCard title="Top Contributors to Aspirational Districts" description="Companies with the most CSR spent in aspirational districts (₹ crore)" height={200} isLoading={policy.isLoading} error={policy.error} isEmpty={!p?.aspirational.topCompanies.length}>
+      <ChartCard title="Top Contributors to Aspirational Districts" description="Companies that spent the most CSR money in aspirational districts (₹ crore)" height={200} isLoading={policy.isLoading} error={policy.error} isEmpty={!p?.aspirational.topCompanies.length}>
         <RankBars rows={p?.aspirational.topCompanies ?? []} />
       </ChartCard>
 

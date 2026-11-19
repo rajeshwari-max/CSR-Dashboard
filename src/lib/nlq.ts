@@ -491,7 +491,7 @@ export function answerQuestion(question: string, filters: Filters): NlqAnswer {
         (districts ? `Top districts: ${districts}. ` : "") +
         (themes ? `Main areas: ${themes}.` : "") +
         (k.totalSpend < 1
-          ? " Very little of this company's CSR is filed project by project on the MCA portal; its annual report CSR annexure gives the full figure."
+          ? " Very little of this company's CSR is filed project by project on the MCA portal; its annual CSR report gives the full figure."
           : "") +
         foundationNote +
         othersNote,

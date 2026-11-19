@@ -85,8 +85,8 @@ export function SectorAnalysisView() {
 
   return (
     <PageFrame
-      title="Explore Sectors"
-      subtitle={`How CSR spent splits across sectors · ${scope}`}
+      title="CSR by Sector"
+      subtitle={`How CSR spending is split across industry sectors and Schedule VII areas · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}

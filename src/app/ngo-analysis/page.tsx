@@ -1,18 +1,6 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { NgoAnalysisView } from "@/components/pages/ngo-analysis-view";
-import { PageSkeleton } from "@/components/shared/page-skeleton";
-
-export const metadata: Metadata = { title: "Implementation Partners · CMS CSR Intelligence" };
-export const dynamic = "force-dynamic";
-
+// The Implementation Partners page has been removed. Partner figures remain in CSR Insights.
 export default function Page() {
-  // The views read filters from the URL via useSearchParams, which Next
-  // requires to sit inside a Suspense boundary.
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <NgoAnalysisView />
-    </Suspense>
-  );
+  redirect("/company-analysis#csr-spending");
 }

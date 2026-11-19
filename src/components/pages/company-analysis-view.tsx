@@ -18,7 +18,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useApi } from "@/lib/api";
+import { companyMatchKey } from "@/lib/data-cleanup";
 import { formatCrore, formatNumber, formatPercent, formatShare, formatSignedPercent } from "@/lib/format";
+import type { PolicyInsights } from "@/lib/policy";
 import { useFilterStore } from "@/store/filters";
 import type { CompanyDetail, ComparisonResponse, SummaryResponse } from "@/types";
 
@@ -46,6 +48,15 @@ export function CompanyAnalysisView() {
   }, [filters.companies]);
 
   const summary = useApi<SummaryResponse>(`/api/summary?${filterQuery}&top=50`);
+  // Same request as the CSR Spending / Unspent sections further down, so it is served from cache.
+  const policy = useApi<PolicyInsights>(`/api/policy?${filterQuery}`);
+  const companyRows = React.useMemo(() => {
+    const unspent = policy.data?.financials?.unspentByCompanyKey;
+    return (summary.data?.topCompanies ?? []).map((row) => {
+      const key = companyMatchKey(row.name);
+      return { ...row, unspent: unspent && key in unspent ? unspent[key] : null };
+    });
+  }, [summary.data, policy.data]);
   const comparison = useApi<ComparisonResponse>(
     compare.length ? `/api/compare?companies=${compare.map(encodeURIComponent).join("|")}&${filterQuery}` : null,
   );
@@ -86,15 +97,19 @@ export function CompanyAnalysisView() {
       isRefreshing={summary.isValidating}
     >
       <MainSection id="company-analysis" title="Company Analysis">
-        Search, benchmark and compare companies, and browse their CSR projects.
+        Find the companies that spend the most on CSR, compare them side by side, and see their projects.
       </MainSection>
-      <SectionLabel>Company search and analysis</SectionLabel>
+      <SectionLabel>Top companies by CSR expenditure</SectionLabel>
       <div>
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Companies Ranked by Total CSR Spent in This View</CardTitle>
-              <CardDescription>Search any of the {formatNumber(meta.data?.companies.length ?? 0)} companies, or click a row to analyse that company</CardDescription>
+              <CardTitle>Top Companies by CSR Expenditure</CardTitle>
+              <CardDescription>
+                Identify leading CSR contributors and understand investment trends across financial years. Search any of
+                the {formatNumber(meta.data?.companies.length ?? 0)} companies, or click a row to view its profile.
+                Unspent CSR is taken from each company&apos;s own annual CSR report.
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="pb-3">
@@ -107,16 +122,18 @@ export function CompanyAnalysisView() {
           </CardContent>
           <CardContent className="px-0">
             <BreakdownTable
-              rows={summary.data?.topCompanies ?? []}
-              label="Company"
+              rows={companyRows}
+              label="Company Name"
               limit={20}
               selected={[]}
               onSelect={(name) => {
                 const match = (summary.data?.topCompanies ?? []).find((row) => row.name === name);
                 if (match?.id) setValues("companies", [match.id]);
               }}
-              latestLabel={summary.data?.kpis.latestYear ?? undefined}
-              columns={["value", "share", "count", "latest", "yoy"]}
+              latestLabel={summary.data?.kpis.latestYear ? `CSR Expenditure in ${summary.data.kpis.latestYear.replace(" ", "\u00a0").replace("-", "\u2011")}` : undefined}
+              headers={{ share: "Share of Total CSR Expenditure", unspent: "Unspent CSR" }}
+              columns={["value", "share", "count", "latest", "yoy", "unspent"]}
+              actionLabel="View Profile"
             />
           </CardContent>
         </Card>
@@ -134,8 +151,8 @@ export function CompanyAnalysisView() {
       {compare.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            Add up to {MAX_COMPARE} companies above (or use the Company filter) to compare their CSR spent, reach and
-            focus side by side, year by year.
+            Add up to {MAX_COMPARE} companies above (or use the Company Name filter) to compare their CSR spending,
+            reach and focus areas side by side, year by year.
           </CardContent>
         </Card>
       ) : (
@@ -162,8 +179,8 @@ export function CompanyAnalysisView() {
               was cut off at half width. */}
           <div className="grid grid-cols-1 gap-5">
             <ChartCard
-              title="CSR Amount Spent by Company and Financial Year"
-              description="Selected companies"
+              title="CSR Expenditure by Company and Financial Year"
+              description="How much each selected company spent on CSR in each financial year (₹ crore)"
               height={320}
               isLoading={comparison.isLoading}
               error={comparison.error}
@@ -177,7 +194,7 @@ export function CompanyAnalysisView() {
                     {...AXIS_PROPS}
                     width={72}
                     tickFormatter={(value: number) => formatCrore(value, false)}
-                    label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }}
+                    label={{ value: "CSR expenditure (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }}
                   />
                   <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
                   <Legend iconType="circle" iconSize={8} verticalAlign="top" height={30} />
@@ -197,24 +214,27 @@ export function CompanyAnalysisView() {
             <Card className="overflow-x-auto">
               <CardHeader>
                 <div>
-                  <CardTitle>Company Benchmark by Total CSR Spent</CardTitle>
-                  <CardDescription>Compliance uses the disclosed 2%-of-net-profit obligation</CardDescription>
+                  <CardTitle>Company Comparison at a Glance</CardTitle>
+                  <CardDescription>
+                    Key CSR figures for the selected companies. &quot;Share of CSR Obligation Spent&quot; compares the amount
+                    spent with the 2% of average net profit each company must spend.
+                  </CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="px-0">
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="min-w-40">Company</TableHead>
-                      <TableHead className="text-right">Total</TableHead>
-                      <TableHead className="text-right">Latest FY</TableHead>
-                      <TableHead className="text-right">YoY</TableHead>
-                      <TableHead className="text-right">Projects</TableHead>
-                      <TableHead className="text-right">States</TableHead>
-                      <TableHead className="text-right">Avg project</TableHead>
-                      <TableHead>Largest category</TableHead>
-                      <TableHead>Largest state</TableHead>
-                      <TableHead className="text-right">Obligation use</TableHead>
+                      <TableHead className="min-w-40 normal-case">Company Name</TableHead>
+                      <TableHead className="text-right normal-case">Total CSR Expenditure</TableHead>
+                      <TableHead className="text-right normal-case">Latest Year</TableHead>
+                      <TableHead className="text-right normal-case">Year-on-Year Change</TableHead>
+                      <TableHead className="text-right normal-case">Projects Reported</TableHead>
+                      <TableHead className="text-right normal-case">States Reached</TableHead>
+                      <TableHead className="text-right normal-case">Average Project Size</TableHead>
+                      <TableHead className="normal-case">Main Schedule VII Area</TableHead>
+                      <TableHead className="normal-case">Main State</TableHead>
+                      <TableHead className="text-right normal-case">Share of CSR Obligation Spent</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -255,13 +275,13 @@ export function CompanyAnalysisView() {
         </>
       )}
 
-      <SectionLabel>Sector distribution &amp; disclosure documents</SectionLabel>
+      <SectionLabel>Companies by sector and company reports</SectionLabel>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <div>
               <CardTitle>Companies by Sector</CardTitle>
-              <CardDescription>Filers and amount spent per sector in this view</CardDescription>
+              <CardDescription>How many companies in each industry sector reported CSR, and how much they spent</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -279,8 +299,8 @@ export function CompanyAnalysisView() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Download annual reports</CardTitle>
-              <CardDescription>Source filings disclosed by the top companies in view</CardDescription>
+              <CardTitle>Download Company Reports</CardTitle>
+              <CardDescription>CSR, BRSR and annual reports published by the top companies in your selection</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="max-h-[26rem] space-y-2 overflow-y-auto">
@@ -293,8 +313,8 @@ export function CompanyAnalysisView() {
 
       <ProjectRegisterSection
         filterQuery={filterQuery}
-        label="Projects for the selected companies"
-        description="Every disclosed project inside the current scope. Use the Company filter above to narrow it."
+        label="CSR projects of the selected companies"
+        description="Every reported CSR project that matches your filters. Use the Company Name filter above to see one company's projects."
         scopeSpend={summary.data?.kpis.totalSpend}
       />
 
@@ -405,32 +425,32 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
       <SectionLabel>Company profile — {data.company.name}</SectionLabel>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <ProfileStat label="Total CSR amount spent" value={formatCrore(kpis.totalSpend)} sub="All years in view (Year filter applies)" />
+        <ProfileStat label="Total CSR Expenditure" value={formatCrore(kpis.totalSpend)} sub="All selected financial years" />
         <ProfileStat
-          label="Latest FY amount spent"
+          label="CSR Expenditure in Latest Year"
           value={formatCrore(kpis.latestYearSpend)}
           sub={
             kpis.yoyGrowthPct === null
-              ? "No prior year to compare"
-              : `${formatSignedPercent(kpis.yoyGrowthPct)} vs. prior year`
+              ? "No previous year to compare with"
+              : `${formatSignedPercent(kpis.yoyGrowthPct)} compared to previous year`
           }
         />
         <ProfileStat
-          label="Projects"
+          label="Projects Reported"
           value={formatNumber(kpis.projectCount)}
-          sub={`${kpis.themeCount} Schedule VII categories`}
+          sub={`Across ${kpis.themeCount} Schedule VII areas`}
         />
         <ProfileStat
-          label="States reached"
+          label="States Reached"
           value={formatNumber(kpis.stateCount)}
-          sub={`Named states and UTs; Pan India excluded${kpis.sectorRank ? ` · #${kpis.sectorRank} in ${data.company.sector}` : ""}`}
+          sub={`States and UTs with at least one project (Pan India not counted)${kpis.sectorRank ? ` · Rank ${kpis.sectorRank} in ${data.company.sector}` : ""}`}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <ChartCard
-          title="Amount Spent Trajectory"
-          description="This company's disclosed amount spent per financial year"
+          title="CSR Expenditure Over the Years"
+          description="How much this company spent on CSR in each financial year"
           height={300}
           isLoading={detail.isLoading}
           error={detail.error}
@@ -440,7 +460,7 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
             <BarChart data={trendData} margin={{ top: 8, right: 12, bottom: 22, left: 18 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="year" {...AXIS_PROPS} label={{ value: "Financial year", position: "insideBottom", offset: -12 }} />
-              <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} label={{ value: "Amount spent (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }} />
+              <YAxis {...AXIS_PROPS} tickFormatter={(value: number) => formatCrore(value, false)} width={72} label={{ value: "CSR expenditure (₹ Cr)", angle: -90, position: "insideLeft", offset: -8 }} />
               <Tooltip {...TOOLTIP_STYLES} formatter={(value: number) => formatCrore(value)} />
               <Bar dataKey="spend" name="Amount spent" fill={colorAt(0)} radius={[5, 5, 0, 0]} maxBarSize={48} />
             </BarChart>
@@ -450,14 +470,14 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card className="overflow-x-auto">
           <CardHeader>
             <div>
-              <CardTitle>CSR Spent by Schedule VII Thematic Area</CardTitle>
-              <CardDescription>Schedule VII categories, largest first</CardDescription>
+              <CardTitle>CSR Expenditure by Schedule VII Thematic Area</CardTitle>
+              <CardDescription>Where this company&apos;s CSR money went, largest area first</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
             <BreakdownTable
               rows={data.byTheme}
-              label="Category"
+              label="Schedule VII Thematic Area"
               limit={10}
               showBars
               columns={["value", "share", "count"]}
@@ -471,8 +491,8 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>States Reached by Reported CSR Projects</CardTitle>
-              <CardDescription>Amount spent by state, largest first</CardDescription>
+              <CardTitle>States Reached by This Company&apos;s CSR Projects</CardTitle>
+              <CardDescription>CSR expenditure in each state, largest first</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
@@ -490,16 +510,16 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Sector Peers</CardTitle>
+              <CardTitle>Similar Companies in the Same Sector</CardTitle>
               <CardDescription>
-                Other {data.company.sector} filers, ranked on national amount spent
+                Other {data.company.sector} companies, ranked by total CSR expenditure across India
               </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-0">
             <BreakdownTable
               rows={data.peers}
-              label="Company"
+              label="Company Name"
               limit={8}
               showBars
               selected={[data.company.name]}
@@ -512,8 +532,8 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Largest CSR Projects by Amount Spent</CardTitle>
-            <CardDescription>Top 25 by amount spent, within the current filters</CardDescription>
+            <CardTitle>Largest CSR Projects</CardTitle>
+            <CardDescription>This company&apos;s 25 biggest projects by amount spent, within your filters</CardDescription>
           </div>
           <Badge variant="outline" className="shrink-0">
             {formatNumber(data.topProjects.length)} shown
@@ -523,11 +543,11 @@ function CompanyProfile({ companyId, filterQuery }: { companyId: string; filterQ
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="min-w-64">Project</TableHead>
-                <TableHead>FY</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>State</TableHead>
-                <TableHead className="text-right">Spent</TableHead>
+                <TableHead className="min-w-64 normal-case">Project Description</TableHead>
+                <TableHead className="normal-case">Financial Year</TableHead>
+                <TableHead className="normal-case">Schedule VII Thematic Area</TableHead>
+                <TableHead className="normal-case">Project Location (State)</TableHead>
+                <TableHead className="text-right normal-case">Amount Spent</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

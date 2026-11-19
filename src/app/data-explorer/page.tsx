@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { DataExplorerView } from "@/components/pages/data-explorer-view";
 import { PageSkeleton } from "@/components/shared/page-skeleton";
 
-export const metadata: Metadata = { title: "Explore CSR Data · CMS CSR Intelligence" };
+export const metadata: Metadata = { title: "CSR Data · CMS CSR Intelligence" };
 export const dynamic = "force-dynamic";
 
 export default function Page() {

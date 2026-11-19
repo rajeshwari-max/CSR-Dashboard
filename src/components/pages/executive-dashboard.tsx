@@ -42,6 +42,9 @@ export function ExecutiveDashboard() {
   const annexurePeriod = annexureYears.length
     ? `${annexureYears[0]}${annexureYears.length > 1 ? ` – ${annexureYears[annexureYears.length - 1]}` : ""}`
     : "selected years";
+  // Full period covered by the data, regardless of the Year filter (e.g. "FY 2020-21 to FY 2024-25").
+  const allYears = meta.data?.years ?? [];
+  const dataPeriod = allYears.length ? `${allYears[0]} to ${allYears[allYears.length - 1]}` : null;
   const states = summary.data?.byState ?? [];
   const mappedStates = states.filter(
     (row) => !["Pan India", "Not Specified", "District Not Classified Elsewhere"].includes(row.name),
@@ -90,6 +93,11 @@ export function ExecutiveDashboard() {
         </div>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: "0 0 6px" }}>
           Explore India&apos;s CSR landscape through company contributions, CSR expenditure, sectoral priorities, geographical distribution and project implementation.
+          {dataPeriod ? (
+            <>
+              {" "}The data covers <strong style={{ color: "var(--text)" }}>{allYears.length} financial years, from {dataPeriod}</strong>.
+            </>
+          ) : null}
         </p>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, margin: 0 }}>
           Use the filters to identify companies, understand funding patterns, explore districts and sectors, and discover emerging CSR trends.
@@ -108,10 +116,10 @@ export function ExecutiveDashboard() {
             ? "Not available for location filters"
             : policy.data?.financials
               ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · ${annexurePeriod}`
-              : "No annexure data",
+              : "No CSR report data",
           icon: Wallet,
           href: "/company-analysis#unspent-csr",
-          tip: "CSR amount companies reported as unspent in their annual-report CSR annexures. Click for the yearly breakdown and full company list.",
+          tip: "CSR amount companies reported as unspent in their annual CSR reports. Click for the yearly breakdown and full company list.",
         }}
       />
       <p className="muted" style={{ fontSize: 12.5, margin: "-6px 0 26px", lineHeight: 1.5 }}>
@@ -119,7 +127,7 @@ export function ExecutiveDashboard() {
         coverage are sourced from project-wise filings on the{" "}
         <a href="https://www.csr.gov.in" target="_blank" rel="noreferrer" style={{ textDecoration: "underline" }}>MCA National CSR Portal</a>.
         Information on CSR obligations, unspent amounts, impact assessments and implementing agencies is compiled from
-        companies&apos; annual report CSR annexures filed with the NSE.
+        companies&apos; annual CSR reports filed with the NSE.
       </p>
 
       <MiniLabel>CSR Trends and Distribution</MiniLabel>

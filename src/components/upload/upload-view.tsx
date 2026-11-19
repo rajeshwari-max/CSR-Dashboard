@@ -450,7 +450,7 @@ export function UploadView() {
         )}
       </div>
 
-      <MiniLabel>CSR annexure data</MiniLabel>
+      <MiniLabel>CSR report data</MiniLabel>
       <UploadPanel
         kind="financials"
         title="CSR financials"

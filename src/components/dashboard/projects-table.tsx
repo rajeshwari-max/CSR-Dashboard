@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,14 +28,14 @@ interface ProjectsTableProps {
 }
 
 const COLUMNS: { key: SortField | "project" | "mode"; label: string; sortable: boolean; className?: string }[] = [
-  { key: "company", label: "Company", sortable: true, className: "min-w-52" },
-  { key: "year", label: "FY", sortable: true },
-  { key: "project", label: "CSR Project", sortable: false, className: "min-w-64" },
-  { key: "theme", label: "Category", sortable: true },
-  { key: "sector", label: "Sector", sortable: true },
-  { key: "state", label: "State", sortable: true },
-  { key: "outlay", label: "Outlay", sortable: true, className: "text-right" },
-  { key: "spent", label: "Spent", sortable: true, className: "text-right" },
+  { key: "company", label: "Company Name", sortable: true, className: "min-w-52" },
+  { key: "year", label: "Financial Year", sortable: true },
+  { key: "project", label: "Project Description", sortable: false, className: "min-w-64" },
+  { key: "theme", label: "Schedule VII Thematic Area", sortable: true },
+  { key: "sector", label: "Company Industry Sector", sortable: true },
+  { key: "state", label: "Project Location", sortable: true },
+  { key: "outlay", label: "Approved Outlay", sortable: true, className: "text-right" },
+  { key: "spent", label: "Amount Spent", sortable: true, className: "text-right" },
 ];
 
 export function ProjectsTable({
@@ -43,7 +43,6 @@ export function ProjectsTable({
   isLoading,
   error,
   sort,
-  direction,
   page,
   pageSize,
   onSortChange,
@@ -59,14 +58,14 @@ export function ProjectsTable({
     <Card id="projects" className="scroll-mt-24">
       <CardHeader>
         <div>
-          <CardTitle>Filtered CSR Project Register</CardTitle>
+          <CardTitle>CSR Projects</CardTitle>
           <CardDescription>
-            Every disclosed CSR project in the current view. Click a company to drill down.
+            Every reported CSR project that matches your filters. Click a company name to see its profile, or a column name to sort.
           </CardDescription>
         </div>
         {data ? (
           <Badge variant="outline" className="shrink-0">
-            {formatCrore(data.totalSpendInView)} in view
+            {formatCrore(data.totalSpendInView)} total spent
           </Badge>
         ) : null}
       </CardHeader>
@@ -86,13 +85,6 @@ export function ProjectsTable({
                   <TableRow className="hover:bg-transparent">
                     {COLUMNS.map((column) => {
                       const isActive = column.sortable && sort === column.key;
-                      const Icon = !column.sortable
-                        ? null
-                        : isActive
-                          ? direction === "asc"
-                            ? ArrowUp
-                            : ArrowDown
-                          : ArrowUpDown;
                       return (
                         <TableHead key={column.key} className={column.className}>
                           {column.sortable ? (
@@ -101,15 +93,14 @@ export function ProjectsTable({
                               onClick={() => onSortChange(column.key as SortField)}
                               className={cn(
                                 "inline-flex items-center gap-1 transition-colors hover:text-foreground",
-                                isActive && "text-foreground",
+                                isActive && "font-semibold text-foreground",
                                 column.className?.includes("text-right") && "flex-row-reverse",
                               )}
                             >
                               {column.label}
-                              {Icon ? <Icon className="size-3" /> : null}
                             </button>
                           ) : (
-                            column.label
+                            <span className="normal-case">{column.label}</span>
                           )}
                         </TableHead>
                       );

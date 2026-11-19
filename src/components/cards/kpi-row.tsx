@@ -78,7 +78,7 @@ export function KpiRow({
   onSelect,
   extra,
 }: {
-  /** Extra card appended to the row (e.g. reported unspent CSR from annexures). */
+  /** Extra card appended to the row (e.g. reported unspent CSR from CSR reports). */
   extra?: KpiSpec | null;
   kpis: Kpis | null;
   meta: Meta | null;
@@ -155,7 +155,7 @@ export function KpiRow({
           value: formatNumber(kpis.districtCount),
           sub: "With a recorded district location",
           icon: MapPinned,
-          href: "/explore-data?unit=district",
+          href: "/state-analysis",
           tip: "Number of districts with a recorded geographical location for CSR projects. Click for the district-wise CSR view.",
         },
     {

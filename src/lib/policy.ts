@@ -12,7 +12,7 @@ import type { Filters } from "@/types";
 
 const NATIONAL = nationalJson as { source: string; years: Record<string, number> };
 
-/** Annexure names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
+/** CSR report names are sometimes pasted twice ("Akshaypatra Foundation Akshaypatra Foundation"). */
 function dedupeName(raw: string): string {
   const words = raw.trim().split(/\s+/);
   if (words.length % 2 === 0) {
@@ -155,8 +155,10 @@ export function buildPolicyInsights(filters: Filters) {
   const sumOf = (key: string, list = fin) => round(list.reduce((s, r) => s + num(r[key]), 0));
   const unspentByCompany = new Map<string, number>();
   const unspentByCompanyYear = new Map<string, Record<string, number>>();
+  const unspentByKey = new Map<string, number>();
   for (const r of fin) {
     unspentByCompany.set(r.company, (unspentByCompany.get(r.company) ?? 0) + num(r.unspent));
+    unspentByKey.set(r.companyKey, (unspentByKey.get(r.companyKey) ?? 0) + num(r.unspent));
     if (num(r.unspent) > 0) {
       const perYear = unspentByCompanyYear.get(r.company) ?? {};
       perYear[r.year] = round((perYear[r.year] ?? 0) + num(r.unspent));
@@ -186,6 +188,8 @@ export function buildPolicyInsights(filters: Filters) {
         /** Companies with any unspent CSR in view, and the full list for download. */
         unspentCompanies: unspentList.length,
         unspentList,
+        /** Unspent CSR per company (companyMatchKey → ₹ crore), for every company with a report in view, including zeros. */
+        unspentByCompanyKey: Object.fromEntries([...unspentByKey.entries()].map(([key, value]) => [key, round(value)])),
       }
     : null;
 
@@ -197,7 +201,7 @@ export function buildPolicyInsights(filters: Filters) {
     const name = dedupeName(String(r.agency));
     // Rows uploaded before the Role column existed count as implementation.
     const role = partnerRole(r.role);
-    // One agency is often spelt several ways across annexures; its CSR-1 registration
+    // One agency is often spelt several ways across CSR reports; its CSR-1 registration
     // number is the stable identity, so group on that when it is given.
     const reg = typeof r.registration === "string" && /^CSR\d{8}$/i.test(r.registration.trim()) ? r.registration.trim().toUpperCase() : null;
     const key = `${role}|${reg ?? name.toLowerCase()}`;

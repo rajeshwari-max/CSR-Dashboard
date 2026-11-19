@@ -384,6 +384,13 @@ tbody tr:hover{background:var(--surface-2);}
   white-space:normal;text-align:left;z-index:500;pointer-events:none;
 }
 .filterbar [data-tip]:hover::after{top:calc(100% + 7px);bottom:auto;min-width:240px;font-weight:500;left:0;transform:none;}
+/* Keep the hovered element (and its row) above neighbours such as the search box or the next KPI card,
+   otherwise later siblings paint over the tooltip and cut its text off. */
+[data-tip]:hover{z-index:600;}
+.filterbar > *:has([data-tip]:hover),
+.filterbar > * > *:has([data-tip]:hover),
+.kpi-row > *:has([data-tip]:hover){position:relative;z-index:600;}
+.filterbar [data-tip]:hover::after{max-width:320px;}
 .recharts-legend-wrapper{line-height:1.35;}
 
 /* ---------- Responsive ---------- */

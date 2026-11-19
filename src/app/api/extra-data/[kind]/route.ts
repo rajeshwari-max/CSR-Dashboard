@@ -36,7 +36,7 @@ export async function GET(_request: Request, context: { params: Promise<{ kind: 
     const help = workbook.addWorksheet("How to fill");
     help.columns = [{ header: "Column", key: "column", width: 44 }, { header: "Required", key: "required", width: 10 }, { header: "Notes", key: "note", width: 70 }];
     help.getRow(1).font = { bold: true };
-    help.addRow({ column: "Source", required: "", note: "Each company's annual report, Annexure on CSR activities (format under the CSR Amendment Rules, 2021). Replace the example row with real data; one row per company per year" + (kind === "partners" ? " per project." : ".") });
+    help.addRow({ column: "Source", required: "", note: "Each company's annual report, Annual Report on CSR Activities (format under the CSR Amendment Rules, 2021). Replace the example row with real data; one row per company per year" + (kind === "partners" ? " per project." : ".") });
     for (const spec of COLUMNS[kind]) help.addRow({ column: spec.header, required: spec.required ? "Yes" : "", note: spec.note });
     const buffer = await workbook.xlsx.writeBuffer();
     return new Response(buffer as ArrayBuffer, {

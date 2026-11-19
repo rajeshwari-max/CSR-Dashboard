@@ -183,6 +183,8 @@ export interface NamedValue {
   latest?: number;
   previous?: number;
   extra?: string | null;
+  /** Unspent CSR (₹ crore) from the company's own CSR report; null when no report is available. */
+  unspent?: number | null;
 }
 
 export interface TrendPoint {

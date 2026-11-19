@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark, BookmarkPlus, Columns3, Trash2 } from "lucide-react";
+import { Columns3 } from "lucide-react";
 
 import { ExportMenu } from "@/components/shared/export-menu";
-import { PageFrame, SectionLabel } from "@/components/shared/page-frame";
+import { PageFrame } from "@/components/shared/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, truncate } from "@/lib/format";
-import { paramsToFilters } from "@/lib/query";
 import { cn } from "@/lib/utils";
-import { useFilterStore } from "@/store/filters";
 import type { ProjectRow, ProjectsResponse, SortDirection, SortField } from "@/types";
 
 type ColumnKey = keyof Pick<
@@ -31,28 +29,20 @@ const COLUMNS: { key: ColumnKey; label: string; sortable?: SortField; align?: "r
   { key: "project", label: "Project Description" },
   { key: "theme", label: "Schedule VII Thematic Area", sortable: "theme" },
   { key: "sector", label: "Company Industry Sector", sortable: "sector" },
-  { key: "state", label: "State", sortable: "state" },
-  { key: "district", label: "District", sortable: "district" },
-  { key: "mode", label: "Implementation", sortable: "mode" },
-  { key: "aspirational", label: "Aspirational" },
-  { key: "outlay", label: "Outlay", sortable: "outlay", align: "right" },
-  { key: "spent", label: "Spent", sortable: "spent", align: "right" },
+  { key: "state", label: "Project Location (State)", sortable: "state" },
+  { key: "district", label: "Project Location (District)", sortable: "district" },
+  { key: "mode", label: "Implementing Agency", sortable: "mode" },
+  { key: "aspirational", label: "Aspirational District" },
+  { key: "outlay", label: "Approved Outlay", sortable: "outlay", align: "right" },
+  { key: "spent", label: "Amount Spent", sortable: "spent", align: "right" },
 ];
 
-const DEFAULT_COLUMNS: ColumnKey[] = ["company", "year", "project", "theme", "state", "spent"];
-const VIEWS_KEY = "cms.explorer.views";
-const COLUMNS_KEY = "cms.explorer.columns";
-
-interface SavedView {
-  id: string;
-  name: string;
-  query: string;
-  at: string;
-}
+const DEFAULT_COLUMNS: ColumnKey[] = ["company", "year", "project", "theme", "sector", "state", "spent"];
+// v2: column labels and defaults changed, so older saved column choices are ignored.
+const COLUMNS_KEY = "cms.explorer.columns.v2";
 
 export function DataExplorerView() {
   const { filters, filterQuery, scope } = useDashboardFilters();
-  const hydrate = useFilterStore((state) => state.hydrate);
   const meta = useMeta();
 
   const [page, setPage] = React.useState(1);
@@ -60,15 +50,11 @@ export function DataExplorerView() {
   const [sort, setSort] = React.useState<SortField>("spent");
   const [direction, setDirection] = React.useState<SortDirection>("desc");
   const [visible, setVisible] = React.useState<ColumnKey[]>(DEFAULT_COLUMNS);
-  const [views, setViews] = React.useState<SavedView[]>([]);
-  const [viewName, setViewName] = React.useState("");
 
   React.useEffect(() => setPage(1), [filterQuery, pageSize, sort, direction]);
 
   React.useEffect(() => {
     try {
-      const savedViews = window.localStorage.getItem(VIEWS_KEY);
-      if (savedViews) setViews(JSON.parse(savedViews) as SavedView[]);
       const savedColumns = window.localStorage.getItem(COLUMNS_KEY);
       if (savedColumns) setVisible(JSON.parse(savedColumns) as ColumnKey[]);
     } catch {
@@ -80,15 +66,6 @@ export function DataExplorerView() {
     setVisible(next);
     try {
       window.localStorage.setItem(COLUMNS_KEY, JSON.stringify(next));
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const persistViews = (next: SavedView[]) => {
-    setViews(next);
-    try {
-      window.localStorage.setItem(VIEWS_KEY, JSON.stringify(next.slice(0, 20)));
     } catch {
       /* ignore */
     }
@@ -125,8 +102,8 @@ export function DataExplorerView() {
 
   return (
     <PageFrame
-      title="Explore CSR Data"
-      subtitle={`Raw project register · ${scope}`}
+      title="CSR Data"
+      subtitle={`Every reported CSR project: company, year, Schedule VII area, location and amount · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}
@@ -136,85 +113,13 @@ export function DataExplorerView() {
       onRefresh={() => projects.refetch()}
       isRefreshing={projects.isValidating}
     >
-      <SectionLabel>Saved views &amp; bookmarks</SectionLabel>
       <Card>
         <CardHeader>
           <div>
-            <CardTitle>Saved views</CardTitle>
-            <CardDescription>Filter sets stored in this browser · restoring one rewrites the URL</CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              value={viewName}
-              onChange={(event) => setViewName(event.target.value)}
-              placeholder="Name this view…"
-              aria-label="Saved view name"
-              className="h-8 w-44 rounded-lg border border-input bg-card px-2.5 text-xs shadow-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <Button
-              size="sm"
-              variant="outline"
-              disabled={!viewName.trim()}
-              onClick={() => {
-                persistViews([
-                  {
-                    id: `${Date.now()}`,
-                    name: viewName.trim(),
-                    query: filterQuery,
-                    at: new Date().toISOString(),
-                  },
-                  ...views,
-                ]);
-                setViewName("");
-              }}
-            >
-              <BookmarkPlus className="size-4" />
-              Save
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {views.length === 0 ? (
-            <p className="py-4 text-center text-sm text-muted-foreground">
-              No saved views yet. Set some filters, name them and hit save.
-            </p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {views.map((view) => (
-                <span
-                  key={view.id}
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs"
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1.5 hover:text-primary"
-                    onClick={() => hydrate(paramsToFilters(new URLSearchParams(view.query)))}
-                  >
-                    <Bookmark className="size-3" />
-                    {view.name}
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={`Delete ${view.name}`}
-                    onClick={() => persistViews(views.filter((item) => item.id !== view.id))}
-                  >
-                    <Trash2 className="size-3 text-muted-foreground hover:text-destructive" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <SectionLabel>Explore</SectionLabel>
-      <Card>
-        <CardHeader>
-          <div>
-            <CardTitle>CSR Project Explorer</CardTitle>
+            <CardTitle>CSR Data</CardTitle>
             <CardDescription>
-              {formatNumber(projects.data?.total ?? 0)} rows · {formatCrore(projects.data?.totalSpendInView ?? 0)} in
-              view
+              {formatNumber(projects.data?.total ?? 0)} projects · {formatCrore(projects.data?.totalSpendInView ?? 0)} total CSR
+              spent (selected filters). Click a column name to sort.
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
@@ -270,13 +175,12 @@ export function DataExplorerView() {
                         <button
                           type="button"
                           onClick={() => handleSort(column.sortable)}
-                          className={cn("hover:text-foreground", sort === column.sortable && "text-foreground")}
+                          className={cn("hover:text-foreground", sort === column.sortable && "font-semibold text-foreground")}
                         >
                           {column.label}
-                          {sort === column.sortable ? (direction === "asc" ? " ↑" : " ↓") : ""}
                         </button>
                       ) : (
-                        column.label
+                        <span className="normal-case">{column.label}</span>
                       )}
                     </TableHead>
                   ))}

@@ -65,8 +65,8 @@ export function StateAnalysisView() {
 
   return (
     <PageFrame
-      title="Explore Geography"
-      subtitle={`Geographic distribution of CSR spent · ${scope}`}
+      title="CSR by Geography"
+      subtitle={`Where CSR money is spent, by state and district · ${scope}`}
       meta={meta.data}
       metaLoading={meta.isLoading}
       filters={filters}

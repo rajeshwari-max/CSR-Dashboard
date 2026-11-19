@@ -54,7 +54,11 @@ export function TrendView() {
       (row) => (row.previous ?? 0) >= 5 && row.yoyGrowthPct !== null,
     );
     const sorted = [...rows].sort((a, b) => (b.yoyGrowthPct ?? 0) - (a.yoyGrowthPct ?? 0));
-    return { growing: sorted.slice(0, 8), declining: sorted.slice(-8).reverse() };
+    // Only true increases on the left and true decreases on the right, so the card titles always hold.
+    return {
+      growing: sorted.filter((row) => (row.yoyGrowthPct ?? 0) > 0).slice(0, 8),
+      declining: sorted.filter((row) => (row.yoyGrowthPct ?? 0) < 0).slice(-8).reverse(),
+    };
   }, [sectors.data]);
 
   const sectorSeries = React.useMemo(() => {
@@ -140,10 +144,10 @@ export function TrendView() {
 
       </div>
 
-      <MiniLabel>Growing vs. declining sectors · {years.at(-2) ?? "prior FY"} to {years.at(-1) ?? "latest FY"}</MiniLabel>
+      <MiniLabel>Change in CSR spending by sector · {years.at(-2) ?? "previous year"} to {years.at(-1) ?? "latest year"}</MiniLabel>
       <div className="grid cols-2" style={{ marginBottom: 32 }}>
-        <MoverCard title="Sectors with the Highest Year-over-Year CSR Spent Growth" rows={movers.growing} direction="up" loading={sectors.isLoading} />
-        <MoverCard title="Sectors with the Largest Year-over-Year CSR Spent Decline" rows={movers.declining} direction="down" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with Increased CSR Spending" rows={movers.growing} direction="up" loading={sectors.isLoading} />
+        <MoverCard title="Sectors with Reduced CSR Spending" rows={movers.declining} direction="down" loading={sectors.isLoading} />
       </div>
 
       <MiniLabel>Sector trajectories</MiniLabel>
@@ -278,7 +282,7 @@ function MoverCard({
       <div className="card-head">
         <ExplainedTitle title={title} />
         <span className={`card-badge ${direction === "up" ? "" : "rose"}`}>
-          {direction === "up" ? "Risers" : "Fallers"}
+          {direction === "up" ? "Increase" : "Decrease"}
         </span>
       </div>
       {loading ? (

@@ -2,7 +2,7 @@
  * Company-year CSR financials (unspent CSR, impact assessment, overheads) and
  * implementing-partner (NGO) records. None of this is in the MCA project-level
  * register the dashboard is built on: it comes from each company's annual-report
- * CSR annexure (the standard format under the CSR Amendment Rules, 2021, from
+ * CSR report (the standard format under the CSR Amendment Rules, 2021, from
  * FY 2020-21). The team fills an Excel template and uploads it; until then the
  * dashboard shows an empty state that says so.
  *
@@ -28,7 +28,7 @@ export const COLUMNS: Record<ExtraKind, ColumnSpec[]> = {
     { key: "company", header: "Company Name", aliases: ["company", "name of company"], type: "text", required: true, note: "As in the dashboard; spelling differences are matched automatically" },
     { key: "cin", header: "CIN", aliases: ["cin", "corporate identity number"], type: "text", note: "Optional" },
     { key: "year", header: "Financial Year", aliases: ["year", "fy", "financial year"], type: "year", required: true, note: "e.g. FY 2023-24" },
-    { key: "obligation", header: "Prescribed CSR Obligation (INR Cr)", aliases: ["prescribed csr", "two percent", "2% of average net profit", "csr obligation", "total csr obligation"], type: "amount", note: "Annexure: two percent of average net profit, after set-off" },
+    { key: "obligation", header: "Prescribed CSR Obligation (INR Cr)", aliases: ["prescribed csr", "two percent", "2% of average net profit", "csr obligation", "total csr obligation"], type: "amount", note: "CSR report: two percent of average net profit, after set-off" },
     { key: "projects", header: "Amount Spent on Projects (INR Cr)", aliases: ["amount spent on projects", "ongoing and other than ongoing", "project spend"], type: "amount", note: "Ongoing + other than ongoing projects" },
     { key: "overheads", header: "Administrative Overheads (INR Cr)", aliases: ["administrative overheads", "admin overheads"], type: "amount", note: "" },
     { key: "impact", header: "Impact Assessment Amount (INR Cr)", aliases: ["impact assessment amount", "amount spent on impact assessment"], type: "amount", note: "" },

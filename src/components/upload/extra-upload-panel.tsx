@@ -6,7 +6,7 @@ import { Download, Upload } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@/lib/format";
 
-/** Upload for annual-report CSR annexure data (financials / implementing partners). */
+/** Upload for annual CSR report data (financials / implementing partners). */
 export function UploadPanel({ kind, title, what, onDone }: { kind: "financials" | "partners"; title: string; what: string; onDone: () => void }) {
   const [busy, setBusy] = React.useState(false);
   const [message, setMessage] = React.useState<{ ok: boolean; text: string } | null>(null);
