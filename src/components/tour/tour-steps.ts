@@ -1,75 +1,87 @@
-import { useFilterStore } from "@/store/filters";
+import { selectFilters, useFilterStore, type ListKey } from "@/store/filters";
+import type { Filters } from "@/types";
 
 /**
- * Guided-tour script. Each step points at one thing on screen, optionally
- * prepares the page first (`before`) and can "click" something with the
- * animated pointer (`click` + optional `action`).
+ * Guided-tour script.
  *
- * Targets are found with `data-tour` attributes on the filter bar, the sidebar
- * links, and — for page content — by the visible card title, so a renamed card
- * only needs its title updated here. A step whose target is missing still
- * shows, centred, so the tour never gets stuck.
+ * The tour is made of small lessons the visitor can pick from a menu:
+ *  - a filter lesson: open the filter, pick something yourself, see what
+ *    changed, then keep it or clear it;
+ *  - a page lesson: the pointer clicks the page in the sidebar, then points
+ *    out the main parts of that page (any filter you kept stays on).
+ * "Quick start" is one filter + one page. "Full tour" strings everything
+ * together with checkpoints, so the visitor can stop whenever they have seen
+ * enough.
+ *
+ * Targets use `data-tour` attributes (filter bar), sidebar links, and visible
+ * card titles. A step whose target is missing still shows, centred.
  */
 
-export type ChapterId =
-  | "intro"
-  | "filters"
-  | "overview"
-  | "insights"
-  | "geography"
-  | "sectors"
-  | "aspirational"
-  | "trends"
-  | "ai"
-  | "reports"
-  | "data"
-  | "glossary"
-  | "finish";
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
+export interface TourChoice {
+  label: string;
+  primary?: boolean;
+  run?: () => void | Promise<void>;
+  /** Where to go after `run`: next step, back one step, the menu, or close. */
+  go: "next" | "back" | "menu" | "end";
+}
 
 export interface TourStep {
   id: string;
-  chapter: ChapterId;
+  /** Short label shown at the top of the card (e.g. "Financial Year"). */
+  section: string;
   /** Page this step belongs to; the tour navigates there first. */
   route?: string;
   /** What to spotlight. No target = centred card with a dimmed page. */
   target?: string | (() => Element | null);
   title: string;
-  body: string;
-  /** Small "watch this" line under the text, for live demos. */
-  watch?: string;
+  body: string | (() => string);
+  /** Small highlighted line for live demos / instructions. */
+  watch?: string | (() => string);
   placement?: "auto" | "bottom" | "top" | "right" | "left";
   block?: ScrollLogicalPosition;
   /** Runs before the element is looked up (open a popup, close one...). */
   before?: () => void | Promise<void>;
-  /** Element the pointer moves to and clicks. */
+  /** Element the pointer moves to and clicks (a real click unless `action`). */
   click?: string | (() => Element | null);
   /** Replaces the real click (used when the click should be idempotent). */
   action?: () => void;
-  /** Wait after the click before measuring again (ms). */
+  /** After the click, wait until the browser is on this page. */
+  awaitRoute?: string;
   settle?: number;
+  /**
+   * The visitor does something themselves. The spotlight becomes clickable,
+   * Next unlocks once `done` is true, and "help" does it for them.
+   */
+  interactive?: {
+    done: (start: Filters, now: Filters) => boolean;
+    helpLabel?: string;
+    help?: () => void | Promise<void>;
+    autoNext?: boolean;
+  };
+  /** Buttons that replace Next (keep / clear / change...). */
+  choices?: TourChoice[];
+  /** Show the "Filters on: ..." strip on the card. */
+  showFilters?: boolean;
 }
 
-export const TOUR_CHAPTERS: Record<ChapterId, { label: string }> = {
-  intro: { label: "Getting started" },
-  filters: { label: "Filters" },
-  overview: { label: "Overview" },
-  insights: { label: "CSR Insights" },
-  geography: { label: "CSR by Geography" },
-  sectors: { label: "CSR by Sector" },
-  aspirational: { label: "Aspirational Districts" },
-  trends: { label: "Trends & Comparisons" },
-  ai: { label: "AI-powered Insights" },
-  reports: { label: "Reports & Downloads" },
-  data: { label: "CSR Data" },
-  glossary: { label: "Glossary" },
-  finish: { label: "All done" },
-};
+export interface Lesson {
+  id: string;
+  label: string;
+  hint: string;
+  steps: TourStep[];
+}
 
 /* ------------------------------------------------------------------ */
-/* Finders                                                             */
+/* Finders & helpers                                                   */
 /* ------------------------------------------------------------------ */
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const store = () => useFilterStore.getState();
+export const currentFilters = () => selectFilters(useFilterStore.getState());
 
 const chip = (key: string) => `[data-tour="filter-${key}"]`;
 const chipButton = (key: string) => `${chip(key)} > button`;
@@ -77,9 +89,9 @@ const popover = (key: string) => `${chip(key)} [data-tour="filter-popover"]`;
 const nav = (href: string) => `.sidebar a.nav-item[href="${href}"]`;
 
 /** Smallest element inside the page whose own text starts with `text`. */
-function findText(text: string, root: ParentNode = document): HTMLElement | null {
-  const scope = (root as Element).querySelector?.(".content") ?? root;
-  const walker = document.createTreeWalker(scope as Node, NodeFilter.SHOW_TEXT);
+export function findText(text: string): HTMLElement | null {
+  const scope = document.querySelector(".content") ?? document.body;
+  const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
   const needle = text.toLowerCase();
   let node: Node | null;
   while ((node = walker.nextNode())) {
@@ -95,30 +107,33 @@ function findText(text: string, root: ParentNode = document): HTMLElement | null
 /** The card (or section) that has this title. */
 function card(title: string) {
   return () => {
-    const heading = findText(title);
+    // Prefer real card titles (section labels can repeat the same words).
+    const needle = title.toLowerCase();
+    const headings = Array.from(document.querySelectorAll<HTMLElement>(".content h1, .content h2, .content h3, .content .metric-title"));
+    const heading =
+      headings.find((el) => el.textContent?.replace(/\s+/g, " ").trim().toLowerCase().startsWith(needle) && el.getBoundingClientRect().width > 0) ??
+      findText(title);
     return (heading?.closest(".card-surface, .card") as HTMLElement | null) ?? heading;
   };
 }
 
 /** A button or link by its visible text. */
-function control(text: string, within?: string) {
+function control(text: string) {
   return () => {
-    const root = within ? document.querySelector(within) : document;
-    if (!root) return null;
     const needle = text.toLowerCase();
-    const items = Array.from(root.querySelectorAll<HTMLElement>("button, a"));
+    const items = Array.from(document.querySelectorAll<HTMLElement>(".content button, .content a"));
     return items.find((item) => item.textContent?.replace(/\s+/g, " ").trim().toLowerCase().startsWith(needle)) ?? null;
   };
 }
 
 const pageHead = () => document.querySelector(".content .page-head");
+const kpis = () => document.querySelector(".content .kpi-row");
 
 /** Close every open filter popup (they close on any outside mousedown). */
-function closePopups() {
+export function closePopups() {
   document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
 }
 
-/** Make sure one filter popup is open, and only that one. */
 async function openPopup(key: string) {
   if (document.querySelector(popover(key))) return;
   closePopups();
@@ -126,7 +141,66 @@ async function openPopup(key: string) {
   (document.querySelector(chipButton(key)) as HTMLButtonElement | null)?.click();
 }
 
-/** Latest regular financial year in the Financial Year popup. */
+const sameList = (a: string[], b: string[]) => a.length === b.length && a.every((value, i) => value === b[i]);
+
+/** Did anything in the filters change since the step started? */
+export function filtersChanged(a: Filters, b: Filters) {
+  return (
+    !sameList(a.years, b.years) ||
+    !sameList(a.states, b.states) ||
+    !sameList(a.districts, b.districts) ||
+    !sameList(a.sectors, b.sectors) ||
+    !sameList(a.companies, b.companies) ||
+    !sameList(a.themes, b.themes) ||
+    !sameList(a.modes, b.modes) ||
+    !sameList(a.ownership, b.ownership) ||
+    a.search !== b.search ||
+    a.minSpend !== b.minSpend ||
+    a.maxSpend !== b.maxSpend
+  );
+}
+
+/** "FY 2024-25 · Maharashtra · 2 companies" — short summary for the card. */
+export function describeFilters(f: Filters): string {
+  const parts: string[] = [];
+  const list = (values: string[], noun: string) =>
+    values.length === 1 ? values[0] : values.length > 1 ? `${values.length} ${noun}` : null;
+  const push = (value: string | null) => value && parts.push(value);
+  push(list(f.years, "years"));
+  push(f.districts.length ? list(f.districts, "districts") : list(f.states, "states"));
+  push(list(f.sectors, "sectors"));
+  push(f.companies.length ? (f.companies.length === 1 ? "1 company" : `${f.companies.length} companies`) : null);
+  push(list(f.themes, "Schedule VII areas"));
+  push(list(f.modes, "agency types"));
+  push(list(f.ownership, "ownership types"));
+  if (f.minSpend !== null || f.maxSpend !== null)
+    push(f.maxSpend === null ? `Projects over ₹${f.minSpend} Cr` : `Projects ₹${f.minSpend ?? 0}–${f.maxSpend} Cr`);
+  if (f.search) push(`“${f.search}”`);
+  return parts.join(" · ");
+}
+
+/* ------------------------------------------------------------------ */
+/* Filter lessons                                                      */
+/* ------------------------------------------------------------------ */
+
+interface FilterDef {
+  id: string;
+  key: string; // data-tour key
+  label: string;
+  what: string;
+  pickText: string;
+  /** Does the filter (still) hold a value? */
+  has: (f: Filters) => boolean;
+  clear: () => void;
+  /** Pick a sample value for the visitor ("Do it for me"). */
+  sample: () => void | Promise<void>;
+}
+
+function firstOption(key: string, skip: (text: string) => boolean = () => false) {
+  const options = Array.from(document.querySelectorAll<HTMLElement>(`${popover(key)} [data-value]`));
+  return options.find((option) => !skip(option.textContent ?? "")) ?? null;
+}
+
 function latestYearOption(): HTMLElement | null {
   const options = Array.from(document.querySelectorAll<HTMLElement>(`${popover("years")} [data-value]`)).filter(
     (option) => !option.textContent?.includes("Earlier year"),
@@ -134,452 +208,533 @@ function latestYearOption(): HTMLElement | null {
   return options.sort((a, b) => (b.dataset.value ?? "").localeCompare(a.dataset.value ?? ""))[0] ?? null;
 }
 
-/* ------------------------------------------------------------------ */
-/* Script                                                              */
-/* ------------------------------------------------------------------ */
+const listFilter = (key: ListKey) => ({
+  has: (f: Filters) => f[key].length > 0,
+  clear: () => store().clearKey(key),
+});
 
-export const TOUR_STEPS: TourStep[] = [
-  /* ---------- Getting started ---------- */
-  {
-    id: "welcome",
-    chapter: "intro",
-    route: "/",
-    title: "Let's take a quick tour",
-    body: "This dashboard brings together the CSR spending reported by Indian companies over the last five financial years. The purple pointer will show you where to click, and it will even use the filters for you so you can see what changes.",
-    watch: "Press → or Next to move on. Press Esc to stop at any time.",
-    before: closePopups,
-  },
-  {
-    id: "sidebar",
-    chapter: "intro",
-    route: "/",
-    target: ".sidebar .sidebar-scroll",
-    placement: "right",
-    title: "Pages are on the left",
-    body: "Explore pages show where CSR money goes: by company, state, sector and aspirational district. Analyse pages show trends and AI findings. Resources has downloads, the full CSR data table and a glossary. Hover over any page name to see what it contains.",
-  },
-
-  /* ---------- Filters ---------- */
-  {
-    id: "filterbar",
-    chapter: "filters",
-    route: "/",
-    target: ".filterbar",
-    placement: "bottom",
-    block: "start",
-    title: "Filters work on every page",
-    body: "Pick a filter once and every chart, card and table updates to match. Your selection stays the same when you move to another page, so you can follow one company, state or year across the whole dashboard.",
-    before: closePopups,
-  },
-  {
-    id: "geo",
-    chapter: "filters",
-    route: "/",
-    target: chip("geography"),
-    title: "Geography",
-    body: "Choose a state to see only projects in that state. After picking a state you can narrow it down further to one district.",
-  },
-  {
-    id: "geo-open",
-    chapter: "filters",
-    route: "/",
-    target: popover("geography"),
-    click: chipButton("geography"),
-    action: () => {
-      if (!document.querySelector(popover("geography"))) (document.querySelector(chipButton("geography")) as HTMLButtonElement | null)?.click();
-    },
-    title: "Search or scroll the list",
-    body: "Type a few letters to find a state quickly, then click it. A second list of that state's districts appears. 'Pan India' means projects spread across the whole country.",
-    watch: "The pointer opened the Geography filter for you.",
-  },
+const FILTERS: FilterDef[] = [
   {
     id: "years",
-    chapter: "filters",
-    route: "/",
-    target: chip("years"),
-    before: closePopups,
-    title: "Financial Year",
-    body: "By default you see all five years together. Let's pick one year and watch the numbers change.",
-  },
-  {
-    id: "years-open",
-    chapter: "filters",
-    route: "/",
-    target: popover("years"),
-    click: chipButton("years"),
-    action: () => {
-      if (!document.querySelector(popover("years"))) (document.querySelector(chipButton("years")) as HTMLButtonElement | null)?.click();
+    key: "years",
+    label: "Financial Year",
+    what: "Shows CSR for the years you pick. By default you see all five years added together.",
+    pickText: "Tick one or more years in the list. The numbers update as soon as you tick.",
+    ...listFilter("years"),
+    sample: async () => {
+      await openPopup("years");
+      await sleep(200);
+      const value = latestYearOption()?.dataset.value;
+      if (value) store().setValues("years", [value]);
     },
-    title: "Tick one or more years",
-    body: "You can tick a single year or several. Years before FY 2020-21 are listed at the bottom but are not part of the default view.",
   },
   {
-    id: "years-pick",
-    chapter: "filters",
-    route: "/",
-    target: popover("years"),
-    before: () => openPopup("years"),
-    click: latestYearOption,
-    action: () => {
-      const option = latestYearOption();
-      const value = option?.dataset.value;
-      if (value) useFilterStore.getState().setValues("years", [value]);
+    id: "geography",
+    key: "geography",
+    label: "Geography",
+    what: "Shows only projects in the state you pick. After choosing a state you can narrow it to one district.",
+    pickText: "Type or scroll to a state and click it. A list of its districts appears if you want to go further.",
+    has: (f) => f.states.length > 0 || f.districts.length > 0,
+    clear: () => {
+      store().clearKey("states");
+      store().clearKey("districts");
     },
-    settle: 700,
-    title: "Selecting the latest year",
-    body: "The pointer has ticked the latest financial year. The filter button turns purple to show it is in use.",
-    watch: "Selected: the latest financial year.",
+    sample: () => {
+      store().setValues("states", ["Maharashtra"]);
+      store().setValues("districts", []);
+    },
   },
   {
-    id: "years-result",
-    chapter: "filters",
-    route: "/",
-    target: ".content .kpi-row",
-    before: closePopups,
-    block: "center",
-    title: "Every number has updated",
-    body: "The cards now show that one year only: total CSR spent, companies, projects, districts, unspent CSR and aspirational districts. Charts and tables on every page follow the same filter.",
-    watch: "Compare these numbers with the 5-year totals you saw before.",
+    id: "sectors",
+    key: "sectors",
+    label: "Sector",
+    what: "The industry a company belongs to, such as Banking, Oil & Gas or Technology.",
+    pickText: "Tick one or more sectors. Use the search box at the top of the list to find one quickly.",
+    ...listFilter("sectors"),
+    sample: async () => {
+      await openPopup("sectors");
+      await sleep(200);
+      const value = firstOption("sectors")?.dataset.value;
+      if (value) store().setValues("sectors", [value]);
+    },
   },
   {
-    id: "clear",
-    chapter: "filters",
-    route: "/",
-    target: '[data-tour="filter-clear"]',
-    click: '[data-tour="filter-clear"]',
-    action: () => useFilterStore.getState().clearAll(),
-    title: "Clear All Filters",
-    body: "One click removes every filter and takes you back to the full five-year picture. The number in brackets tells you how many filters are switched on.",
-    watch: "The pointer just cleared the year filter.",
+    id: "companies",
+    key: "companies",
+    label: "Company Name",
+    what: "Follow one company, or a few, across the whole dashboard.",
+    pickText: "Type part of a company's name, then tick it. You can tick several to compare them.",
+    ...listFilter("companies"),
+    sample: async () => {
+      await openPopup("companies");
+      await sleep(200);
+      const value = firstOption("companies")?.dataset.value;
+      if (value) store().setValues("companies", [value]);
+    },
   },
   {
-    id: "sector",
-    chapter: "filters",
-    route: "/",
-    target: chip("sectors"),
-    title: "Sector",
-    body: "The industry the company belongs to, such as Banking, Oil & Gas or Technology. Use it to compare how much different industries spend on CSR.",
+    id: "themes",
+    key: "themes",
+    label: "Domain (Schedule VII area)",
+    what: "What the money was spent on: education, health care, environment, rural development and so on.",
+    pickText: "Tick one or more areas. The link next to this filter explains Schedule VII.",
+    ...listFilter("themes"),
+    sample: async () => {
+      await openPopup("themes");
+      await sleep(200);
+      const value = firstOption("themes")?.dataset.value;
+      if (value) store().setValues("themes", [value]);
+    },
   },
   {
-    id: "company",
-    chapter: "filters",
-    route: "/",
-    target: chip("companies"),
-    title: "Company Name",
-    body: "Start typing a company's name to find it. Pick one company to see its own CSR story everywhere, or pick a few to compare them.",
-  },
-  {
-    id: "domain",
-    chapter: "filters",
-    route: "/",
-    target: chip("themes"),
-    title: "Domain (Schedule VII area)",
-    body: "What the CSR money was spent on: education, health care, environment, rural development and so on. These areas are set out in Schedule VII of the Companies Act.",
-  },
-  {
-    id: "schedule7",
-    chapter: "filters",
-    route: "/",
-    target: '[data-tour="filter-schedule7"]',
-    title: "Not sure what Schedule VII is?",
-    body: "This link opens a short official Government of India explainer in a new tab.",
-  },
-  {
-    id: "agency",
-    chapter: "filters",
-    route: "/",
-    target: chip("modes"),
-    title: "Implementing Agency",
-    body: "Who carried out the project: the company itself (direct), or an outside agency such as an NGO, trust or the company's own foundation.",
+    id: "modes",
+    key: "modes",
+    label: "Implementing Agency",
+    what: "Who carried out the project: the company itself, or an outside agency such as an NGO or the company's foundation.",
+    pickText: "Tick 'Direct' or 'Implementing agency' (or both).",
+    ...listFilter("modes"),
+    sample: async () => {
+      await openPopup("modes");
+      await sleep(200);
+      const value = firstOption("modes")?.dataset.value;
+      if (value) store().setValues("modes", [value]);
+    },
   },
   {
     id: "ownership",
-    chapter: "filters",
-    route: "/",
-    target: chip("ownership"),
-    title: "Company Ownership",
-    body: "Private companies, central and state public sector companies (PSUs), public sector banks and insurers. Useful to compare government-owned and private CSR.",
+    key: "ownership",
+    label: "Company Ownership",
+    what: "Private companies, public sector companies (PSUs), public sector banks and insurers.",
+    pickText: "Tick one type, for example 'Central PSU', to see only government-owned companies.",
+    ...listFilter("ownership"),
+    sample: async () => {
+      await openPopup("ownership");
+      await sleep(200);
+      const value = firstOption("ownership")?.dataset.value;
+      if (value) store().setValues("ownership", [value]);
+    },
   },
   {
     id: "amount",
-    chapter: "filters",
-    route: "/",
-    target: popover("amount"),
-    click: '[data-tour="filter-amount"] > button',
-    action: () => {
-      if (!document.querySelector(popover("amount"))) (document.querySelector('[data-tour="filter-amount"] > button') as HTMLButtonElement | null)?.click();
+    key: "amount",
+    label: "CSR Spending Range",
+    what: "Shows only projects of a certain size, for example projects of more than ₹10 crore.",
+    pickText: "Click one of the ranges. Click the same range again to remove it.",
+    has: (f) => f.minSpend !== null || f.maxSpend !== null,
+    clear: () => store().setRange(null, null),
+    sample: () => store().setRange(10, null),
+  },
+];
+
+/** Three steps per filter: open it, pick something, see the result and decide. */
+function filterLesson(def: FilterDef, route = "/"): TourStep[] {
+  const isAmount = def.key === "amount";
+  const button = isAmount ? '[data-tour="filter-amount"] > button' : chipButton(def.key);
+  return [
+    {
+      id: `${def.id}-open`,
+      section: def.label,
+      route,
+      target: chip(def.key),
+      before: closePopups,
+      title: `Click “${def.label}”`,
+      body: def.what,
+      watch: "Click the highlighted button to open it.",
+      interactive: {
+        done: () => Boolean(document.querySelector(popover(def.key))),
+        helpLabel: "Open it for me",
+        help: () => (document.querySelector(button) as HTMLButtonElement | null)?.click(),
+        autoNext: true,
+      },
     },
-    title: "CSR Spending Range",
-    body: "Show only projects of a certain size, for example projects of more than ₹10 crore. Click a range again to remove it.",
-    watch: "The pointer opened the spending ranges.",
-  },
-  {
-    id: "search",
-    chapter: "filters",
-    route: "/",
-    target: '[data-tour="filter-search"]',
-    before: closePopups,
-    title: "Search",
-    body: "Type any word: a company, state, district or topic such as 'water' or 'schools'. Suggestions appear as you type; pick one to apply it as a filter.",
-  },
+    {
+      id: `${def.id}-pick`,
+      section: def.label,
+      route,
+      target: popover(def.key),
+      before: () => openPopup(def.key),
+      placement: "right",
+      title: "Now choose an option",
+      body: def.pickText,
+      watch: "Pick anything you like; you can change or clear it in the next step.",
+      interactive: {
+        done: (start, now) => filtersChanged(start, now) && def.has(now),
+        helpLabel: "Pick one for me",
+        help: def.sample,
+      },
+    },
+    {
+      id: `${def.id}-result`,
+      section: def.label,
+      route,
+      target: route === "/" ? kpis : pageHead,
+      before: closePopups,
+      title: "See what changed",
+      body: () => {
+        const summary = describeFilters(currentFilters());
+        return `${summary ? `Now showing only: ${summary}. ` : ""}Every card, chart and table updated to match, and this filter stays on when you open other pages. The filter button turns purple while it is in use.`;
+      },
+      watch: "Keep it to see it on the next page, or clear it to go back to all data.",
+      showFilters: true,
+      choices: [
+        { label: "Change selection", go: "back" },
+        { label: "Clear & continue", run: def.clear, go: "next" },
+        { label: "Keep & continue", primary: true, go: "next" },
+      ],
+    },
+  ];
+}
 
-  /* ---------- Overview ---------- */
-  {
-    id: "ov-head",
-    chapter: "overview",
-    route: "/",
-    target: pageHead,
-    block: "start",
-    title: "Overview: the big picture",
-    body: "This page sums up India's CSR at a glance. The buttons on the right refresh the data, download it, or open the trends page.",
-  },
-  {
-    id: "ov-kpis",
-    chapter: "overview",
-    route: "/",
-    target: ".content .kpi-row",
-    title: "Key numbers",
-    body: "Six headline numbers for your current filters. Click any card to open the page with the full detail behind it. Hover over the ⓘ icon for a plain explanation.",
-  },
-  {
-    id: "ov-trend",
-    chapter: "overview",
-    route: "/",
-    target: card("CSR Expenditure and Project Trends"),
-    title: "Five-year trend",
-    body: "The purple line is the money spent each year and the green line is the number of projects. Hover over a point to see the exact figures.",
-  },
-  {
-    id: "ov-states",
-    chapter: "overview",
-    route: "/",
-    target: card("Which States Receive"),
-    title: "Top states and sectors",
-    body: "The states and industry sectors with the most CSR spending. 'View all results' opens the full list on its own page.",
-  },
-  {
-    id: "ov-download",
-    chapter: "overview",
-    route: "/",
-    target: control("Download Data"),
-    block: "start",
-    title: "Download what you see",
-    body: "Export the current selection as Excel, CSV, PDF or PowerPoint, ready to share.",
-  },
+function searchLesson(): TourStep[] {
+  return [
+    {
+      id: "search-try",
+      section: "Search",
+      route: "/",
+      target: '[data-tour="filter-search"]',
+      before: closePopups,
+      title: "Search for anything",
+      body: "Type a company, state, district or topic (for example 'water' or 'Tata'), then click a suggestion to apply it as a filter.",
+      watch: "Click the search box and try it.",
+      interactive: {
+        done: (start, now) => filtersChanged(start, now),
+        helpLabel: "Search for me",
+        help: () => store().setSearch("education"),
+      },
+    },
+    {
+      id: "search-result",
+      section: "Search",
+      route: "/",
+      target: kpis,
+      title: "See what changed",
+      body: () => {
+        const summary = describeFilters(currentFilters());
+        return `${summary ? `Now showing only: ${summary}. ` : ""}The whole dashboard now follows your search.`;
+      },
+      showFilters: true,
+      choices: [
+        { label: "Clear & continue", run: () => store().setSearch(""), go: "next" },
+        { label: "Keep & continue", primary: true, go: "next" },
+      ],
+    },
+  ];
+}
 
-  /* ---------- CSR Insights ---------- */
-  {
-    id: "nav-insights",
-    chapter: "insights",
-    route: "/",
-    target: nav("/company-analysis"),
-    placement: "right",
-    title: "Next: CSR Insights",
-    body: "Everything about companies: who spends the most, how they compare, what they were required to spend and what was left unspent.",
-  },
-  {
-    id: "ins-table",
-    chapter: "insights",
-    route: "/company-analysis",
-    target: card("Top Companies by CSR Expenditure"),
-    block: "start",
-    title: "Top companies",
-    body: "Companies ranked by total CSR spent, with their share of all CSR, projects, latest-year spending, change from last year and unspent CSR. Click a column name to sort.",
-  },
-  {
-    id: "ins-search",
-    chapter: "insights",
-    route: "/company-analysis",
-    target: 'input[placeholder^="Search a company"]',
-    title: "Find any company",
-    body: "Type a name to jump to a company. Click a row or 'View Profile' to open that company's full CSR profile.",
-  },
-  {
-    id: "ins-compare",
-    chapter: "insights",
-    route: "/company-analysis",
-    target: () => findText("Company comparison"),
-    title: "Compare companies side by side",
-    body: "Add up to five companies to compare their spending year by year, the states they reach and their main focus areas.",
-  },
-  {
-    id: "ins-unspent",
-    chapter: "insights",
-    route: "/company-analysis",
-    target: card("Required, Spent and Unspent CSR by Year"),
-    title: "Required, spent and unspent CSR",
-    body: "From each company's annual CSR report: how much it had to spend (2% of average profit), how much it spent, and how much was left unspent.",
-  },
+/* ------------------------------------------------------------------ */
+/* Page lessons                                                        */
+/* ------------------------------------------------------------------ */
 
-  /* ---------- CSR by Geography ---------- */
-  {
-    id: "geo-page",
-    chapter: "geography",
-    route: "/state-analysis",
-    target: pageHead,
-    block: "start",
-    title: "CSR by Geography",
-    body: "Where CSR money is spent, state by state and district by district.",
-  },
-  {
-    id: "geo-map",
-    chapter: "geography",
-    route: "/state-analysis",
-    target: card("State-wise Total CSR Spent"),
-    title: "The India map",
-    body: "Darker states received more CSR money. Hover over a state for its figures, or click it to filter the whole dashboard to that state.",
-  },
-  {
-    id: "geo-districts",
-    chapter: "geography",
-    route: "/state-analysis",
-    target: card("Districts Ranked"),
-    title: "Districts",
-    body: "Districts ranked by CSR spent. Many projects do not name a district, so use this list for relative comparison rather than totals.",
-  },
+interface PageDef {
+  id: string;
+  href: string;
+  label: string;
+  hint: string;
+  intro: string;
+  steps: Omit<TourStep, "section" | "route">[];
+}
 
-  /* ---------- CSR by Sector ---------- */
+const PAGES: PageDef[] = [
   {
-    id: "sec-page",
-    chapter: "sectors",
-    route: "/sector-analysis",
-    target: pageHead,
-    block: "start",
-    title: "CSR by Sector",
-    body: "How spending splits by the company's industry, and by what the money was spent on (Schedule VII areas).",
+    id: "overview",
+    href: "/",
+    label: "Overview",
+    hint: "The big picture in one screen",
+    intro: "A one-screen summary of India's CSR: headline numbers, the five-year trend, and the top states and sectors.",
+    steps: [
+      {
+        id: "ov-kpis",
+        target: kpis,
+        title: "Key numbers",
+        body: "Six headline numbers for your current filters. Click any card to open the page with the detail behind it, and hover over ⓘ for a plain explanation.",
+      },
+      {
+        id: "ov-trend",
+        target: card("CSR Expenditure and Project Trends"),
+        title: "Five-year trend",
+        body: "Purple is the money spent each year; green is the number of projects. Hover over a point for the exact figures.",
+      },
+      {
+        id: "ov-download",
+        target: control("Download Data"),
+        block: "start",
+        title: "Download what you see",
+        body: "Export the current selection as Excel, CSV, PDF or PowerPoint.",
+      },
+    ],
   },
   {
-    id: "sec-share",
-    chapter: "sectors",
-    route: "/sector-analysis",
-    target: card("CSR Spent Share by Sector"),
-    title: "Which industries give the most",
-    body: "Each industry's share of total CSR spent. Click a sector to filter the dashboard to it.",
+    id: "insights",
+    href: "/company-analysis",
+    label: "CSR Insights",
+    hint: "Top companies, comparisons, unspent CSR",
+    intro: "Everything about companies: who spends the most, how they compare, and what they were required to spend but left unspent.",
+    steps: [
+      {
+        id: "ins-table",
+        target: card("Top Companies by CSR Expenditure"),
+        block: "start",
+        title: "Top companies",
+        body: "Companies ranked by CSR spent, with their share of all CSR, projects, latest-year spending, change from last year and unspent CSR. Click a column name to sort, or a row to open that company's profile.",
+      },
+      {
+        id: "ins-compare",
+        target: () => findText("Company comparison"),
+        title: "Compare companies",
+        body: "Add up to five companies to compare their spending year by year, the states they reach and their main focus areas.",
+      },
+      {
+        id: "ins-unspent",
+        target: card("Required, Spent and Unspent CSR by Year"),
+        title: "Required, spent and unspent",
+        body: "From company CSR reports: how much companies had to spend (2% of average profit), how much they spent, and how much was left unspent.",
+      },
+    ],
   },
   {
-    id: "sec-themes",
-    chapter: "sectors",
-    route: "/sector-analysis",
-    target: card("CSR Expenditure Across Schedule VII"),
-    title: "What the money was spent on",
-    body: "Each box is a Schedule VII area; bigger boxes received more money. The tiles above it name the leading and second-largest areas.",
-  },
-
-  /* ---------- Aspirational districts ---------- */
-  {
-    id: "asp-page",
-    chapter: "aspirational",
-    route: "/aspirational-districts",
-    target: pageHead,
-    block: "start",
-    title: "Aspirational Districts",
-    body: "NITI Aayog has named 112 districts that lag furthest behind on health, education, farming and basic services. This page shows how much CSR reaches them.",
-  },
-  {
-    id: "asp-pick",
-    chapter: "aspirational",
-    route: "/aspirational-districts",
-    target: control("All aspirational districts"),
-    title: "Look at one district",
-    body: "Pick a single aspirational district here to see its own spending and the companies funding it. This choice only affects this page.",
+    id: "geography",
+    href: "/state-analysis",
+    label: "CSR by Geography",
+    hint: "India map, states and districts",
+    intro: "Where CSR money is spent, state by state and district by district.",
+    steps: [
+      {
+        id: "geo-map",
+        target: card("State-wise Total CSR Spent"),
+        title: "The India map",
+        body: "Darker states received more CSR money. Hover over a state for its figures, or click it to filter the whole dashboard to that state.",
+      },
+      {
+        id: "geo-districts",
+        target: card("Districts Ranked"),
+        title: "Districts",
+        body: "Districts ranked by CSR spent. Many projects do not name a district, so use this for comparison rather than totals.",
+      },
+    ],
   },
   {
-    id: "asp-cards",
-    chapter: "aspirational",
-    route: "/aspirational-districts",
-    target: () => findText("CSR Spent in Aspirational Districts")?.closest(".grid") ?? null,
-    title: "How much reaches them",
-    body: "Total CSR spent in these districts, the companies funding them, how many of the 112 districts got at least one project, and the biggest contributor.",
-  },
-
-  /* ---------- Trends ---------- */
-  {
-    id: "tr-page",
-    chapter: "trends",
-    route: "/trend-analysis",
-    target: ".content .kpi-row",
-    block: "start",
-    title: "Trends & Comparisons",
-    body: "Growth at a glance: the latest year's spending, the change from last year, the average yearly growth and a projection for next year.",
-  },
-  {
-    id: "tr-sectors",
-    chapter: "trends",
-    route: "/trend-analysis",
-    target: card("Sectors with Increased CSR Spending"),
-    title: "Which sectors changed most",
-    body: "Sectors that spent more this year than last year, and (next to it) sectors that spent less. Each row shows both years' amounts and the % change.",
-  },
-
-  /* ---------- AI ---------- */
-  {
-    id: "ai-page",
-    chapter: "ai",
-    route: "/ai-insights",
-    target: pageHead,
-    block: "start",
-    title: "AI-powered Insights",
-    body: "Automatic findings about your current selection, such as unusual jumps or falls, written in plain language.",
+    id: "sectors",
+    href: "/sector-analysis",
+    label: "CSR by Sector",
+    hint: "Industries and Schedule VII areas",
+    intro: "How spending splits by the company's industry, and by what the money was spent on.",
+    steps: [
+      {
+        id: "sec-share",
+        target: card("CSR Spent Share by Sector"),
+        title: "Which industries give the most",
+        body: "Each industry's share of total CSR spent. Click a sector to filter the dashboard to it.",
+      },
+      {
+        id: "sec-themes",
+        target: card("CSR Expenditure Across Schedule VII"),
+        title: "What the money was spent on",
+        body: "Each box is a Schedule VII area; bigger boxes received more money.",
+      },
+    ],
   },
   {
-    id: "ai-ask",
-    chapter: "ai",
-    route: "/ai-insights",
-    target: card("Natural Language Search"),
-    title: "Ask a question",
-    body: "Type a question in everyday words, for example 'Which companies spent most on education in Karnataka?', and get an answer from the data.",
-  },
-
-  /* ---------- Reports ---------- */
-  {
-    id: "rep-page",
-    chapter: "reports",
-    route: "/reports",
-    target: pageHead,
-    block: "start",
-    title: "Reports & Downloads",
-    body: "Ready-made reports in PDF, Excel, PowerPoint and CSV. Everything is built from your current filters, so set the filters first, then download.",
-  },
-
-  /* ---------- CSR Data ---------- */
-  {
-    id: "data-table",
-    chapter: "data",
-    route: "/data-explorer",
-    target: card("CSR Data"),
-    block: "start",
-    title: "CSR Data: every project",
-    body: "The complete list of reported CSR projects for your filters: company, year, project, Schedule VII area, sector, location and amount. Click a column name to sort.",
+    id: "aspirational",
+    href: "/aspirational-districts",
+    label: "Aspirational Districts",
+    hint: "CSR in India's 112 most backward districts",
+    intro: "NITI Aayog has named 112 districts that lag furthest behind on health, education, farming and basic services. This page shows how much CSR reaches them.",
+    steps: [
+      {
+        id: "asp-cards",
+        target: () => findText("CSR Spent in Aspirational Districts")?.closest(".grid") ?? null,
+        title: "How much reaches them",
+        body: "CSR spent in these districts, the companies funding them, how many of the 112 got at least one project, and the biggest contributor.",
+      },
+      {
+        id: "asp-pick",
+        target: control("All aspirational districts"),
+        title: "Look at one district",
+        body: "Pick a single aspirational district here to see its own figures. This choice only affects this page.",
+      },
+    ],
   },
   {
-    id: "data-columns",
-    chapter: "data",
-    route: "/data-explorer",
-    target: control("Columns"),
-    title: "Choose columns and export",
-    body: "Show or hide columns such as district, implementing agency or approved outlay. 'Export' downloads exactly what you see.",
+    id: "trends",
+    href: "/trend-analysis",
+    label: "Trends & Comparisons",
+    hint: "Growth, change from last year, rising and falling sectors",
+    intro: "How CSR spending has grown, and which sectors spent more or less than last year.",
+    steps: [
+      {
+        id: "tr-kpis",
+        target: kpis,
+        block: "start",
+        title: "Growth at a glance",
+        body: "The latest year's spending, the change from last year, the average yearly growth and a projection for next year.",
+      },
+      {
+        id: "tr-sectors",
+        target: card("Sectors with Increased CSR Spending"),
+        title: "Sectors that changed most",
+        body: "Sectors that spent more than last year, and next to it, sectors that spent less. Each row shows both years and the % change.",
+      },
+    ],
   },
-
-  /* ---------- Glossary ---------- */
+  {
+    id: "ai",
+    href: "/ai-insights",
+    label: "AI-powered Insights",
+    hint: "Automatic findings and questions in plain words",
+    intro: "Automatic findings about your current selection, and a box where you can ask questions in everyday words.",
+    steps: [
+      {
+        id: "ai-ask",
+        target: card("Natural Language Search"),
+        title: "Ask a question",
+        body: "For example: 'Which companies spent most on education in Karnataka?'. The answer comes straight from the data.",
+      },
+    ],
+  },
+  {
+    id: "reports",
+    href: "/reports",
+    label: "Reports & Downloads",
+    hint: "PDF, Excel, PowerPoint, CSV",
+    intro: "Ready-made reports built from your current filters. Set the filters first, then download.",
+    steps: [],
+  },
+  {
+    id: "data",
+    href: "/data-explorer",
+    label: "CSR Data",
+    hint: "Every reported project in one table",
+    intro: "The complete list of reported CSR projects for your filters.",
+    steps: [
+      {
+        id: "data-columns",
+        target: control("Columns"),
+        title: "Choose columns and export",
+        body: "Show or hide columns such as district or implementing agency. 'Export' downloads exactly what you see.",
+      },
+    ],
+  },
   {
     id: "glossary",
-    chapter: "glossary",
-    route: "/glossary",
-    target: pageHead,
-    block: "start",
-    title: "Glossary",
-    body: "Not sure what a term means? Unspent CSR, Schedule VII, implementing agency and more are explained here in simple words.",
+    href: "/glossary",
+    label: "Glossary",
+    hint: "CSR terms in simple words",
+    intro: "Unspent CSR, Schedule VII, implementing agency and other terms explained simply.",
+    steps: [],
   },
+];
 
-  /* ---------- Finish ---------- */
+/** Pointer clicks the page in the sidebar, then the page's own steps. */
+function pageLesson(page: PageDef): TourStep[] {
+  return [
+    {
+      id: `${page.id}-nav`,
+      section: page.label,
+      target: nav(page.href),
+      click: nav(page.href),
+      awaitRoute: page.href,
+      placement: "right",
+      title: `Opening ${page.label}`,
+      body: page.intro,
+      watch: "The pointer clicked this page in the menu for you.",
+      showFilters: true,
+    },
+    ...page.steps.map((step) => ({ ...step, section: page.label, route: page.href, showFilters: true })),
+  ];
+}
+
+/* ------------------------------------------------------------------ */
+/* Intro, checkpoints and the menu                                     */
+/* ------------------------------------------------------------------ */
+
+const INTRO: TourStep[] = [
   {
-    id: "finish",
-    chapter: "finish",
+    id: "welcome",
+    section: "Getting started",
     route: "/",
-    target: '[data-tour="tour-button"]',
-    placement: "bottom",
-    title: "You're ready to explore",
-    body: "That's the whole dashboard. You can replay the tour, or a tour of just the page you are on, any time from this Tour button.",
     before: closePopups,
+    title: "Let's take a quick tour",
+    body: "You will try a filter yourself and see one page. The pointer shows you where to click; you do the clicking.",
+    watch: "Use → / ← or the buttons to move. Esc stops the tour.",
   },
+  {
+    id: "filterbar",
+    section: "Getting started",
+    route: "/",
+    target: ".filterbar",
+    block: "start",
+    before: closePopups,
+    title: "Filters work on every page",
+    body: "Pick a filter once and every chart, card and table updates, on this page and on every other page you open.",
+  },
+];
+
+const checkpoint = (id: string, title: string, body: string): TourStep => ({
+  id,
+  section: "Checkpoint",
+  before: closePopups,
+  title,
+  body,
+  showFilters: true,
+  choices: [
+    { label: "I'm done", go: "end" },
+    { label: "Back to menu", go: "menu" },
+    { label: "Continue", primary: true, go: "next" },
+  ],
+});
+
+const OTHER_FILTERS_GLANCE: TourStep[] = FILTERS.filter((def) => def.id !== "years").map((def) => ({
+  id: `${def.id}-glance`,
+  section: "Other filters",
+  route: "/",
+  target: chip(def.key),
+  before: closePopups,
+  title: def.label,
+  body: `${def.what} You can try it yourself from the tour menu.`,
+}));
+
+const FINISH: TourStep = {
+  id: "finish",
+  section: "All done",
+  target: '[data-tour="tour-button"]',
+  before: closePopups,
+  title: "You're ready to explore",
+  body: "Open this Tour button any time to try another filter or page. Filters you kept are still on; use Clear All Filters to remove them.",
+  showFilters: true,
+  choices: [
+    { label: "Back to menu", go: "menu" },
+    { label: "Finish", primary: true, go: "end" },
+  ],
+};
+
+export const FILTER_LESSONS: Lesson[] = [
+  ...FILTERS.map((def) => ({ id: `filter-${def.id}`, label: def.label, hint: def.what.split(".")[0], steps: filterLesson(def) })),
+  { id: "filter-search", label: "Search", hint: "Find a company, place or topic by typing", steps: searchLesson() },
+];
+
+export const PAGE_LESSONS: Lesson[] = PAGES.map((page) => ({
+  id: `page-${page.id}`,
+  label: page.label,
+  hint: page.hint,
+  steps: pageLesson(page),
+}));
+
+const yearsLesson = FILTER_LESSONS.find((lesson) => lesson.id === "filter-years")!.steps;
+const insightsLesson = PAGE_LESSONS.find((lesson) => lesson.id === "page-insights")!.steps;
+
+/** One filter you try yourself + one page. About two minutes. */
+export const QUICK_START: TourStep[] = [...INTRO, ...yearsLesson, ...insightsLesson, FINISH];
+
+/** Everything, with checkpoints so the visitor can stop at any point. */
+export const FULL_TOUR: TourStep[] = [
+  ...INTRO,
+  ...yearsLesson,
+  checkpoint("cp-filters", "Want a quick look at the other filters?", "Next: one short step for each of the other filters. You can stop here or go back to the menu."),
+  ...OTHER_FILTERS_GLANCE,
+  ...PAGE_LESSONS.flatMap((lesson, index) =>
+    index === 0
+      ? lesson.steps
+      : [checkpoint(`cp-${lesson.id}`, `Next: ${lesson.label}`, `${PAGES[index].intro}`), ...lesson.steps],
+  ),
+  FINISH,
 ];

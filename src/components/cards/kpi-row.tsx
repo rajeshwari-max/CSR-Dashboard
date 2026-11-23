@@ -126,7 +126,7 @@ export function KpiRow({
     {
       label: "Companies with Reported CSR Data",
       value: formatNumber(kpis.companyCount),
-      sub: `From ${kpis.sectorCount} industry sectors`,
+      sub: kpis.sectorCount === 1 ? "From 1 industry sector" : `From ${kpis.sectorCount} industry sectors`,
       icon: Building2,
       href: "/company-analysis",
       tip: "Number of companies represented in the selected period. Click for the company-wise list, ownership and sector distribution.",
@@ -153,7 +153,7 @@ export function KpiRow({
           // a "Beneficiaries Reached" column is uploaded.
           label: "Districts with Reported CSR Projects",
           value: formatNumber(kpis.districtCount),
-          sub: `Spread across ${kpis.stateCount} states and UTs`,
+          sub: kpis.stateCount === 1 ? "In 1 state or UT" : `Spread across ${kpis.stateCount} states and UTs`,
           icon: MapPinned,
           href: "/state-analysis",
           tip: "Number of districts with a recorded geographical location for CSR projects. Click for the district-wise CSR view.",
