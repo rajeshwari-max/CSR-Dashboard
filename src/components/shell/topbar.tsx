@@ -48,7 +48,7 @@ export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: Topbar
       </nav>
 
       <div className="topbar-actions">
-        <button type="button" className="tour-launch" data-tour="tour-button" onClick={openTour} data-tip="Take a guided tour of the dashboard">
+        <button type="button" className="tour-launch" data-tour="tour-button" onClick={openTour} data-tip="Guided tour: a step-by-step walkthrough that shows you how to use the filters and each page">
           <Compass width={15} height={15} />
           Tour
         </button>

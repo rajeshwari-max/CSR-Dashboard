@@ -789,3 +789,8 @@ tbody tr:hover{background:var(--surface-2);}
 .tour-menu-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
 .tour-menu-foot .tour-keys{margin:0;justify-content:flex-start;}
 @media (max-width:720px){.tour-starts,.tour-lists{grid-template-columns:1fr;}}
+
+/* Top bar sits at the very top of the screen: show its hover tips BELOW the
+   button (above would be cut off), right-aligned so they stay on screen. */
+.topbar [data-tip]:hover::after{top:calc(100% + 8px);bottom:auto;left:auto;right:0;transform:none;
+  min-width:0;width:max-content;max-width:260px;font-weight:500;}
