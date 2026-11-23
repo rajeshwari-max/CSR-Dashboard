@@ -134,7 +134,7 @@ export function KpiRow({
     {
       label: "Reported CSR Projects",
       value: formatNumber(kpis.projectCount),
-      sub: `Average ${formatCrore(kpis.avgProjectSize)} per project`,
+      sub: `On average, ${formatCrore(kpis.avgProjectSize)} spent on each project`,
       icon: FolderKanban,
       href: "/data-explorer",
       tip: "Total number of CSR projects recorded in the selected period. Click for project details, implementing agencies and locations.",
