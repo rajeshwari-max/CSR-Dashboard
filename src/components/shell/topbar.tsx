@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, RefreshCw } from "lucide-react";
+import { ChevronDown, Compass, Menu, RefreshCw } from "lucide-react";
 
 import { BREADCRUMB } from "@/components/shell/nav";
+import { useTour } from "@/components/tour/guided-tour";
 
 interface TopbarProps {
   onMenu: () => void;
@@ -19,6 +20,7 @@ interface TopbarProps {
 export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: TopbarProps) {
   const pathname = usePathname();
   const [avatarOpen, setAvatarOpen] = React.useState(false);
+  const { openTour } = useTour();
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -46,6 +48,10 @@ export function Topbar({ onMenu, onRefresh, isRefreshing, datasetLabel }: Topbar
       </nav>
 
       <div className="topbar-actions">
+        <button type="button" className="tour-launch" data-tour="tour-button" onClick={openTour} data-tip="Take a guided tour of the dashboard">
+          <Compass width={15} height={15} />
+          Tour
+        </button>
         {onRefresh ? (
           <button
             type="button"

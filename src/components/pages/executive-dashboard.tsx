@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, CircleHelp, RefreshCw, TrendingUp, Wallet, X } from "lucide-react";
+import { ArrowUpRight, CircleHelp, RefreshCw, TrendingUp, Wallet } from "lucide-react";
 
 import { KpiRow } from "@/components/cards/kpi-row";
 import { RankRows } from "@/components/cards/rank-list";
@@ -12,6 +12,7 @@ import { IndiaMap } from "@/components/charts/india-map";
 import { MiniLabel, PageFrame } from "@/components/shell/page-frame";
 import { useDashboardFilters, useMeta } from "@/components/shared/use-dashboard-filters";
 import { ExportMenu } from "@/components/shared/export-menu";
+import { useTour } from "@/components/tour/guided-tour";
 import { useApi } from "@/lib/api";
 import { formatCrore, formatNumber, formatShare } from "@/lib/format";
 import { useFilterStore } from "@/store/filters";
@@ -26,7 +27,7 @@ import { canScopeAnnexureFinancials } from "@/lib/annexure-scope";
  * Nothing is added or moved; only the numbers are real.
  */
 export function ExecutiveDashboard() {
-  const [guideOpen, setGuideOpen] = React.useState(false);
+  const { openTour } = useTour();
   const { filters, filterQuery } = useDashboardFilters();
   const toggleValue = useFilterStore((state) => state.toggleValue);
   const setValues = useFilterStore((state) => state.setValues);
@@ -38,10 +39,6 @@ export function ExecutiveDashboard() {
 
   const kpis = summary.data?.kpis ?? null;
   const annexureScopeSupported = canScopeAnnexureFinancials(filters);
-  const annexureYears = policy.data?.years ?? [];
-  const annexurePeriod = annexureYears.length
-    ? `${annexureYears[0]}${annexureYears.length > 1 ? ` – ${annexureYears[annexureYears.length - 1]}` : ""}`
-    : "selected years";
   // Full period covered by the data, regardless of the Year filter (e.g. "FY 2020-21 to FY 2024-25").
   const allYears = meta.data?.years ?? [];
   const dataPeriod = allYears.length ? `${allYears[0]} to ${allYears[allYears.length - 1]}` : null;
@@ -79,13 +76,12 @@ export function ExecutiveDashboard() {
         </>
       }
     >
-      {guideOpen ? <HowToUse onClose={() => setGuideOpen(false)} /> : null}
       <div className="card" style={{ padding: "18px 22px", marginBottom: 26 }}>
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 8 }}>
           <div style={{ fontSize: 16, fontWeight: 650 }}>CSR Intelligence Dashboard</div>
           <button
             type="button"
-            onClick={() => setGuideOpen(true)}
+            onClick={openTour}
             style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5, fontWeight: 600, color: "var(--c1)", textDecoration: "underline", textUnderlineOffset: 3 }}
           >
             <CircleHelp width={14} height={14} /> How to use this dashboard · Take a tour
@@ -115,7 +111,7 @@ export function ExecutiveDashboard() {
           sub: !annexureScopeSupported
             ? "Not available for location filters"
             : policy.data?.financials
-              ? `${formatNumber(policy.data.financials.unspentCompanies)} companies · ${annexurePeriod}`
+              ? `Left unspent by ${formatNumber(policy.data.financials.unspentCompanies)} companies`
               : "No CSR report data",
           icon: Wallet,
           href: "/company-analysis#unspent-csr",
@@ -262,68 +258,6 @@ function MiniStat({ label, value }: { label: string; value: string }) {
       </div>
       <div className="mono truncate1" style={{ fontSize: 13, fontWeight: 700 }}>
         {value}
-      </div>
-    </div>
-  );
-}
-
-/** Short step-by-step walkthrough, opened from "How to use this dashboard". */
-const GUIDE_STEPS: { title: string; text: string }[] = [
-  { title: "Apply filters", text: "Select a financial year, sector, company, state or district to narrow your search." },
-  { title: "Explore company intelligence", text: "Understand individual company CSR spending, sectors, projects and geographical priorities." },
-  { title: "Analyse geographical distribution", text: "Identify states and districts receiving CSR investments." },
-  { title: "Understand sector trends", text: "Compare CSR spending across different development sectors." },
-  { title: "Download reports", text: "Export relevant information for further analysis and planning." },
-];
-
-function HowToUse({ onClose }: { onClose: () => void }) {
-  const [step, setStep] = React.useState(0);
-  const last = step === GUIDE_STEPS.length - 1;
-  React.useEffect(() => {
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Welcome to CSR Intelligence: product tour"
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(20, 10, 30, 0.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
-    >
-      <div className="card" onClick={(event) => event.stopPropagation()} style={{ width: "min(480px, 100%)", padding: "22px 24px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <div>
-            <div style={{ fontSize: 16, fontWeight: 700 }}>Welcome to CSR Intelligence</div>
-            <div className="muted" style={{ fontSize: 12.5 }}>Product tour · Learn how to explore CSR data and discover useful insights.</div>
-          </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
-            <X width={16} height={16} />
-          </button>
-        </div>
-        <div className="kpi-label" style={{ marginBottom: 6 }}>Step {step + 1} of {GUIDE_STEPS.length}</div>
-        <div style={{ fontSize: 17, fontWeight: 650, marginBottom: 8 }}>{GUIDE_STEPS[step].title}</div>
-        <p className="muted" style={{ fontSize: 13.5, lineHeight: 1.6, minHeight: 44 }}>{GUIDE_STEPS[step].text}</p>
-        <div style={{ display: "flex", gap: 6, margin: "16px 0" }}>
-          {GUIDE_STEPS.map((item, index) => (
-            <button
-              key={item.title}
-              type="button"
-              aria-label={`Step ${index + 1}`}
-              onClick={() => setStep(index)}
-              style={{ height: 6, flex: 1, borderRadius: 999, background: index <= step ? "var(--c1)" : "var(--border)" }}
-            />
-          ))}
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <button type="button" className="btn btn-outline btn-sm" onClick={() => setStep((s) => s - 1)} disabled={step === 0}>
-            Back
-          </button>
-          <button type="button" className="btn btn-gradient btn-sm" onClick={() => (last ? onClose() : setStep((s) => s + 1))}>
-            {last ? "Done" : "Next"}
-          </button>
-        </div>
       </div>
     </div>
   );

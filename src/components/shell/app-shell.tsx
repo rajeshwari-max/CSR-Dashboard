@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { CommandPalette } from "@/components/shell/command-palette";
 import { Sidebar } from "@/components/shell/sidebar";
+import { TourProvider } from "@/components/tour/guided-tour";
 
 interface ShellContextValue {
   openMobileNav: () => void;
@@ -82,6 +83,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ShellContext.Provider value={value}>
+      <TourProvider>
       <div className="app-shell">
         <Sidebar
           collapsed={collapsed}
@@ -94,6 +96,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
       <div className={`toast${toastMessage ? " show" : ""}`}>{toastMessage}</div>
+      </TourProvider>
     </ShellContext.Provider>
   );
 }

@@ -151,7 +151,7 @@ export function FilterBar({
       </span>
 
       {!hide.includes("states") && !hide.includes("districts") ? (
-        <div className="pos-rel">
+        <div className="pos-rel" data-tour="filter-geography">
           <button
             type="button"
             className={`select-chip${filters.states.length || filters.districts.length ? " active" : ""}`}
@@ -197,7 +197,7 @@ export function FilterBar({
               : `${chip.label} · ${selected.length}`;
 
         return (
-          <div key={chip.key} className="pos-rel" style={chip.key === "themes" ? { display: "inline-flex", alignItems: "center" } : undefined}>
+          <div key={chip.key} className="pos-rel" data-tour={`filter-${chip.key}`} style={chip.key === "themes" ? { display: "inline-flex", alignItems: "center" } : undefined}>
             <button
               type="button"
               className={`select-chip${selected.length ? " active" : ""}`}
@@ -212,6 +212,7 @@ export function FilterBar({
             </button>
             {chip.key === "themes" ? (
               <a
+                data-tour="filter-schedule7"
                 href={SCHEDULE_VII_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -237,7 +238,7 @@ export function FilterBar({
         );
       })}
 
-      <div className="pos-rel">
+      <div className="pos-rel" data-tour="filter-amount">
         <button
           type="button"
           className={`select-chip${filters.minSpend !== null || filters.maxSpend !== null ? " active" : ""}`}
@@ -252,6 +253,7 @@ export function FilterBar({
         {openChip === "amount" ? (
           <div
             className="dropdown open"
+            data-tour="filter-popover"
             style={{ top: 34, left: 0, right: "auto", width: 220, padding: 8 }}
           >
             <div className="mini-label no-rule" style={{ margin: "2px 4px 8px" }}>
@@ -308,7 +310,7 @@ export function FilterBar({
         <span className="filter-count">{resultCount.toLocaleString("en-IN")} projects</span>
       ) : null}
 
-      <button type="button" className="fb-text" onClick={clearAll} disabled={count === 0}>
+      <button type="button" className="fb-text" data-tour="filter-clear" onClick={clearAll} disabled={count === 0}>
         <RotateCcw width={13} height={13} />
         Clear All Filters{count ? ` (${count})` : ""}
       </button>
@@ -336,7 +338,7 @@ function LocationPopover({
   const filtered = options.filter((option) => option.toLowerCase().includes(term.trim().toLowerCase()));
 
   return (
-    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
+    <div className="dropdown open" data-tour="filter-popover" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
       <div style={{ padding: "9px 12px 0", fontSize: 11.5, color: "var(--text-soft)", lineHeight: 1.45 }}>
         Filter CSR projects and expenditure by state and district to identify where companies are investing.
       </div>
@@ -434,7 +436,7 @@ function ChipPopover({
   }, [options, term]);
 
   return (
-    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: hintBelow ? 340 : 280 }}>
+    <div className="dropdown open" data-tour="filter-popover" style={{ top: 34, left: 0, right: "auto", width: hintBelow ? 340 : 280 }}>
       {note ? (
         <div style={{ padding: "9px 12px 0", fontSize: 11.5, color: "var(--text-soft)", lineHeight: 1.45 }}>
           {note}
@@ -472,6 +474,7 @@ function ChipPopover({
               <button
                 key={option.value}
                 type="button"
+                data-value={option.value}
                 className="cmdk-result"
                 style={{ width: "100%", border: "none", background: active ? "var(--blue-light)" : "transparent" }}
                 onClick={() =>
@@ -555,7 +558,7 @@ export function AspirationalPopover({
   const filtered = options.filter((name) => name.toLowerCase().includes(term.trim().toLowerCase()));
 
   return (
-    <div className="dropdown open" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
+    <div className="dropdown open" data-tour="filter-popover" style={{ top: 34, left: 0, right: "auto", width: 300 }}>
       <div className="cmdk-input-row" style={{ padding: "9px 12px" }}>
         <input
           autoFocus
@@ -664,7 +667,7 @@ function FilterSearch({ meta, filters }: { meta: Meta | null; filters: Filters }
   React.useEffect(() => setActive(0), [text]);
 
   return (
-    <div className="pos-rel" ref={wrapRef}>
+    <div className="pos-rel" ref={wrapRef} data-tour="filter-search">
       <div className={`select-chip${filters.search ? " active" : ""}`} style={{ gap: 6, paddingRight: 6, cursor: "text" }}>
         <Search width={13} height={13} style={{ flex: "none" }} />
         <input

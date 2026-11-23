@@ -114,10 +114,10 @@ export function KpiRow({
       value: formatCrore(kpis.totalSpend),
       sub:
         kpis.yoyGrowthPct !== null && kpis.previousYear
-          ? "compared to previous year"
+          ? `in ${kpis.latestYear} compared to ${kpis.previousYear}`
           : period && period.count > 1
-            ? "Cumulative across the years shown"
-            : `${kpis.latestYear ?? "—"}`,
+            ? "Total of all the years shown"
+            : `Spent in ${kpis.latestYear ?? "the selected year"}`,
       delta: kpis.yoyGrowthPct,
       icon: IndianRupee,
       href: "/trend-analysis",
@@ -126,7 +126,7 @@ export function KpiRow({
     {
       label: "Companies with Reported CSR Data",
       value: formatNumber(kpis.companyCount),
-      sub: `${kpis.sectorCount} sectors`,
+      sub: `From ${kpis.sectorCount} industry sectors`,
       icon: Building2,
       href: "/company-analysis",
       tip: "Number of companies represented in the selected period. Click for the company-wise list, ownership and sector distribution.",
@@ -134,7 +134,7 @@ export function KpiRow({
     {
       label: "Reported CSR Projects",
       value: formatNumber(kpis.projectCount),
-      sub: "Across India",
+      sub: `Average ${formatCrore(kpis.avgProjectSize)} per project`,
       icon: FolderKanban,
       href: "/data-explorer",
       tip: "Total number of CSR projects recorded in the selected period. Click for project details, implementing agencies and locations.",
@@ -153,7 +153,7 @@ export function KpiRow({
           // a "Beneficiaries Reached" column is uploaded.
           label: "Districts with Reported CSR Projects",
           value: formatNumber(kpis.districtCount),
-          sub: "With a recorded district location",
+          sub: `Spread across ${kpis.stateCount} states and UTs`,
           icon: MapPinned,
           href: "/state-analysis",
           tip: "Number of districts with a recorded geographical location for CSR projects. Click for the district-wise CSR view.",
@@ -161,7 +161,7 @@ export function KpiRow({
     {
       label: "Aspirational District Coverage",
       value: `${formatNumber(kpis.aspirationalDistrictCount ?? 0)} of 112`,
-      sub: `${formatCrore(kpis.aspirationalSpend)} spent · ${formatShare(kpis.aspirationalShare)} of total CSR spent`,
+      sub: `${formatCrore(kpis.aspirationalSpend)} spent here · ${formatShare(kpis.aspirationalShare)} of all CSR`,
       icon: Target,
       href: "/aspirational-districts",
       tip: "Number of aspirational districts with reported CSR project coverage. Click for districts covered, expenditure and companies investing in these districts.",
@@ -224,7 +224,7 @@ export function KpiRow({
                   {formatSignedPercent(card.delta)}
                 </span>
               ) : null}
-              <span className="truncate1">{card.sub}</span>
+              <span className="kpi-sub-text truncate1">{card.sub}</span>
             </div>
           </div>
         );
