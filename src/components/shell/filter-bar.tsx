@@ -51,12 +51,10 @@ const CHIPS: ChipSpec[] = [
     info: "Select the financial year or period for which you want to view CSR expenditure and project information.",
     note: "Select one or more financial years.",
     placeholder: "Search years…",
-    options: (meta) => [...meta.years, ...(meta.earlierYears ?? [])],
-    // FY 2020-21 onwards is the default view; earlier years are opt-in.
-    optionValue: (meta) => [
-      ...meta.years.map((year) => ({ value: year, label: year })),
-      ...[...(meta.earlierYears ?? [])].reverse().map((year) => ({ value: year, label: year, hint: "Earlier year, not in default view" })),
-    ],
+    // Only FY 2020-21 to FY 2024-25 are offered here. Earlier years stay in the
+    // dataset (and in downloads of the raw data); they are just not listed in this filter.
+    options: (meta) => meta.years,
+    optionValue: (meta) => meta.years.map((year) => ({ value: year, label: year })),
   },
   { key: "sectors", label: "Sector", info: "Filter by the industry sector of the company spending the CSR money (e.g. banking, oil & gas).", placeholder: "e.g. Banking, Oil & Gas, Technology", options: (meta) => meta.sectors },
   {

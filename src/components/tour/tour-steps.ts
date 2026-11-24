@@ -481,7 +481,7 @@ const PAGES: PageDef[] = [
         id: "ins-compare",
         target: () => findText("Company comparison"),
         title: "Compare companies",
-        body: "Add up to five companies to compare their spending year by year, the states they reach and their main focus areas.",
+        body: "Add up to six companies to compare their spending year by year, the states they reach and their main focus areas.",
       },
       {
         id: "ins-unspent",

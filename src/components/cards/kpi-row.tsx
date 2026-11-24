@@ -106,7 +106,7 @@ export function KpiRow({
   const periodTip = period
     ? period.filtered
       ? `Covers ${period.range} only, as picked in the Year filter. Clear the Year filter to see every year in the dashboard.`
-      : `Covers every financial year in the default view (${period.range}). Pick years in the Year filter to narrow it${meta?.earlierYears?.length ? `, or to add earlier years (${meta.earlierYears[0]} onwards)` : ""}.`
+      : `Covers every financial year in the default view (${period.range}). Pick years in the Financial Year filter to narrow it.`
     : undefined;
   const cards: KpiSpec[] = [
     {
